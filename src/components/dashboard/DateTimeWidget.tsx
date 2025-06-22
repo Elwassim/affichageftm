@@ -15,13 +15,17 @@ export const DateTimeWidget = () => {
   }, []);
 
   return (
-    <Card className="p-6 bg-white text-center shadow-lg">
-      <div className="space-y-2">
-        <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800">
+    <Card className="p-8 bg-white text-center professional-shadow border-0">
+      <div className="space-y-4">
+        <div className="text-5xl md:text-6xl lg:text-7xl font-black text-cgt-gray tracking-tight">
           {format(currentTime, "HH:mm", { locale: fr })}
         </div>
-        <div className="text-lg md:text-xl text-gray-600">
+        <div className="h-px bg-gradient-to-r from-transparent via-cgt-red to-transparent w-1/2 mx-auto"></div>
+        <div className="text-xl md:text-2xl text-cgt-gray font-semibold capitalize">
           {format(currentTime, "EEEE d MMMM yyyy", { locale: fr })}
+        </div>
+        <div className="text-sm text-gray-500 font-medium uppercase tracking-wider">
+          Heure officielle
         </div>
       </div>
     </Card>

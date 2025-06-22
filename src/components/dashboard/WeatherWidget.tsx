@@ -24,10 +24,11 @@ export const WeatherWidget = () => {
 
   if (loading) {
     return (
-      <Card className="p-6 bg-white text-center shadow-lg">
-        <div className="animate-pulse">
-          <div className="h-12 bg-gray-200 rounded mb-4"></div>
-          <div className="h-6 bg-gray-200 rounded"></div>
+      <Card className="p-8 bg-white text-center professional-shadow border-0">
+        <div className="animate-pulse space-y-4">
+          <div className="h-16 bg-gray-200 rounded-lg"></div>
+          <div className="h-8 bg-gray-200 rounded-lg"></div>
+          <div className="h-6 bg-gray-200 rounded-lg w-2/3 mx-auto"></div>
         </div>
       </Card>
     );
@@ -35,23 +36,26 @@ export const WeatherWidget = () => {
 
   if (!weather) {
     return (
-      <Card className="p-6 bg-white text-center shadow-lg">
-        <div className="text-gray-500">Météo indisponible</div>
+      <Card className="p-8 bg-white text-center professional-shadow border-0">
+        <div className="text-gray-500 font-medium">Météo indisponible</div>
       </Card>
     );
   }
 
   return (
-    <Card className="p-6 bg-white text-center shadow-lg">
-      <div className="space-y-3">
-        <div className="text-4xl">{weather.icon}</div>
-        <div className="text-3xl font-bold text-gray-800">
+    <Card className="p-8 bg-white text-center professional-shadow border-0">
+      <div className="space-y-4">
+        <div className="text-6xl lg:text-7xl">{weather.icon}</div>
+        <div className="text-4xl lg:text-5xl font-black text-cgt-gray">
           {weather.temperature}°C
         </div>
-        <div className="text-lg text-gray-600 capitalize">
+        <div className="h-px bg-gradient-to-r from-transparent via-cgt-red to-transparent w-1/2 mx-auto"></div>
+        <div className="text-xl text-cgt-gray font-semibold capitalize">
           {weather.description}
         </div>
-        <div className="text-sm text-gray-500">{weather.city}</div>
+        <div className="text-sm text-gray-500 font-medium uppercase tracking-wider">
+          {weather.city}
+        </div>
       </div>
     </Card>
   );

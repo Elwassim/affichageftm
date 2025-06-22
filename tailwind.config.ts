@@ -19,7 +19,17 @@ export default {
     },
     extend: {
       colors: {
-        // Union theme colors
+        // CGT Professional theme colors
+        cgt: {
+          red: "hsl(var(--union-red))",
+          "red-dark": "hsl(var(--union-red-dark))",
+          "red-light": "hsl(var(--union-red-light))",
+          white: "hsl(var(--union-white))",
+          gray: "hsl(var(--union-gray))",
+          "gray-light": "hsl(var(--union-gray-light))",
+          "text-light": "hsl(var(--union-text-light))",
+        },
+        // Legacy union colors for compatibility
         union: {
           red: "hsl(var(--union-red))",
           white: "hsl(var(--union-white))",

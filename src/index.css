@@ -9,41 +9,44 @@
    * A different format will require also updating the theme in tailwind.config.ts.
   */
   :root {
-    /* Union theme colors */
-    --union-red: 0 85% 55%;
-    --union-red-dark: 0 85% 45%;
+    /* CGT Professional theme colors */
+    --union-red: 0 75% 50%;
+    --union-red-dark: 0 85% 35%;
+    --union-red-light: 0 75% 60%;
     --union-white: 0 0% 100%;
-    --union-text-light: 0 0% 95%;
+    --union-text-light: 0 0% 98%;
+    --union-gray: 220 13% 18%;
+    --union-gray-light: 220 13% 91%;
 
-    --background: 0 85% 55%;
+    --background: 0 75% 50%;
     --foreground: 0 0% 100%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 13% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 13% 18%;
 
-    --primary: 0 85% 55%;
+    --primary: 0 75% 50%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 0 0% 100%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary-foreground: 220 13% 18%;
 
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 13% 95%;
+    --muted-foreground: 220 13% 45%;
 
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 220 13% 95%;
+    --accent-foreground: 220 13% 18%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 0 85% 55%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 0 75% 50%;
 
-    --radius: 1rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -122,6 +125,24 @@
   }
 
   .animate-marquee {
-    animation: marquee 30s linear infinite;
+    animation: marquee 35s linear infinite;
+  }
+
+  .cgt-gradient {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--union-red)) 0%,
+      hsl(var(--union-red-dark)) 100%
+    );
+  }
+
+  .professional-shadow {
+    box-shadow:
+      0 20px 25px -5px rgb(0 0 0 / 0.1),
+      0 8px 10px -6px rgb(0 0 0 / 0.1);
+  }
+
+  .text-shadow {
+    text-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
   }
 }

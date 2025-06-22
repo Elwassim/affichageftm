@@ -98,46 +98,91 @@ const Admin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-union-red p-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-white">
-            Administration du tableau de bord
-          </h1>
-          <div className="flex gap-4">
-            <Button
-              onClick={handleBackToDashboard}
-              variant="outline"
-              className="bg-white text-union-red hover:bg-gray-100"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Retour au tableau de bord
-            </Button>
-            <Button
-              onClick={handleSave}
-              className="bg-union-red-dark text-white hover:bg-red-800"
-            >
-              <Save className="w-4 h-4 mr-2" />
-              Sauvegarder
-            </Button>
+    <div className="min-h-screen cgt-gradient">
+      <div className="max-w-7xl mx-auto p-6 lg:p-8">
+        {/* Professional Admin Header */}
+        <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8 border border-white/20">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
+                <span className="text-cgt-red font-black text-xl">CGT</span>
+              </div>
+              <div>
+                <h1 className="text-4xl font-black text-white text-shadow">
+                  Administration CGT
+                </h1>
+                <p className="text-white/90 text-lg font-medium">
+                  Gestion du tableau de bord syndical
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-4">
+              <Button
+                onClick={handleBackToDashboard}
+                variant="outline"
+                size="lg"
+                className="bg-white/95 text-cgt-red hover:bg-white hover:shadow-lg transition-all duration-200 font-semibold border-0"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                Retour au tableau de bord
+              </Button>
+              <Button
+                onClick={handleSave}
+                size="lg"
+                className="bg-white text-cgt-red hover:bg-white/90 hover:shadow-lg transition-all duration-200 font-bold border-0"
+              >
+                <Save className="w-5 h-5 mr-2" />
+                Sauvegarder les modifications
+              </Button>
+            </div>
           </div>
         </div>
 
-        <Tabs defaultValue="meetings" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 bg-white">
-            <TabsTrigger value="meetings">Réunions</TabsTrigger>
-            <TabsTrigger value="permanences">Permanences</TabsTrigger>
-            <TabsTrigger value="video">Vidéo</TabsTrigger>
-            <TabsTrigger value="alert">Alerte</TabsTrigger>
-            <TabsTrigger value="social">Message</TabsTrigger>
+        <Tabs defaultValue="meetings" className="space-y-8">
+          <TabsList className="grid w-full grid-cols-5 bg-white/95 backdrop-blur-sm p-2 rounded-xl shadow-lg border-0">
+            <TabsTrigger
+              value="meetings"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+            >
+              Réunions
+            </TabsTrigger>
+            <TabsTrigger
+              value="permanences"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+            >
+              Permanences
+            </TabsTrigger>
+            <TabsTrigger
+              value="video"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+            >
+              Vidéo
+            </TabsTrigger>
+            <TabsTrigger
+              value="alert"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+            >
+              Alerte
+            </TabsTrigger>
+            <TabsTrigger
+              value="social"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+            >
+              Message
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="meetings">
-            <Card className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Gestion des réunions</h2>
-                <Button onClick={addMeeting}>
-                  <Plus className="w-4 h-4 mr-2" />
+            <Card className="p-8 bg-white/95 backdrop-blur-sm border-0 professional-shadow rounded-2xl">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-3xl font-black text-cgt-gray">
+                  Gestion des réunions CGT
+                </h2>
+                <Button
+                  onClick={addMeeting}
+                  className="bg-cgt-red text-white hover:bg-cgt-red-dark font-semibold px-6 py-3 rounded-xl"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
                   Ajouter une réunion
                 </Button>
               </div>
