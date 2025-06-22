@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
+import { CGTLogo } from "./CGTLogo";
 
 export const CGTHeader = () => {
   return (
@@ -34,13 +35,9 @@ export const CGTHeader = () => {
       <div className="relative p-6 lg:p-8">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-6">
-            {/* CGT Logo placeholder - replace with actual logo */}
+            {/* CGT Official Logo */}
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 lg:w-20 lg:h-20 bg-white rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-cgt-red font-black text-xl lg:text-2xl">
-                  CGT
-                </span>
-              </div>
+              <CGTLogo className="w-16 h-16 lg:w-20 lg:h-20" />
               <div className="text-white">
                 <h1 className="text-3xl lg:text-5xl xl:text-6xl font-black tracking-tight text-shadow">
                   CONFÉDÉRATION

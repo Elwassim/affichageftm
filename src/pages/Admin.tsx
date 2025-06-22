@@ -191,7 +191,7 @@ const Admin = () => {
                 {data.meetings.map((meeting) => (
                   <div
                     key={meeting.id}
-                    className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border rounded-lg"
+                    className="grid grid-cols-1 md:grid-cols-4 gap-6 p-6 bg-gradient-to-r from-gray-50 to-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all"
                   >
                     <div>
                       <Label htmlFor={`meeting-title-${meeting.id}`}>
@@ -248,11 +248,16 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="permanences">
-            <Card className="p-6">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Gestion des permanences</h2>
-                <Button onClick={addPermanence}>
-                  <Plus className="w-4 h-4 mr-2" />
+            <Card className="p-8 bg-white/95 backdrop-blur-sm border-0 professional-shadow rounded-2xl">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-3xl font-black text-cgt-gray">
+                  Gestion des permanences CGT
+                </h2>
+                <Button
+                  onClick={addPermanence}
+                  className="bg-cgt-red text-white hover:bg-cgt-red-dark font-semibold px-6 py-3 rounded-xl"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
                   Ajouter une permanence
                 </Button>
               </div>
@@ -330,8 +335,10 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="video">
-            <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Configuration vidéo</h2>
+            <Card className="p-8 bg-white/95 backdrop-blur-sm border-0 professional-shadow rounded-2xl">
+              <h2 className="text-3xl font-black text-cgt-gray mb-8">
+                Configuration vidéo institutionnelle
+              </h2>
 
               <div className="space-y-4">
                 <div>
@@ -369,8 +376,10 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="alert">
-            <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Bandeau d'alerte</h2>
+            <Card className="p-8 bg-white/95 backdrop-blur-sm border-0 professional-shadow rounded-2xl">
+              <h2 className="text-3xl font-black text-cgt-gray mb-8">
+                Bandeau d'alerte CGT
+              </h2>
 
               <div>
                 <Label htmlFor="alert-text">Texte du bandeau</Label>
@@ -392,8 +401,10 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="social">
-            <Card className="p-6">
-              <h2 className="text-2xl font-bold mb-6">Message syndical</h2>
+            <Card className="p-8 bg-white/95 backdrop-blur-sm border-0 professional-shadow rounded-2xl">
+              <h2 className="text-3xl font-black text-cgt-gray mb-8">
+                Message syndical officiel
+              </h2>
 
               <div className="space-y-4">
                 <div>
