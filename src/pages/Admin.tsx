@@ -22,7 +22,8 @@ import {
   type User,
 } from "@/lib/users";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Plus, Trash2, Users } from "lucide-react";
+import { ArrowLeft, Save, Plus, Trash2, Users, LogOut } from "lucide-react";
+import { logout, getCurrentUser } from "@/lib/auth";
 
 const Admin = () => {
   const [data, setData] = useState(getDashboardData());
@@ -44,6 +45,15 @@ const Admin = () => {
   const handleBackToDashboard = () => {
     navigate("/");
   };
+
+  const handleLogout = () => {
+    if (confirm("Êtes-vous sûr de vouloir vous déconnecter ?")) {
+      logout();
+      navigate("/login");
+    }
+  };
+
+  const currentUser = getCurrentUser();
 
   const addMeeting = () => {
     const newMeeting: Meeting = {
@@ -160,24 +170,44 @@ const Admin = () => {
                 </p>
               </div>
             </div>
-            <div className="flex gap-4">
-              <Button
-                onClick={handleBackToDashboard}
-                variant="outline"
-                size="lg"
-                className="bg-white/95 text-cgt-red hover:bg-white hover:shadow-lg transition-all duration-200 font-semibold border-0"
-              >
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                Retour au tableau de bord
-              </Button>
-              <Button
-                onClick={handleSave}
-                size="lg"
-                className="bg-white text-cgt-red hover:bg-white/90 hover:shadow-lg transition-all duration-200 font-bold border-0"
-              >
-                <Save className="w-5 h-5 mr-2" />
-                Sauvegarder les modifications
-              </Button>
+            <div className="flex items-center gap-4">
+              {currentUser && (
+                <div className="text-white/90 text-right mr-4">
+                  <p className="text-sm font-semibold">{currentUser.name}</p>
+                  <p className="text-xs opacity-80">{currentUser.section}</p>
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={handleBackToDashboard}
+                  variant="outline"
+                  size="lg"
+                  className="bg-white/95 text-cgt-red hover:bg-white hover:shadow-lg transition-all duration-200 font-semibold border-0"
+                >
+                  <ArrowLeft className="w-5 h-5 mr-2" />
+                  Tableau de bord
+                </Button>
+
+                <Button
+                  onClick={handleSave}
+                  size="lg"
+                  className="bg-white text-cgt-red hover:bg-white/90 hover:shadow-lg transition-all duration-200 font-bold border-0"
+                >
+                  <Save className="w-5 h-5 mr-2" />
+                  Sauvegarder
+                </Button>
+
+                <Button
+                  onClick={handleLogout}
+                  variant="outline"
+                  size="lg"
+                  className="bg-red-600 text-white hover:bg-red-700 hover:shadow-lg transition-all duration-200 font-semibold border-0"
+                >
+                  <LogOut className="w-5 h-5 mr-2" />
+                  Déconnexion
+                </Button>
+              </div>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Settings } from "lucide-react";
 import { CGTLogo } from "./CGTLogo";
+import { isAuthenticated } from "@/lib/auth";
 
 export const CGTHeader = () => {
   return (
@@ -47,14 +48,14 @@ export const CGTHeader = () => {
           </div>
 
           <div className="flex items-center">
-            <Link to="/admin">
+            <Link to={isAuthenticated() ? "/admin" : "/login"}>
               <Button
                 variant="outline"
                 size="sm"
                 className="bg-white/95 text-cgt-red hover:bg-white hover:shadow-lg transition-all duration-200 font-semibold border-0"
               >
                 <Settings className="w-4 h-4 mr-2" />
-                Admin
+                {isAuthenticated() ? "Admin" : "Connexion"}
               </Button>
             </Link>
           </div>
