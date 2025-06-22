@@ -53,16 +53,19 @@ export const useRealTimeUpdates = (config: Partial<RealTimeConfig> = {}) => {
 };
 
 // Real-time weather updates
-export const useRealTimeWeather = (city: string, interval: number = 300000) => {
-  // 5 minutes
+export const useRealTimeWeather = (city: string, interval: number = 60000) => {
+  // 1 minute for better sync
   const [weather, setWeather] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [lastFetch, setLastFetch] = useState<Date | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchWeather = useCallback(async () => {
+  const fetchWeatherData = useCallback(async () => {
     if (!city) return;
 
     setIsLoading(true);
+    setError(null);
+
     try {
       // Import weather function dynamically to avoid circular imports
       const { fetchWeather } = await import("@/lib/weather");
@@ -71,27 +74,43 @@ export const useRealTimeWeather = (city: string, interval: number = 300000) => {
       if (weatherData) {
         setWeather(weatherData);
         setLastFetch(new Date());
+        console.log(`Weather updated for ${city}:`, weatherData);
+      } else {
+        setError("Impossible de récupérer la météo");
       }
     } catch (error) {
       console.error("Failed to fetch real-time weather:", error);
+      setError("Erreur de connexion météo");
     } finally {
       setIsLoading(false);
     }
   }, [city]);
 
   useEffect(() => {
-    fetchWeather();
+    // Initial fetch
+    fetchWeatherData();
 
-    const intervalId = setInterval(fetchWeather, interval);
+    // Set up interval for regular updates
+    const intervalId = setInterval(() => {
+      console.log(`Refreshing weather for ${city}...`);
+      fetchWeatherData();
+    }, interval);
 
     return () => clearInterval(intervalId);
-  }, [fetchWeather, interval]);
+  }, [fetchWeatherData, interval]);
+
+  // Force refresh function
+  const forceRefresh = useCallback(() => {
+    console.log(`Force refreshing weather for ${city}...`);
+    fetchWeatherData();
+  }, [fetchWeatherData]);
 
   return {
     weather,
     isLoading,
     lastFetch,
-    refetch: fetchWeather,
+    error,
+    refetch: forceRefresh,
   };
 };
 
