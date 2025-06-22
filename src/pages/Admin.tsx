@@ -1,0 +1,405 @@
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  getDashboardData,
+  saveDashboardData,
+  type Meeting,
+  type Permanence,
+  type SocialPost,
+} from "@/lib/storage";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
+
+const Admin = () => {
+  const [data, setData] = useState(getDashboardData());
+  const navigate = useNavigate();
+
+  const handleSave = () => {
+    saveDashboardData(data);
+    alert("Données sauvegardées avec succès !");
+  };
+
+  const handleBackToDashboard = () => {
+    navigate("/");
+  };
+
+  const addMeeting = () => {
+    const newMeeting: Meeting = {
+      id: Date.now().toString(),
+      title: "",
+      time: "",
+      room: "",
+    };
+    setData((prev) => ({
+      ...prev,
+      meetings: [...prev.meetings, newMeeting],
+    }));
+  };
+
+  const removeMeeting = (id: string) => {
+    setData((prev) => ({
+      ...prev,
+      meetings: prev.meetings.filter((m) => m.id !== id),
+    }));
+  };
+
+  const updateMeeting = (id: string, field: keyof Meeting, value: string) => {
+    setData((prev) => ({
+      ...prev,
+      meetings: prev.meetings.map((m) =>
+        m.id === id ? { ...m, [field]: value } : m,
+      ),
+    }));
+  };
+
+  const addPermanence = () => {
+    const newPermanence: Permanence = {
+      id: Date.now().toString(),
+      name: "",
+      time: "",
+      theme: "",
+    };
+    setData((prev) => ({
+      ...prev,
+      permanences: [...prev.permanences, newPermanence],
+    }));
+  };
+
+  const removePermanence = (id: string) => {
+    setData((prev) => ({
+      ...prev,
+      permanences: prev.permanences.filter((p) => p.id !== id),
+    }));
+  };
+
+  const updatePermanence = (
+    id: string,
+    field: keyof Permanence,
+    value: string,
+  ) => {
+    setData((prev) => ({
+      ...prev,
+      permanences: prev.permanences.map((p) =>
+        p.id === id ? { ...p, [field]: value } : p,
+      ),
+    }));
+  };
+
+  const updateSocialPost = (field: keyof SocialPost, value: string) => {
+    setData((prev) => ({
+      ...prev,
+      socialPost: { ...prev.socialPost, [field]: value },
+    }));
+  };
+
+  return (
+    <div className="min-h-screen bg-union-red p-4">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-6">
+          <h1 className="text-3xl font-bold text-white">
+            Administration du tableau de bord
+          </h1>
+          <div className="flex gap-4">
+            <Button
+              onClick={handleBackToDashboard}
+              variant="outline"
+              className="bg-white text-union-red hover:bg-gray-100"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour au tableau de bord
+            </Button>
+            <Button
+              onClick={handleSave}
+              className="bg-union-red-dark text-white hover:bg-red-800"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Sauvegarder
+            </Button>
+          </div>
+        </div>
+
+        <Tabs defaultValue="meetings" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-5 bg-white">
+            <TabsTrigger value="meetings">Réunions</TabsTrigger>
+            <TabsTrigger value="permanences">Permanences</TabsTrigger>
+            <TabsTrigger value="video">Vidéo</TabsTrigger>
+            <TabsTrigger value="alert">Alerte</TabsTrigger>
+            <TabsTrigger value="social">Message</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="meetings">
+            <Card className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Gestion des réunions</h2>
+                <Button onClick={addMeeting}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Ajouter une réunion
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                {data.meetings.map((meeting) => (
+                  <div
+                    key={meeting.id}
+                    className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border rounded-lg"
+                  >
+                    <div>
+                      <Label htmlFor={`meeting-title-${meeting.id}`}>
+                        Titre
+                      </Label>
+                      <Input
+                        id={`meeting-title-${meeting.id}`}
+                        value={meeting.title}
+                        onChange={(e) =>
+                          updateMeeting(meeting.id, "title", e.target.value)
+                        }
+                        placeholder="Titre de la réunion"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`meeting-time-${meeting.id}`}>
+                        Heure
+                      </Label>
+                      <Input
+                        id={`meeting-time-${meeting.id}`}
+                        value={meeting.time}
+                        onChange={(e) =>
+                          updateMeeting(meeting.id, "time", e.target.value)
+                        }
+                        placeholder="14:00"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`meeting-room-${meeting.id}`}>
+                        Salle
+                      </Label>
+                      <Input
+                        id={`meeting-room-${meeting.id}`}
+                        value={meeting.room}
+                        onChange={(e) =>
+                          updateMeeting(meeting.id, "room", e.target.value)
+                        }
+                        placeholder="Salle principale"
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => removeMeeting(meeting.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="permanences">
+            <Card className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Gestion des permanences</h2>
+                <Button onClick={addPermanence}>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Ajouter une permanence
+                </Button>
+              </div>
+
+              <div className="space-y-4">
+                {data.permanences.map((permanence) => (
+                  <div
+                    key={permanence.id}
+                    className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border rounded-lg"
+                  >
+                    <div>
+                      <Label htmlFor={`permanence-name-${permanence.id}`}>
+                        Nom
+                      </Label>
+                      <Input
+                        id={`permanence-name-${permanence.id}`}
+                        value={permanence.name}
+                        onChange={(e) =>
+                          updatePermanence(
+                            permanence.id,
+                            "name",
+                            e.target.value,
+                          )
+                        }
+                        placeholder="Marie Dubois"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`permanence-time-${permanence.id}`}>
+                        Horaires
+                      </Label>
+                      <Input
+                        id={`permanence-time-${permanence.id}`}
+                        value={permanence.time}
+                        onChange={(e) =>
+                          updatePermanence(
+                            permanence.id,
+                            "time",
+                            e.target.value,
+                          )
+                        }
+                        placeholder="09:00 - 12:00"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`permanence-theme-${permanence.id}`}>
+                        Thème
+                      </Label>
+                      <Input
+                        id={`permanence-theme-${permanence.id}`}
+                        value={permanence.theme}
+                        onChange={(e) =>
+                          updatePermanence(
+                            permanence.id,
+                            "theme",
+                            e.target.value,
+                          )
+                        }
+                        placeholder="Droit du travail"
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => removePermanence(permanence.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="video">
+            <Card className="p-6">
+              <h2 className="text-2xl font-bold mb-6">Configuration vidéo</h2>
+
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="video-url">URL de la vidéo</Label>
+                  <Input
+                    id="video-url"
+                    value={data.videoUrl}
+                    onChange={(e) =>
+                      setData((prev) => ({ ...prev, videoUrl: e.target.value }))
+                    }
+                    placeholder="https://www.youtube.com/watch?v=..."
+                  />
+                  <p className="text-sm text-gray-500 mt-1">
+                    Accepte les liens YouTube, Vimeo ou liens directs vers des
+                    vidéos
+                  </p>
+                </div>
+
+                <div>
+                  <Label htmlFor="weather-city">Ville pour la météo</Label>
+                  <Input
+                    id="weather-city"
+                    value={data.weatherCity}
+                    onChange={(e) =>
+                      setData((prev) => ({
+                        ...prev,
+                        weatherCity: e.target.value,
+                      }))
+                    }
+                    placeholder="Paris"
+                  />
+                </div>
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="alert">
+            <Card className="p-6">
+              <h2 className="text-2xl font-bold mb-6">Bandeau d'alerte</h2>
+
+              <div>
+                <Label htmlFor="alert-text">Texte du bandeau</Label>
+                <Textarea
+                  id="alert-text"
+                  value={data.alertText}
+                  onChange={(e) =>
+                    setData((prev) => ({ ...prev, alertText: e.target.value }))
+                  }
+                  placeholder="🔴 MANIFESTATION NATIONALE - Jeudi 21 mars à 14h - Place de la République"
+                  rows={3}
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Ce texte défilera en haut de l'écran. Utilisez des émojis pour
+                  plus d'impact.
+                </p>
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="social">
+            <Card className="p-6">
+              <h2 className="text-2xl font-bold mb-6">Message syndical</h2>
+
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="social-name">Nom</Label>
+                  <Input
+                    id="social-name"
+                    value={data.socialPost.name}
+                    onChange={(e) => updateSocialPost("name", e.target.value)}
+                    placeholder="Sophie Lefebvre"
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="social-photo">URL de la photo</Label>
+                  <Input
+                    id="social-photo"
+                    value={data.socialPost.photo}
+                    onChange={(e) => updateSocialPost("photo", e.target.value)}
+                    placeholder="https://..."
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="social-text">Message</Label>
+                  <Textarea
+                    id="social-text"
+                    value={data.socialPost.text}
+                    onChange={(e) => updateSocialPost("text", e.target.value)}
+                    placeholder="Fière de représenter nos adhérents..."
+                    rows={3}
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="social-hashtag">Hashtag</Label>
+                  <Input
+                    id="social-hashtag"
+                    value={data.socialPost.hashtag}
+                    onChange={(e) =>
+                      updateSocialPost("hashtag", e.target.value)
+                    }
+                    placeholder="#SolidaritéSyndicale"
+                  />
+                </div>
+              </div>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  );
+};
+
+export default Admin;
