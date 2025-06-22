@@ -267,23 +267,82 @@ const Admin = () => {
             {navigationItems.map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
+
+              // Static color classes based on item type
+              const getActiveClasses = (color: string) => {
+                switch (color) {
+                  case "blue":
+                    return "bg-blue-50 text-blue-700";
+                  case "green":
+                    return "bg-green-50 text-green-700";
+                  case "purple":
+                    return "bg-purple-50 text-purple-700";
+                  case "orange":
+                    return "bg-orange-50 text-orange-700";
+                  case "red":
+                    return "bg-red-50 text-red-700";
+                  case "indigo":
+                    return "bg-indigo-50 text-indigo-700";
+                  default:
+                    return "bg-slate-50 text-slate-700";
+                }
+              };
+
+              const getIconClasses = (color: string) => {
+                switch (color) {
+                  case "blue":
+                    return "text-blue-600";
+                  case "green":
+                    return "text-green-600";
+                  case "purple":
+                    return "text-purple-600";
+                  case "orange":
+                    return "text-orange-600";
+                  case "red":
+                    return "text-red-600";
+                  case "indigo":
+                    return "text-indigo-600";
+                  default:
+                    return "text-slate-600";
+                }
+              };
+
+              const getDotClasses = (color: string) => {
+                switch (color) {
+                  case "blue":
+                    return "bg-blue-500";
+                  case "green":
+                    return "bg-green-500";
+                  case "purple":
+                    return "bg-purple-500";
+                  case "orange":
+                    return "bg-orange-500";
+                  case "red":
+                    return "bg-red-500";
+                  case "indigo":
+                    return "bg-indigo-500";
+                  default:
+                    return "bg-slate-500";
+                }
+              };
+
               return (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                     isActive
-                      ? `bg-${item.color}-50 text-${item.color}-700 shadow-sm`
+                      ? `${getActiveClasses(item.color)} shadow-sm`
                       : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
                   }`}
                 >
                   <Icon
-                    className={`w-5 h-5 ${isActive ? `text-${item.color}-600` : "text-slate-400 group-hover:text-slate-600"}`}
+                    className={`w-5 h-5 ${isActive ? getIconClasses(item.color) : "text-slate-400 group-hover:text-slate-600"}`}
                   />
                   <span className="font-medium">{item.label}</span>
                   {isActive && (
                     <div
-                      className={`ml-auto w-2 h-2 bg-${item.color}-500 rounded-full`}
+                      className={`ml-auto w-2 h-2 ${getDotClasses(item.color)} rounded-full`}
                     ></div>
                   )}
                 </button>
