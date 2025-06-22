@@ -22,7 +22,7 @@ import {
   type User,
 } from "@/lib/users";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, Plus, Trash2, Users } from "lucide-react";
 
 const Admin = () => {
   const [data, setData] = useState(getDashboardData());
