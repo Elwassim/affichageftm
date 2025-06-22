@@ -12,11 +12,28 @@ import {
   type Permanence,
   type SocialPost,
 } from "@/lib/storage";
+import {
+  getUsersData,
+  addUser,
+  updateUser,
+  deleteUser,
+  getRoleLabel,
+  getRoleColor,
+  type User,
+} from "@/lib/users";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
 
 const Admin = () => {
   const [data, setData] = useState(getDashboardData());
+  const [usersData, setUsersData] = useState(getUsersData());
+  const [newUser, setNewUser] = useState({
+    name: "",
+    email: "",
+    role: "secretaire" as User["role"],
+    phone: "",
+    section: "",
+  });
   const navigate = useNavigate();
 
   const handleSave = () => {
@@ -97,6 +114,32 @@ const Admin = () => {
     }));
   };
 
+  const handleAddUser = () => {
+    if (newUser.name && newUser.email) {
+      addUser(newUser);
+      setUsersData(getUsersData());
+      setNewUser({
+        name: "",
+        email: "",
+        role: "secretaire",
+        phone: "",
+        section: "",
+      });
+    }
+  };
+
+  const handleUpdateUser = (id: string, field: keyof User, value: string) => {
+    updateUser(id, { [field]: value });
+    setUsersData(getUsersData());
+  };
+
+  const handleDeleteUser = (id: string) => {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
+      deleteUser(id);
+      setUsersData(getUsersData());
+    }
+  };
+
   return (
     <div className="min-h-screen cgt-gradient">
       <div className="max-w-7xl mx-auto p-6 lg:p-8">
@@ -109,10 +152,11 @@ const Admin = () => {
               </div>
               <div>
                 <h1 className="text-4xl font-black text-white text-shadow">
-                  Administration CGT
+                  Administration CGT FTM
                 </h1>
                 <p className="text-white/90 text-lg font-medium">
-                  Gestion du tableau de bord syndical
+                  Gestion du tableau de bord - Fédération des Travailleurs de la
+                  Métallurgie
                 </p>
               </div>
             </div>
@@ -139,7 +183,7 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="meetings" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-5 bg-white/95 backdrop-blur-sm p-2 rounded-xl shadow-lg border-0">
+          <TabsList className="grid w-full grid-cols-6 bg-white/95 backdrop-blur-sm p-2 rounded-xl shadow-lg border-0">
             <TabsTrigger
               value="meetings"
               className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
@@ -151,6 +195,12 @@ const Admin = () => {
               className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
             >
               Permanences
+            </TabsTrigger>
+            <TabsTrigger
+              value="users"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+            >
+              Utilisateurs
             </TabsTrigger>
             <TabsTrigger
               value="video"
@@ -237,6 +287,177 @@ const Admin = () => {
                         variant="destructive"
                         size="sm"
                         onClick={() => removeMeeting(meeting.id)}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="users">
+            <Card className="p-8 bg-white/95 backdrop-blur-sm border-0 professional-shadow rounded-2xl">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-3xl font-black text-cgt-gray">
+                  Gestion des utilisateurs CGT FTM
+                </h2>
+              </div>
+
+              {/* Add new user form */}
+              <div className="bg-gray-50 p-6 rounded-xl mb-8">
+                <h3 className="text-xl font-bold text-cgt-gray mb-4">
+                  Ajouter un nouvel utilisateur
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <Label htmlFor="new-user-name">Nom complet</Label>
+                    <Input
+                      id="new-user-name"
+                      value={newUser.name}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, name: e.target.value })
+                      }
+                      placeholder="Marie Dubois"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="new-user-email">Email</Label>
+                    <Input
+                      id="new-user-email"
+                      type="email"
+                      value={newUser.email}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, email: e.target.value })
+                      }
+                      placeholder="marie.dubois@cgt-ftm.fr"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="new-user-role">Rôle</Label>
+                    <select
+                      id="new-user-role"
+                      value={newUser.role}
+                      onChange={(e) =>
+                        setNewUser({
+                          ...newUser,
+                          role: e.target.value as User["role"],
+                        })
+                      }
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <option value="secretaire">Secrétaire</option>
+                      <option value="delegue">Délégué syndical</option>
+                      <option value="admin">Administrateur</option>
+                    </select>
+                  </div>
+                  <div>
+                    <Label htmlFor="new-user-phone">Téléphone</Label>
+                    <Input
+                      id="new-user-phone"
+                      value={newUser.phone}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, phone: e.target.value })
+                      }
+                      placeholder="01.23.45.67.89"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="new-user-section">Section</Label>
+                    <Input
+                      id="new-user-section"
+                      value={newUser.section}
+                      onChange={(e) =>
+                        setNewUser({ ...newUser, section: e.target.value })
+                      }
+                      placeholder="Secrétariat FTM"
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <Button
+                      onClick={handleAddUser}
+                      className="bg-cgt-red text-white hover:bg-cgt-red-dark font-semibold px-6 py-3 rounded-xl w-full"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Ajouter
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Users list */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-cgt-gray">
+                  Utilisateurs existants
+                </h3>
+                {usersData.users.map((user) => (
+                  <div
+                    key={user.id}
+                    className="grid grid-cols-1 md:grid-cols-6 gap-4 p-6 bg-gradient-to-r from-gray-50 to-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all"
+                  >
+                    <div>
+                      <Label htmlFor={`user-name-${user.id}`}>Nom</Label>
+                      <Input
+                        id={`user-name-${user.id}`}
+                        value={user.name}
+                        onChange={(e) =>
+                          handleUpdateUser(user.id, "name", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`user-email-${user.id}`}>Email</Label>
+                      <Input
+                        id={`user-email-${user.id}`}
+                        type="email"
+                        value={user.email}
+                        onChange={(e) =>
+                          handleUpdateUser(user.id, "email", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`user-role-${user.id}`}>Rôle</Label>
+                      <select
+                        id={`user-role-${user.id}`}
+                        value={user.role}
+                        onChange={(e) =>
+                          handleUpdateUser(user.id, "role", e.target.value)
+                        }
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        <option value="secretaire">Secrétaire</option>
+                        <option value="delegue">Délégué syndical</option>
+                        <option value="admin">Administrateur</option>
+                      </select>
+                    </div>
+                    <div>
+                      <Label htmlFor={`user-phone-${user.id}`}>Téléphone</Label>
+                      <Input
+                        id={`user-phone-${user.id}`}
+                        value={user.phone || ""}
+                        onChange={(e) =>
+                          handleUpdateUser(user.id, "phone", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`user-section-${user.id}`}>Section</Label>
+                      <Input
+                        id={`user-section-${user.id}`}
+                        value={user.section || ""}
+                        onChange={(e) =>
+                          handleUpdateUser(user.id, "section", e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="flex items-end">
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeleteUser(user.id)}
+                        className="w-full"
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>

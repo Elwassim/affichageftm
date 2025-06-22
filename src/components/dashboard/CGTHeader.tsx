@@ -40,7 +40,7 @@ export const CGTHeader = () => {
               <CGTLogo className="w-12 h-12" />
               <div className="text-white">
                 <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-shadow">
-                  CONFÉDÉRATION GÉNÉRALE DU TRAVAIL
+                  CGT FTM - FÉDÉRATION DES TRAVAILLEURS DE LA MÉTALLURGIE
                 </h1>
               </div>
             </div>

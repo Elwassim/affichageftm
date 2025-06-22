@@ -25,8 +25,8 @@ export const PermanencesWidget = () => {
           <p className="text-gray-500 text-xs">Aucune permanence</p>
         </div>
       ) : (
-        <div className="space-y-2 overflow-y-auto max-h-[200px]">
-          {permanences.slice(0, 3).map((permanence) => (
+        <div className="space-y-2">
+          {permanences.map((permanence) => (
             <div
               key={permanence.id}
               className="p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-2 border-cgt-red"

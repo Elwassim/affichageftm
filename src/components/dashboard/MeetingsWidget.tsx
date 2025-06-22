@@ -25,8 +25,8 @@ export const MeetingsWidget = () => {
           <p className="text-gray-500 text-xs">Aucune réunion</p>
         </div>
       ) : (
-        <div className="space-y-2 overflow-y-auto max-h-[200px]">
-          {meetings.slice(0, 3).map((meeting, index) => (
+        <div className="space-y-2">
+          {meetings.map((meeting, index) => (
             <div
               key={meeting.id}
               className="p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-2 border-cgt-red"
