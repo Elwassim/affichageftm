@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr } from "date-fns/locale/fr";
 import { Card } from "@/components/ui/card";
 
 export const DateTimeWidget = () => {
