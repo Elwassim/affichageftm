@@ -35,12 +35,20 @@ import {
   AlertTriangle,
   MessageSquare,
   UserCheck,
+  Settings,
+  Home,
+  Bell,
+  Search,
+  Menu,
+  X,
 } from "lucide-react";
 import { logout, getCurrentUser } from "@/lib/auth";
 
 const Admin = () => {
   const [data, setData] = useState(getDashboardData());
   const [authUsers, setAuthUsers] = useState(getAuthUsers());
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activeTab, setActiveTab] = useState("meetings");
   const [newAuthUser, setNewAuthUser] = useState({
     username: "",
     password: "",
@@ -55,7 +63,13 @@ const Admin = () => {
 
   const handleSave = () => {
     saveDashboardData(data);
-    alert("Données sauvegardées avec succès !");
+    // Show toast notification instead of alert
+    const toast = document.createElement("div");
+    toast.className =
+      "fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50";
+    toast.textContent = "✅ Données sauvegardées avec succès !";
+    document.body.appendChild(toast);
+    setTimeout(() => document.body.removeChild(toast), 3000);
   };
 
   const handleBackToDashboard = () => {
@@ -71,6 +85,7 @@ const Admin = () => {
 
   const currentUser = getCurrentUser();
 
+  // Meeting functions
   const addMeeting = () => {
     const newMeeting: Meeting = {
       id: Date.now().toString(),
@@ -100,6 +115,7 @@ const Admin = () => {
     }));
   };
 
+  // Permanence functions
   const addPermanence = () => {
     const newPermanence: Permanence = {
       id: Date.now().toString(),
@@ -181,924 +197,1001 @@ const Admin = () => {
     }
   };
 
+  const navigationItems = [
+    { id: "meetings", label: "Réunions", icon: Calendar, color: "blue" },
+    { id: "permanences", label: "Permanences", icon: Users, color: "green" },
+    { id: "auth-users", label: "Connexions", icon: UserCheck, color: "purple" },
+    { id: "video", label: "Média", icon: Video, color: "orange" },
+    { id: "alert", label: "Alertes", icon: AlertTriangle, color: "red" },
+    { id: "social", label: "Messages", icon: MessageSquare, color: "indigo" },
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      {/* Modern Header */}
-      <div className="relative bg-gradient-to-r from-cgt-red via-cgt-red-dark to-cgt-red shadow-xl">
-        {/* Animated background pattern */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-br from-white/5 to-transparent rounded-full animate-pulse"></div>
-          <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-tl from-white/5 to-transparent rounded-full animate-pulse delay-1000"></div>
+    <div className="min-h-screen bg-slate-50">
+      {/* Modern Sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl border-r border-slate-200 transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Sidebar Header */}
+        <div className="flex items-center justify-between p-6 border-b border-slate-200">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center">
+              <Shield className="w-6 h-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-lg font-bold text-slate-800">CGT FTM</h1>
+              <p className="text-xs text-slate-500">Administration</p>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSidebarOpen(false)}
+            className="md:hidden"
+          >
+            <X className="w-4 h-4" />
+          </Button>
         </div>
 
-        <div className="relative max-w-7xl mx-auto p-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-6">
-              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center border border-white/30">
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-4xl font-black text-white text-shadow tracking-tight">
-                  Administration CGT FTM
-                </h1>
-                <p className="text-white/90 text-lg font-medium">
-                  Panneau de contrôle - Fédération des Travailleurs de la
-                  Métallurgie
-                </p>
-              </div>
+        {/* User Info */}
+        <div className="p-6 border-b border-slate-200">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-r from-slate-400 to-slate-500 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-sm">
+                {currentUser?.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("") || "AD"}
+              </span>
             </div>
-
-            <div className="flex items-center gap-6">
-              {currentUser && (
-                <div className="text-white/90 text-right">
-                  <p className="text-lg font-bold">{currentUser.name}</p>
-                  <p className="text-sm opacity-80">{currentUser.section}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                    <span className="text-xs">Connecté</span>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex gap-3">
-                <Button
-                  onClick={handleBackToDashboard}
-                  variant="outline"
-                  size="lg"
-                  className="bg-white/20 backdrop-blur-sm text-white border-white/30 hover:bg-white/30 hover:shadow-lg transition-all duration-300 font-semibold"
-                >
-                  <ArrowLeft className="w-5 h-5 mr-2" />
-                  Tableau de bord
-                </Button>
-
-                <Button
-                  onClick={handleSave}
-                  size="lg"
-                  className="bg-white text-cgt-red hover:bg-white/90 hover:shadow-lg transition-all duration-300 font-bold shadow-lg"
-                >
-                  <Save className="w-5 h-5 mr-2" />
-                  Sauvegarder
-                </Button>
-
-                <Button
-                  onClick={handleLogout}
-                  variant="outline"
-                  size="lg"
-                  className="bg-red-600/90 backdrop-blur-sm text-white border-red-500 hover:bg-red-700 hover:shadow-lg transition-all duration-300 font-semibold"
-                >
-                  <LogOut className="w-5 h-5 mr-2" />
-                  Déconnexion
-                </Button>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-slate-800 truncate">
+                {currentUser?.name || "Administrateur"}
+              </p>
+              <p className="text-xs text-slate-500 truncate">
+                {currentUser?.section || "Direction"}
+              </p>
+              <div className="flex items-center gap-1 mt-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-xs text-slate-500">En ligne</span>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 p-6">
+          <div className="space-y-2">
+            {navigationItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+                    isActive
+                      ? `bg-${item.color}-50 text-${item.color}-700 shadow-sm`
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
+                  }`}
+                >
+                  <Icon
+                    className={`w-5 h-5 ${isActive ? `text-${item.color}-600` : "text-slate-400 group-hover:text-slate-600"}`}
+                  />
+                  <span className="font-medium">{item.label}</span>
+                  {isActive && (
+                    <div
+                      className={`ml-auto w-2 h-2 bg-${item.color}-500 rounded-full`}
+                    ></div>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+
+        {/* Bottom Actions */}
+        <div className="p-6 border-t border-slate-200 space-y-2">
+          <Button
+            onClick={handleBackToDashboard}
+            variant="ghost"
+            className="w-full justify-start text-slate-600 hover:text-slate-800 hover:bg-slate-50"
+          >
+            <Home className="w-4 h-4 mr-3" />
+            Tableau de bord
+          </Button>
+          <Button
+            onClick={handleLogout}
+            variant="ghost"
+            className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+          >
+            <LogOut className="w-4 h-4 mr-3" />
+            Déconnexion
+          </Button>
+        </div>
       </div>
 
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black bg-opacity-50 md:hidden"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-8">
-        <Tabs defaultValue="meetings" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-6 bg-white/80 backdrop-blur-sm p-3 rounded-2xl shadow-xl border border-gray-200/50">
-            <TabsTrigger
-              value="meetings"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cgt-red data-[state=active]:to-cgt-red-dark data-[state=active]:text-white font-bold py-4 rounded-xl transition-all duration-300 text-sm flex items-center gap-2 shadow-sm"
-            >
-              <Calendar className="w-4 h-4" />
-              Réunions
-            </TabsTrigger>
-            <TabsTrigger
-              value="permanences"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cgt-red data-[state=active]:to-cgt-red-dark data-[state=active]:text-white font-bold py-4 rounded-xl transition-all duration-300 text-sm flex items-center gap-2 shadow-sm"
-            >
-              <Users className="w-4 h-4" />
-              Permanences
-            </TabsTrigger>
-            <TabsTrigger
-              value="auth-users"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cgt-red data-[state=active]:to-cgt-red-dark data-[state=active]:text-white font-bold py-4 rounded-xl transition-all duration-300 text-sm flex items-center gap-2 shadow-sm"
-            >
-              <UserCheck className="w-4 h-4" />
-              Connexions
-            </TabsTrigger>
-            <TabsTrigger
-              value="video"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cgt-red data-[state=active]:to-cgt-red-dark data-[state=active]:text-white font-bold py-4 rounded-xl transition-all duration-300 text-sm flex items-center gap-2 shadow-sm"
-            >
-              <Video className="w-4 h-4" />
-              Vidéo
-            </TabsTrigger>
-            <TabsTrigger
-              value="alert"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cgt-red data-[state=active]:to-cgt-red-dark data-[state=active]:text-white font-bold py-4 rounded-xl transition-all duration-300 text-sm flex items-center gap-2 shadow-sm"
-            >
-              <AlertTriangle className="w-4 h-4" />
-              Alerte
-            </TabsTrigger>
-            <TabsTrigger
-              value="social"
-              className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-cgt-red data-[state=active]:to-cgt-red-dark data-[state=active]:text-white font-bold py-4 rounded-xl transition-all duration-300 text-sm flex items-center gap-2 shadow-sm"
-            >
-              <MessageSquare className="w-4 h-4" />
-              Message
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="meetings">
-            <Card className="p-8 bg-white/80 backdrop-blur-sm border-0 shadow-2xl rounded-3xl border border-gray-200/50">
-              <div className="flex justify-between items-center mb-8">
-                <div>
-                  <h2 className="text-3xl font-black text-gray-800 flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-cgt-red to-cgt-red-dark rounded-2xl flex items-center justify-center shadow-lg">
-                      <Calendar className="w-6 h-6 text-white" />
-                    </div>
-                    Gestion des réunions CGT FTM
-                  </h2>
-                  <p className="text-gray-600 mt-2 ml-15">
-                    Planifiez et organisez les assemblées syndicales
-                  </p>
-                </div>
-                <Button
-                  onClick={addMeeting}
-                  className="bg-gradient-to-r from-cgt-red to-cgt-red-dark text-white hover:shadow-xl transition-all duration-300 font-bold px-8 py-4 rounded-2xl shadow-lg"
-                >
-                  <Plus className="w-5 h-5 mr-2" />
-                  Nouvelle réunion
-                </Button>
+      <div
+        className={`transition-all duration-300 ${
+          sidebarOpen ? "md:ml-64" : "ml-0"
+        }`}
+      >
+        {/* Top Header */}
+        <header className="bg-white shadow-sm border-b border-slate-200">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center space-x-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="text-slate-600 hover:text-slate-800"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+              <div>
+                <h1 className="text-xl font-bold text-slate-800">
+                  {navigationItems.find((item) => item.id === activeTab)
+                    ?.label || "Administration"}
+                </h1>
+                <p className="text-sm text-slate-500">
+                  Gestion du tableau de bord syndical
+                </p>
               </div>
+            </div>
 
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Rechercher..."
+                  className="pl-10 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                />
+              </div>
+              <Button
+                onClick={handleSave}
+                className="bg-red-600 hover:bg-red-700 text-white shadow-sm"
+              >
+                <Save className="w-4 h-4 mr-2" />
+                Sauvegarder
+              </Button>
+            </div>
+          </div>
+        </header>
+
+        {/* Content Area */}
+        <main className="p-6">
+          <div className="max-w-7xl mx-auto">
+            {/* Meetings Tab */}
+            {activeTab === "meetings" && (
               <div className="space-y-6">
-                {data.meetings.map((meeting) => (
-                  <div
-                    key={meeting.id}
-                    className="grid grid-cols-1 md:grid-cols-4 gap-6 p-8 bg-gradient-to-r from-white via-gray-50/50 to-white border border-gray-200/60 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <div>
-                      <Label
-                        htmlFor={`meeting-title-${meeting.id}`}
-                        className="text-gray-700 font-semibold"
-                      >
-                        Titre de la réunion
-                      </Label>
-                      <Input
-                        id={`meeting-title-${meeting.id}`}
-                        value={meeting.title}
-                        onChange={(e) =>
-                          updateMeeting(meeting.id, "title", e.target.value)
-                        }
-                        placeholder="Assemblée générale CGT"
-                        className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                      />
-                    </div>
-                    <div>
-                      <Label
-                        htmlFor={`meeting-time-${meeting.id}`}
-                        className="text-gray-700 font-semibold"
-                      >
-                        Heure
-                      </Label>
-                      <Input
-                        id={`meeting-time-${meeting.id}`}
-                        value={meeting.time}
-                        onChange={(e) =>
-                          updateMeeting(meeting.id, "time", e.target.value)
-                        }
-                        placeholder="14:00"
-                        className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                      />
-                    </div>
-                    <div>
-                      <Label
-                        htmlFor={`meeting-room-${meeting.id}`}
-                        className="text-gray-700 font-semibold"
-                      >
-                        Salle
-                      </Label>
-                      <Input
-                        id={`meeting-room-${meeting.id}`}
-                        value={meeting.room}
-                        onChange={(e) =>
-                          updateMeeting(meeting.id, "room", e.target.value)
-                        }
-                        placeholder="Salle des délégués"
-                        className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                      />
-                    </div>
-                    <div className="flex items-end">
-                      <Button
-                        variant="destructive"
-                        size="lg"
-                        onClick={() => removeMeeting(meeting.id)}
-                        className="w-full h-12 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all"
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </Button>
-                    </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-800">
+                      Réunions CGT FTM
+                    </h2>
+                    <p className="text-slate-600 mt-1">
+                      Planifiez et organisez les assemblées syndicales
+                    </p>
                   </div>
-                ))}
-              </div>
-            </Card>
-          </TabsContent>
+                  <Button
+                    onClick={addMeeting}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Nouvelle réunion
+                  </Button>
+                </div>
 
-          <TabsContent value="auth-users">
-            <Card className="p-8 bg-white/80 backdrop-blur-sm border-0 shadow-2xl rounded-3xl border border-gray-200/50">
-              <div className="flex justify-between items-center mb-8">
+                <div className="grid gap-4">
+                  {data.meetings.map((meeting) => (
+                    <Card
+                      key={meeting.id}
+                      className="p-6 hover:shadow-md transition-shadow"
+                    >
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor={`meeting-title-${meeting.id}`}
+                            className="text-sm font-medium text-slate-700"
+                          >
+                            Titre de la réunion
+                          </Label>
+                          <Input
+                            id={`meeting-title-${meeting.id}`}
+                            value={meeting.title}
+                            onChange={(e) =>
+                              updateMeeting(meeting.id, "title", e.target.value)
+                            }
+                            placeholder="Assemblée générale CGT"
+                            className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor={`meeting-time-${meeting.id}`}
+                            className="text-sm font-medium text-slate-700"
+                          >
+                            Heure
+                          </Label>
+                          <Input
+                            id={`meeting-time-${meeting.id}`}
+                            value={meeting.time}
+                            onChange={(e) =>
+                              updateMeeting(meeting.id, "time", e.target.value)
+                            }
+                            placeholder="14:00"
+                            className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor={`meeting-room-${meeting.id}`}
+                            className="text-sm font-medium text-slate-700"
+                          >
+                            Salle
+                          </Label>
+                          <Input
+                            id={`meeting-room-${meeting.id}`}
+                            value={meeting.room}
+                            onChange={(e) =>
+                              updateMeeting(meeting.id, "room", e.target.value)
+                            }
+                            placeholder="Salle des délégués"
+                            className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => removeMeeting(meeting.id)}
+                            className="w-full"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Permanences Tab */}
+            {activeTab === "permanences" && (
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-800">
+                      Permanences CGT FTM
+                    </h2>
+                    <p className="text-slate-600 mt-1">
+                      Organisez les horaires des délégués syndicaux
+                    </p>
+                  </div>
+                  <Button
+                    onClick={addPermanence}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Nouvelle permanence
+                  </Button>
+                </div>
+
+                <div className="grid gap-4">
+                  {data.permanences.map((permanence) => (
+                    <Card
+                      key={permanence.id}
+                      className="p-6 hover:shadow-md transition-shadow"
+                    >
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor={`permanence-name-${permanence.id}`}
+                            className="text-sm font-medium text-slate-700"
+                          >
+                            Nom du délégué
+                          </Label>
+                          <Input
+                            id={`permanence-name-${permanence.id}`}
+                            value={permanence.name}
+                            onChange={(e) =>
+                              updatePermanence(
+                                permanence.id,
+                                "name",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Marie Dubois"
+                            className="border-slate-200 focus:border-green-500 focus:ring-green-500"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor={`permanence-time-${permanence.id}`}
+                            className="text-sm font-medium text-slate-700"
+                          >
+                            Horaires
+                          </Label>
+                          <Input
+                            id={`permanence-time-${permanence.id}`}
+                            value={permanence.time}
+                            onChange={(e) =>
+                              updatePermanence(
+                                permanence.id,
+                                "time",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="09:00 - 12:00"
+                            className="border-slate-200 focus:border-green-500 focus:ring-green-500"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor={`permanence-theme-${permanence.id}`}
+                            className="text-sm font-medium text-slate-700"
+                          >
+                            Spécialité
+                          </Label>
+                          <Input
+                            id={`permanence-theme-${permanence.id}`}
+                            value={permanence.theme}
+                            onChange={(e) =>
+                              updatePermanence(
+                                permanence.id,
+                                "theme",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Droit du travail"
+                            className="border-slate-200 focus:border-green-500 focus:ring-green-500"
+                          />
+                        </div>
+                        <div className="flex items-end">
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => removePermanence(permanence.id)}
+                            className="w-full"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Auth Users Tab */}
+            {activeTab === "auth-users" && (
+              <div className="space-y-8">
                 <div>
-                  <h2 className="text-3xl font-black text-gray-800 flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-cgt-red to-cgt-red-dark rounded-2xl flex items-center justify-center shadow-lg">
-                      <UserCheck className="w-6 h-6 text-white" />
-                    </div>
-                    Comptes de connexion CGT FTM
+                  <h2 className="text-2xl font-bold text-slate-800">
+                    Comptes de connexion
                   </h2>
-                  <p className="text-gray-600 mt-2 ml-15">
+                  <p className="text-slate-600 mt-1">
                     Gestion des utilisateurs pouvant se connecter à
                     l'administration
                   </p>
                 </div>
-              </div>
 
-              {/* Groups info */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-2xl mb-8 border border-blue-200/50">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                  <Shield className="w-6 h-6 text-blue-600" />
-                  Groupes et permissions
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {USER_GROUPS.map((group) => (
-                    <div
-                      key={group.id}
-                      className="p-6 bg-white rounded-2xl border border-gray-200/50 shadow-lg"
-                    >
-                      <div className="flex items-center gap-3 mb-3">
-                        <span
-                          className={`px-3 py-2 rounded-xl text-sm font-bold ${group.color}`}
-                        >
-                          {group.name}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 leading-relaxed">
-                        {group.description}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Add new auth user form */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-2xl mb-8 border border-green-200/50">
-                <h3 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                  <Plus className="w-6 h-6 text-green-600" />
-                  Créer un nouveau compte
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                  <div>
-                    <Label
-                      htmlFor="new-auth-username"
-                      className="text-gray-700 font-semibold"
-                    >
-                      Nom d'utilisateur
-                    </Label>
-                    <Input
-                      id="new-auth-username"
-                      value={newAuthUser.username}
-                      onChange={(e) =>
-                        setNewAuthUser({
-                          ...newAuthUser,
-                          username: e.target.value,
-                        })
-                      }
-                      placeholder="marie.dubois"
-                      className="mt-2 h-12 rounded-xl border-gray-300 focus:border-green-500 focus:ring-green-500"
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="new-auth-password"
-                      className="text-gray-700 font-semibold"
-                    >
-                      Mot de passe
-                    </Label>
-                    <Input
-                      id="new-auth-password"
-                      type="password"
-                      value={newAuthUser.password}
-                      onChange={(e) =>
-                        setNewAuthUser({
-                          ...newAuthUser,
-                          password: e.target.value,
-                        })
-                      }
-                      placeholder="••••••••"
-                      className="mt-2 h-12 rounded-xl border-gray-300 focus:border-green-500 focus:ring-green-500"
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="new-auth-name"
-                      className="text-gray-700 font-semibold"
-                    >
-                      Nom complet
-                    </Label>
-                    <Input
-                      id="new-auth-name"
-                      value={newAuthUser.name}
-                      onChange={(e) =>
-                        setNewAuthUser({ ...newAuthUser, name: e.target.value })
-                      }
-                      placeholder="Marie Dubois"
-                      className="mt-2 h-12 rounded-xl border-gray-300 focus:border-green-500 focus:ring-green-500"
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="new-auth-email"
-                      className="text-gray-700 font-semibold"
-                    >
-                      Email
-                    </Label>
-                    <Input
-                      id="new-auth-email"
-                      type="email"
-                      value={newAuthUser.email}
-                      onChange={(e) =>
-                        setNewAuthUser({
-                          ...newAuthUser,
-                          email: e.target.value,
-                        })
-                      }
-                      placeholder="marie@cgt-ftm.fr"
-                      className="mt-2 h-12 rounded-xl border-gray-300 focus:border-green-500 focus:ring-green-500"
-                    />
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="new-auth-role"
-                      className="text-gray-700 font-semibold"
-                    >
-                      Rôle
-                    </Label>
-                    <select
-                      id="new-auth-role"
-                      value={newAuthUser.role}
-                      onChange={(e) =>
-                        setNewAuthUser({
-                          ...newAuthUser,
-                          role: e.target.value as AuthUser["role"],
-                        })
-                      }
-                      className="mt-2 flex h-12 w-full rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm focus:border-green-500 focus:ring-green-500"
-                    >
-                      <option value="secretaire">Secrétaire</option>
-                      <option value="delegue">Délégué syndical</option>
-                      <option value="admin">Administrateur</option>
-                    </select>
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="new-auth-group"
-                      className="text-gray-700 font-semibold"
-                    >
-                      Groupe
-                    </Label>
-                    <select
-                      id="new-auth-group"
-                      value={newAuthUser.group}
-                      onChange={(e) =>
-                        setNewAuthUser({
-                          ...newAuthUser,
-                          group: e.target.value as AuthUser["group"],
-                        })
-                      }
-                      className="mt-2 flex h-12 w-full rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm focus:border-green-500 focus:ring-green-500"
-                    >
-                      {USER_GROUPS.map((group) => (
-                        <option key={group.id} value={group.id}>
-                          {group.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <Label
-                      htmlFor="new-auth-section"
-                      className="text-gray-700 font-semibold"
-                    >
-                      Section
-                    </Label>
-                    <Input
-                      id="new-auth-section"
-                      value={newAuthUser.section}
-                      onChange={(e) =>
-                        setNewAuthUser({
-                          ...newAuthUser,
-                          section: e.target.value,
-                        })
-                      }
-                      placeholder="Secrétariat FTM"
-                      className="mt-2 h-12 rounded-xl border-gray-300 focus:border-green-500 focus:ring-green-500"
-                    />
-                  </div>
-                  <div className="flex items-end">
-                    <Button
-                      onClick={handleAddAuthUser}
-                      className="bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:shadow-xl transition-all duration-300 font-bold px-8 py-4 h-12 rounded-xl w-full shadow-lg"
-                    >
-                      <Plus className="w-5 h-5 mr-2" />
-                      Créer
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Auth users list */}
-              <div className="space-y-6">
-                <h3 className="text-2xl font-bold text-gray-800">
-                  Comptes existants
-                </h3>
-                {authUsers.map((user) => {
-                  const groupInfo = getGroupInfo(user.group);
-                  return (
-                    <div
-                      key={user.id}
-                      className="grid grid-cols-1 md:grid-cols-8 gap-6 p-8 bg-gradient-to-r from-white via-gray-50/50 to-white border border-gray-200/60 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
-                    >
-                      <div>
-                        <Label
-                          htmlFor={`auth-username-${user.id}`}
-                          className="text-gray-700 font-semibold"
-                        >
-                          Username
-                        </Label>
-                        <Input
-                          id={`auth-username-${user.id}`}
-                          value={user.username}
-                          onChange={(e) =>
-                            handleUpdateAuthUser(
-                              user.id,
-                              "username",
-                              e.target.value,
-                            )
-                          }
-                          className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                        />
-                      </div>
-                      <div>
-                        <Label
-                          htmlFor={`auth-name-${user.id}`}
-                          className="text-gray-700 font-semibold"
-                        >
-                          Nom
-                        </Label>
-                        <Input
-                          id={`auth-name-${user.id}`}
-                          value={user.name}
-                          onChange={(e) =>
-                            handleUpdateAuthUser(
-                              user.id,
-                              "name",
-                              e.target.value,
-                            )
-                          }
-                          className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                        />
-                      </div>
-                      <div>
-                        <Label
-                          htmlFor={`auth-email-${user.id}`}
-                          className="text-gray-700 font-semibold"
-                        >
-                          Email
-                        </Label>
-                        <Input
-                          id={`auth-email-${user.id}`}
-                          type="email"
-                          value={user.email}
-                          onChange={(e) =>
-                            handleUpdateAuthUser(
-                              user.id,
-                              "email",
-                              e.target.value,
-                            )
-                          }
-                          className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                        />
-                      </div>
-                      <div>
-                        <Label
-                          htmlFor={`auth-role-${user.id}`}
-                          className="text-gray-700 font-semibold"
-                        >
-                          Rôle
-                        </Label>
-                        <select
-                          id={`auth-role-${user.id}`}
-                          value={user.role}
-                          onChange={(e) =>
-                            handleUpdateAuthUser(
-                              user.id,
-                              "role",
-                              e.target.value,
-                            )
-                          }
-                          className="mt-2 flex h-12 w-full rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm focus:border-cgt-red focus:ring-cgt-red"
-                        >
-                          <option value="secretaire">Secrétaire</option>
-                          <option value="delegue">Délégué</option>
-                          <option value="admin">Admin</option>
-                        </select>
-                      </div>
-                      <div>
-                        <Label
-                          htmlFor={`auth-group-${user.id}`}
-                          className="text-gray-700 font-semibold"
-                        >
-                          Groupe
-                        </Label>
-                        <select
-                          id={`auth-group-${user.id}`}
-                          value={user.group}
-                          onChange={(e) =>
-                            handleUpdateAuthUser(
-                              user.id,
-                              "group",
-                              e.target.value,
-                            )
-                          }
-                          className="mt-2 flex h-12 w-full rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm focus:border-cgt-red focus:ring-cgt-red"
-                        >
-                          {USER_GROUPS.map((group) => (
-                            <option key={group.id} value={group.id}>
-                              {group.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <Label
-                          htmlFor={`auth-section-${user.id}`}
-                          className="text-gray-700 font-semibold"
-                        >
-                          Section
-                        </Label>
-                        <Input
-                          id={`auth-section-${user.id}`}
-                          value={user.section}
-                          onChange={(e) =>
-                            handleUpdateAuthUser(
-                              user.id,
-                              "section",
-                              e.target.value,
-                            )
-                          }
-                          className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                        />
-                      </div>
-                      <div>
-                        <Label className="text-gray-700 font-semibold">
-                          Statut
-                        </Label>
-                        <div className="flex items-center gap-3 mt-4">
-                          <input
-                            type="checkbox"
-                            checked={user.active}
-                            onChange={(e) =>
-                              handleUpdateAuthUser(
-                                user.id,
-                                "active",
-                                e.target.checked,
-                              )
-                            }
-                            className="w-5 h-5 rounded-lg border-gray-300 text-cgt-red focus:ring-cgt-red"
-                          />
-                          <span className="text-sm font-medium">
-                            {user.active ? "Actif" : "Inactif"}
+                {/* Groups Info */}
+                <Card className="p-6">
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                    <Shield className="w-5 h-5 text-purple-600" />
+                    Groupes et permissions
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {USER_GROUPS.map((group) => (
+                      <div
+                        key={group.id}
+                        className="p-4 bg-slate-50 rounded-lg border border-slate-200"
+                      >
+                        <div className="flex items-center gap-2 mb-2">
+                          <span
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${group.color}`}
+                          >
+                            {group.name}
                           </span>
                         </div>
-                        {groupInfo && (
-                          <span
-                            className={`inline-block px-3 py-1 rounded-xl text-xs font-bold mt-2 ${groupInfo.color}`}
-                          >
-                            {groupInfo.name}
-                          </span>
-                        )}
+                        <p className="text-sm text-slate-600">
+                          {group.description}
+                        </p>
                       </div>
-                      <div className="flex items-end">
-                        <Button
-                          variant="destructive"
-                          size="lg"
-                          onClick={() => handleDeleteAuthUser(user.id)}
-                          className="w-full h-12 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-          </TabsContent>
+                    ))}
+                  </div>
+                </Card>
 
-          <TabsContent value="permanences">
-            <Card className="p-8 bg-white/80 backdrop-blur-sm border-0 shadow-2xl rounded-3xl border border-gray-200/50">
-              <div className="flex justify-between items-center mb-8">
-                <div>
-                  <h2 className="text-3xl font-black text-gray-800 flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-cgt-red to-cgt-red-dark rounded-2xl flex items-center justify-center shadow-lg">
-                      <Users className="w-6 h-6 text-white" />
-                    </div>
-                    Gestion des permanences CGT FTM
-                  </h2>
-                  <p className="text-gray-600 mt-2 ml-15">
-                    Organisez les horaires des délégués syndicaux
-                  </p>
-                </div>
-                <Button
-                  onClick={addPermanence}
-                  className="bg-gradient-to-r from-cgt-red to-cgt-red-dark text-white hover:shadow-xl transition-all duration-300 font-bold px-8 py-4 rounded-2xl shadow-lg"
-                >
-                  <Plus className="w-5 h-5 mr-2" />
-                  Nouvelle permanence
-                </Button>
-              </div>
-
-              <div className="space-y-6">
-                {data.permanences.map((permanence) => (
-                  <div
-                    key={permanence.id}
-                    className="grid grid-cols-1 md:grid-cols-4 gap-6 p-8 bg-gradient-to-r from-white via-gray-50/50 to-white border border-gray-200/60 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
-                  >
-                    <div>
+                {/* Add New User */}
+                <Card className="p-6">
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                    <Plus className="w-5 h-5 text-green-600" />
+                    Créer un nouveau compte
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="space-y-2">
                       <Label
-                        htmlFor={`permanence-name-${permanence.id}`}
-                        className="text-gray-700 font-semibold"
+                        htmlFor="new-auth-username"
+                        className="text-sm font-medium text-slate-700"
                       >
-                        Nom du délégué
+                        Nom d'utilisateur
                       </Label>
                       <Input
-                        id={`permanence-name-${permanence.id}`}
-                        value={permanence.name}
+                        id="new-auth-username"
+                        value={newAuthUser.username}
                         onChange={(e) =>
-                          updatePermanence(
-                            permanence.id,
-                            "name",
-                            e.target.value,
-                          )
+                          setNewAuthUser({
+                            ...newAuthUser,
+                            username: e.target.value,
+                          })
+                        }
+                        placeholder="marie.dubois"
+                        className="border-slate-200 focus:border-purple-500 focus:ring-purple-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="new-auth-password"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Mot de passe
+                      </Label>
+                      <Input
+                        id="new-auth-password"
+                        type="password"
+                        value={newAuthUser.password}
+                        onChange={(e) =>
+                          setNewAuthUser({
+                            ...newAuthUser,
+                            password: e.target.value,
+                          })
+                        }
+                        placeholder="••••••••"
+                        className="border-slate-200 focus:border-purple-500 focus:ring-purple-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="new-auth-name"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Nom complet
+                      </Label>
+                      <Input
+                        id="new-auth-name"
+                        value={newAuthUser.name}
+                        onChange={(e) =>
+                          setNewAuthUser({
+                            ...newAuthUser,
+                            name: e.target.value,
+                          })
                         }
                         placeholder="Marie Dubois"
-                        className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
+                        className="border-slate-200 focus:border-purple-500 focus:ring-purple-500"
                       />
                     </div>
-                    <div>
+                    <div className="space-y-2">
                       <Label
-                        htmlFor={`permanence-time-${permanence.id}`}
-                        className="text-gray-700 font-semibold"
+                        htmlFor="new-auth-email"
+                        className="text-sm font-medium text-slate-700"
                       >
-                        Horaires
+                        Email
                       </Label>
                       <Input
-                        id={`permanence-time-${permanence.id}`}
-                        value={permanence.time}
+                        id="new-auth-email"
+                        type="email"
+                        value={newAuthUser.email}
                         onChange={(e) =>
-                          updatePermanence(
-                            permanence.id,
-                            "time",
-                            e.target.value,
-                          )
+                          setNewAuthUser({
+                            ...newAuthUser,
+                            email: e.target.value,
+                          })
                         }
-                        placeholder="09:00 - 12:00"
-                        className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
+                        placeholder="marie@cgt-ftm.fr"
+                        className="border-slate-200 focus:border-purple-500 focus:ring-purple-500"
                       />
                     </div>
-                    <div>
+                    <div className="space-y-2">
                       <Label
-                        htmlFor={`permanence-theme-${permanence.id}`}
-                        className="text-gray-700 font-semibold"
+                        htmlFor="new-auth-role"
+                        className="text-sm font-medium text-slate-700"
                       >
-                        Spécialité
+                        Rôle
+                      </Label>
+                      <select
+                        id="new-auth-role"
+                        value={newAuthUser.role}
+                        onChange={(e) =>
+                          setNewAuthUser({
+                            ...newAuthUser,
+                            role: e.target.value as AuthUser["role"],
+                          })
+                        }
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-purple-500 focus:ring-purple-500"
+                      >
+                        <option value="secretaire">Secrétaire</option>
+                        <option value="delegue">Délégué syndical</option>
+                        <option value="admin">Administrateur</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="new-auth-group"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Groupe
+                      </Label>
+                      <select
+                        id="new-auth-group"
+                        value={newAuthUser.group}
+                        onChange={(e) =>
+                          setNewAuthUser({
+                            ...newAuthUser,
+                            group: e.target.value as AuthUser["group"],
+                          })
+                        }
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-purple-500 focus:ring-purple-500"
+                      >
+                        {USER_GROUPS.map((group) => (
+                          <option key={group.id} value={group.id}>
+                            {group.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="new-auth-section"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Section
                       </Label>
                       <Input
-                        id={`permanence-theme-${permanence.id}`}
-                        value={permanence.theme}
+                        id="new-auth-section"
+                        value={newAuthUser.section}
                         onChange={(e) =>
-                          updatePermanence(
-                            permanence.id,
-                            "theme",
-                            e.target.value,
-                          )
+                          setNewAuthUser({
+                            ...newAuthUser,
+                            section: e.target.value,
+                          })
                         }
-                        placeholder="Droit du travail"
-                        className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
+                        placeholder="Secrétariat FTM"
+                        className="border-slate-200 focus:border-purple-500 focus:ring-purple-500"
                       />
                     </div>
                     <div className="flex items-end">
                       <Button
-                        variant="destructive"
-                        size="lg"
-                        onClick={() => removePermanence(permanence.id)}
-                        className="w-full h-12 rounded-xl font-semibold shadow-md hover:shadow-lg transition-all"
+                        onClick={handleAddAuthUser}
+                        className="w-full bg-purple-600 hover:bg-purple-700 text-white"
                       >
-                        <Trash2 className="w-5 h-5" />
+                        <Plus className="w-4 h-4 mr-2" />
+                        Créer
                       </Button>
                     </div>
                   </div>
-                ))}
-              </div>
-            </Card>
-          </TabsContent>
+                </Card>
 
-          <TabsContent value="video">
-            <Card className="p-8 bg-white/80 backdrop-blur-sm border-0 shadow-2xl rounded-3xl border border-gray-200/50">
-              <div className="mb-8">
-                <h2 className="text-3xl font-black text-gray-800 flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-cgt-red to-cgt-red-dark rounded-2xl flex items-center justify-center shadow-lg">
-                    <Video className="w-6 h-6 text-white" />
-                  </div>
-                  Configuration vidéo institutionnelle
-                </h2>
-                <p className="text-gray-600 mt-2 ml-15">
-                  Gérez le contenu vidéo affiché sur le tableau de bord
-                </p>
+                {/* Users List */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-slate-800">
+                    Comptes existants
+                  </h3>
+                  {authUsers.map((user) => {
+                    const groupInfo = getGroupInfo(user.group);
+                    return (
+                      <Card
+                        key={user.id}
+                        className="p-6 hover:shadow-md transition-shadow"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-8 gap-4">
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`auth-username-${user.id}`}
+                              className="text-sm font-medium text-slate-700"
+                            >
+                              Username
+                            </Label>
+                            <Input
+                              id={`auth-username-${user.id}`}
+                              value={user.username}
+                              onChange={(e) =>
+                                handleUpdateAuthUser(
+                                  user.id,
+                                  "username",
+                                  e.target.value,
+                                )
+                              }
+                              className="border-slate-200 focus:border-purple-500 focus:ring-purple-500"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`auth-name-${user.id}`}
+                              className="text-sm font-medium text-slate-700"
+                            >
+                              Nom
+                            </Label>
+                            <Input
+                              id={`auth-name-${user.id}`}
+                              value={user.name}
+                              onChange={(e) =>
+                                handleUpdateAuthUser(
+                                  user.id,
+                                  "name",
+                                  e.target.value,
+                                )
+                              }
+                              className="border-slate-200 focus:border-purple-500 focus:ring-purple-500"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`auth-email-${user.id}`}
+                              className="text-sm font-medium text-slate-700"
+                            >
+                              Email
+                            </Label>
+                            <Input
+                              id={`auth-email-${user.id}`}
+                              type="email"
+                              value={user.email}
+                              onChange={(e) =>
+                                handleUpdateAuthUser(
+                                  user.id,
+                                  "email",
+                                  e.target.value,
+                                )
+                              }
+                              className="border-slate-200 focus:border-purple-500 focus:ring-purple-500"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`auth-role-${user.id}`}
+                              className="text-sm font-medium text-slate-700"
+                            >
+                              Rôle
+                            </Label>
+                            <select
+                              id={`auth-role-${user.id}`}
+                              value={user.role}
+                              onChange={(e) =>
+                                handleUpdateAuthUser(
+                                  user.id,
+                                  "role",
+                                  e.target.value,
+                                )
+                              }
+                              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-purple-500 focus:ring-purple-500"
+                            >
+                              <option value="secretaire">Secrétaire</option>
+                              <option value="delegue">Délégué</option>
+                              <option value="admin">Admin</option>
+                            </select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`auth-group-${user.id}`}
+                              className="text-sm font-medium text-slate-700"
+                            >
+                              Groupe
+                            </Label>
+                            <select
+                              id={`auth-group-${user.id}`}
+                              value={user.group}
+                              onChange={(e) =>
+                                handleUpdateAuthUser(
+                                  user.id,
+                                  "group",
+                                  e.target.value,
+                                )
+                              }
+                              className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-purple-500 focus:ring-purple-500"
+                            >
+                              {USER_GROUPS.map((group) => (
+                                <option key={group.id} value={group.id}>
+                                  {group.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label
+                              htmlFor={`auth-section-${user.id}`}
+                              className="text-sm font-medium text-slate-700"
+                            >
+                              Section
+                            </Label>
+                            <Input
+                              id={`auth-section-${user.id}`}
+                              value={user.section}
+                              onChange={(e) =>
+                                handleUpdateAuthUser(
+                                  user.id,
+                                  "section",
+                                  e.target.value,
+                                )
+                              }
+                              className="border-slate-200 focus:border-purple-500 focus:ring-purple-500"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-sm font-medium text-slate-700">
+                              Statut
+                            </Label>
+                            <div className="flex items-center gap-2 pt-2">
+                              <input
+                                type="checkbox"
+                                checked={user.active}
+                                onChange={(e) =>
+                                  handleUpdateAuthUser(
+                                    user.id,
+                                    "active",
+                                    e.target.checked,
+                                  )
+                                }
+                                className="w-4 h-4 text-purple-600 border-slate-300 rounded focus:ring-purple-500"
+                              />
+                              <span className="text-sm">
+                                {user.active ? "Actif" : "Inactif"}
+                              </span>
+                            </div>
+                            {groupInfo && (
+                              <span
+                                className={`inline-block px-2 py-1 rounded-full text-xs font-medium ${groupInfo.color}`}
+                              >
+                                {groupInfo.name}
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-end">
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => handleDeleteAuthUser(user.id)}
+                              className="w-full"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </Card>
+                    );
+                  })}
+                </div>
               </div>
+            )}
 
+            {/* Video Tab */}
+            {activeTab === "video" && (
               <div className="space-y-6">
-                <div className="p-8 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200/50">
-                  <Label
-                    htmlFor="video-url"
-                    className="text-gray-700 font-semibold text-lg"
-                  >
-                    URL de la vidéo
-                  </Label>
-                  <Input
-                    id="video-url"
-                    value={data.videoUrl}
-                    onChange={(e) =>
-                      setData((prev) => ({ ...prev, videoUrl: e.target.value }))
-                    }
-                    placeholder="https://www.youtube.com/watch?v=..."
-                    className="mt-4 h-14 text-lg rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                  />
-                  <p className="text-sm text-gray-500 mt-3 leading-relaxed">
-                    Accepte les liens YouTube, Vimeo ou liens directs vers des
-                    vidéos. La vidéo sera affichée en autoplay sur le tableau de
-                    bord.
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-800">
+                    Configuration vidéo et météo
+                  </h2>
+                  <p className="text-slate-600 mt-1">
+                    Gérez le contenu multimédia du tableau de bord
                   </p>
                 </div>
 
-                <div className="p-8 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200/50">
-                  <Label
-                    htmlFor="weather-city"
-                    className="text-gray-700 font-semibold text-lg"
-                  >
-                    Ville pour la météo
-                  </Label>
-                  <Input
-                    id="weather-city"
-                    value={data.weatherCity}
-                    onChange={(e) =>
-                      setData((prev) => ({
-                        ...prev,
-                        weatherCity: e.target.value,
-                      }))
-                    }
-                    placeholder="Paris"
-                    className="mt-4 h-14 text-lg rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                  />
-                  <p className="text-sm text-gray-500 mt-3">
-                    La météo se met à jour automatiquement toutes les minutes
+                <div className="grid gap-6">
+                  <Card className="p-6">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-4">
+                      Vidéo institutionnelle
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <Label
+                          htmlFor="video-url"
+                          className="text-sm font-medium text-slate-700"
+                        >
+                          URL de la vidéo
+                        </Label>
+                        <Input
+                          id="video-url"
+                          value={data.videoUrl}
+                          onChange={(e) =>
+                            setData((prev) => ({
+                              ...prev,
+                              videoUrl: e.target.value,
+                            }))
+                          }
+                          placeholder="https://www.youtube.com/watch?v=..."
+                          className="mt-2 border-slate-200 focus:border-orange-500 focus:ring-orange-500"
+                        />
+                        <p className="text-sm text-slate-500 mt-2">
+                          Accepte les liens YouTube, Vimeo ou liens directs vers
+                          des vidéos
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+
+                  <Card className="p-6">
+                    <h3 className="text-lg font-semibold text-slate-800 mb-4">
+                      Configuration météo
+                    </h3>
+                    <div className="space-y-4">
+                      <div>
+                        <Label
+                          htmlFor="weather-city"
+                          className="text-sm font-medium text-slate-700"
+                        >
+                          Ville pour la météo
+                        </Label>
+                        <Input
+                          id="weather-city"
+                          value={data.weatherCity}
+                          onChange={(e) =>
+                            setData((prev) => ({
+                              ...prev,
+                              weatherCity: e.target.value,
+                            }))
+                          }
+                          placeholder="Paris"
+                          className="mt-2 border-slate-200 focus:border-orange-500 focus:ring-orange-500"
+                        />
+                        <p className="text-sm text-slate-500 mt-2">
+                          La météo se met à jour automatiquement toutes les
+                          minutes
+                        </p>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              </div>
+            )}
+
+            {/* Alert Tab */}
+            {activeTab === "alert" && (
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-800">
+                    Bandeau d'alerte
+                  </h2>
+                  <p className="text-slate-600 mt-1">
+                    Diffusez des informations importantes en temps réel
                   </p>
                 </div>
-              </div>
-            </Card>
-          </TabsContent>
 
-          <TabsContent value="alert">
-            <Card className="p-8 bg-white/80 backdrop-blur-sm border-0 shadow-2xl rounded-3xl border border-gray-200/50">
-              <div className="mb-8">
-                <h2 className="text-3xl font-black text-gray-800 flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-cgt-red to-cgt-red-dark rounded-2xl flex items-center justify-center shadow-lg">
-                    <AlertTriangle className="w-6 h-6 text-white" />
+                <Card className="p-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label
+                        htmlFor="alert-text"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Texte du bandeau défilant
+                      </Label>
+                      <Textarea
+                        id="alert-text"
+                        value={data.alertText}
+                        onChange={(e) =>
+                          setData((prev) => ({
+                            ...prev,
+                            alertText: e.target.value,
+                          }))
+                        }
+                        placeholder="🚨 APPEL CGT FTM - Négociation collective métallurgie - Jeudi 21 mars à 14h"
+                        rows={4}
+                        className="mt-2 border-slate-200 focus:border-red-500 focus:ring-red-500"
+                      />
+                      <p className="text-sm text-slate-500 mt-2">
+                        Ce texte défilera en haut du tableau de bord. Utilisez
+                        des émojis pour plus d'impact.
+                      </p>
+                    </div>
                   </div>
-                  Bandeau d'alerte CGT
-                </h2>
-                <p className="text-gray-600 mt-2 ml-15">
-                  Diffusez des informations importantes en temps réel
-                </p>
+                </Card>
               </div>
+            )}
 
-              <div className="p-8 bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl border border-red-200/50">
-                <Label
-                  htmlFor="alert-text"
-                  className="text-gray-700 font-semibold text-lg"
-                >
-                  Texte du bandeau défilant
-                </Label>
-                <Textarea
-                  id="alert-text"
-                  value={data.alertText}
-                  onChange={(e) =>
-                    setData((prev) => ({ ...prev, alertText: e.target.value }))
-                  }
-                  placeholder="🚨 APPEL CGT FTM - Négociation collective métallurgie - Jeudi 21 mars à 14h - Siège fédéral"
-                  rows={4}
-                  className="mt-4 text-lg rounded-xl border-gray-300 focus:border-red-500 focus:ring-red-500"
-                />
-                <p className="text-sm text-gray-500 mt-3 leading-relaxed">
-                  Ce texte défilera en haut du tableau de bord. Utilisez des
-                  émojis (🚨⚠️📢) pour plus d'impact visuel.
-                </p>
-              </div>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="social">
-            <Card className="p-8 bg-white/80 backdrop-blur-sm border-0 shadow-2xl rounded-3xl border border-gray-200/50">
-              <div className="mb-8">
-                <h2 className="text-3xl font-black text-gray-800 flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-cgt-red to-cgt-red-dark rounded-2xl flex items-center justify-center shadow-lg">
-                    <MessageSquare className="w-6 h-6 text-white" />
-                  </div>
-                  Message syndical officiel
-                </h2>
-                <p className="text-gray-600 mt-2 ml-15">
-                  Communiquez avec vos adhérents
-                </p>
-              </div>
-
+            {/* Social Tab */}
+            {activeTab === "social" && (
               <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-6 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200/50">
-                    <Label
-                      htmlFor="social-name"
-                      className="text-gray-700 font-semibold"
-                    >
-                      Nom du délégué
-                    </Label>
-                    <Input
-                      id="social-name"
-                      value={data.socialPost.name}
-                      onChange={(e) => updateSocialPost("name", e.target.value)}
-                      placeholder="Sophie Lefebvre"
-                      className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                    />
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-800">
+                    Message syndical
+                  </h2>
+                  <p className="text-slate-600 mt-1">
+                    Communiquez avec vos adhérents
+                  </p>
+                </div>
+
+                <Card className="p-6">
+                  <div className="grid gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label
+                          htmlFor="social-name"
+                          className="text-sm font-medium text-slate-700"
+                        >
+                          Nom du délégué
+                        </Label>
+                        <Input
+                          id="social-name"
+                          value={data.socialPost.name}
+                          onChange={(e) =>
+                            updateSocialPost("name", e.target.value)
+                          }
+                          placeholder="Sophie Lefebvre"
+                          className="border-slate-200 focus:border-indigo-500 focus:ring-indigo-500"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label
+                          htmlFor="social-photo"
+                          className="text-sm font-medium text-slate-700"
+                        >
+                          URL de la photo
+                        </Label>
+                        <Input
+                          id="social-photo"
+                          value={data.socialPost.photo}
+                          onChange={(e) =>
+                            updateSocialPost("photo", e.target.value)
+                          }
+                          placeholder="https://..."
+                          className="border-slate-200 focus:border-indigo-500 focus:ring-indigo-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="social-text"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Message
+                      </Label>
+                      <Textarea
+                        id="social-text"
+                        value={data.socialPost.text}
+                        onChange={(e) =>
+                          updateSocialPost("text", e.target.value)
+                        }
+                        placeholder="Fière de représenter nos adhérents à la négociation salariale..."
+                        rows={4}
+                        className="border-slate-200 focus:border-indigo-500 focus:ring-indigo-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="social-hashtag"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Hashtag
+                      </Label>
+                      <Input
+                        id="social-hashtag"
+                        value={data.socialPost.hashtag}
+                        onChange={(e) =>
+                          updateSocialPost("hashtag", e.target.value)
+                        }
+                        placeholder="#CGTFTM"
+                        className="border-slate-200 focus:border-indigo-500 focus:ring-indigo-500"
+                      />
+                    </div>
                   </div>
-
-                  <div className="p-6 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200/50">
-                    <Label
-                      htmlFor="social-photo"
-                      className="text-gray-700 font-semibold"
-                    >
-                      URL de la photo
-                    </Label>
-                    <Input
-                      id="social-photo"
-                      value={data.socialPost.photo}
-                      onChange={(e) =>
-                        updateSocialPost("photo", e.target.value)
-                      }
-                      placeholder="https://..."
-                      className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                    />
-                  </div>
-                </div>
-
-                <div className="p-6 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200/50">
-                  <Label
-                    htmlFor="social-text"
-                    className="text-gray-700 font-semibold"
-                  >
-                    Message
-                  </Label>
-                  <Textarea
-                    id="social-text"
-                    value={data.socialPost.text}
-                    onChange={(e) => updateSocialPost("text", e.target.value)}
-                    placeholder="Fière de représenter nos adhérents à la négociation salariale de ce matin..."
-                    rows={4}
-                    className="mt-2 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                  />
-                </div>
-
-                <div className="p-6 bg-gradient-to-r from-gray-50 to-white rounded-2xl border border-gray-200/50">
-                  <Label
-                    htmlFor="social-hashtag"
-                    className="text-gray-700 font-semibold"
-                  >
-                    Hashtag
-                  </Label>
-                  <Input
-                    id="social-hashtag"
-                    value={data.socialPost.hashtag}
-                    onChange={(e) =>
-                      updateSocialPost("hashtag", e.target.value)
-                    }
-                    placeholder="#CGTFTM"
-                    className="mt-2 h-12 rounded-xl border-gray-300 focus:border-cgt-red focus:ring-cgt-red"
-                  />
-                </div>
+                </Card>
               </div>
-            </Card>
-          </TabsContent>
-        </Tabs>
+            )}
+          </div>
+        </main>
       </div>
     </div>
   );
