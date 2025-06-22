@@ -32,37 +32,31 @@ export const CGTHeader = () => {
         </svg>
       </div>
 
-      <div className="relative p-6 lg:p-8">
+      <div className="relative p-4">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-4">
             {/* CGT Official Logo */}
-            <div className="flex items-center space-x-4">
-              <CGTLogo className="w-16 h-16 lg:w-20 lg:h-20" />
+            <div className="flex items-center space-x-3">
+              <CGTLogo className="w-12 h-12" />
               <div className="text-white">
-                <h1 className="text-3xl lg:text-5xl xl:text-6xl font-black tracking-tight text-shadow">
-                  CONFÉDÉRATION
+                <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-shadow">
+                  CONFÉDÉRATION GÉNÉRALE DU TRAVAIL
                 </h1>
-                <p className="text-lg lg:text-xl xl:text-2xl font-semibold tracking-wide opacity-90">
-                  GÉNÉRALE DU TRAVAIL
-                </p>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col items-end space-y-2">
+          <div className="flex items-center">
             <Link to="/admin">
               <Button
                 variant="outline"
-                size="lg"
+                size="sm"
                 className="bg-white/95 text-cgt-red hover:bg-white hover:shadow-lg transition-all duration-200 font-semibold border-0"
               >
-                <Settings className="w-5 h-5 mr-2" />
-                Administration
+                <Settings className="w-4 h-4 mr-2" />
+                Admin
               </Button>
             </Link>
-            <div className="text-white/90 text-sm font-medium">
-              Tableau de bord syndical
-            </div>
           </div>
         </div>
       </div>

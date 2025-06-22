@@ -7,23 +7,23 @@ export const SocialWidget = () => {
   const { socialPost } = getDashboardData();
 
   return (
-    <Card className="p-8 bg-white professional-shadow border-0">
-      <div className="mb-6">
-        <h2 className="text-3xl font-black text-cgt-gray flex items-center gap-3">
-          <div className="w-10 h-10 bg-cgt-red rounded-lg flex items-center justify-center">
-            <MessageCircle className="w-6 h-6 text-white" />
+    <Card className="p-4 bg-white professional-shadow border-0 h-full">
+      <div className="mb-3">
+        <h2 className="text-lg font-black text-cgt-gray flex items-center gap-2">
+          <div className="w-6 h-6 bg-cgt-red rounded flex items-center justify-center">
+            <MessageCircle className="w-4 h-4 text-white" />
           </div>
-          Actualités CGT
+          Actualités
         </h2>
-        <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-3"></div>
+        <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
 
-      <div className="space-y-6">
-        <div className="p-6 bg-gradient-to-r from-gray-50 to-white rounded-xl border border-gray-100">
-          <div className="flex items-start gap-4">
-            <Avatar className="w-16 h-16 ring-4 ring-cgt-red/20">
+      <div className="h-[calc(100%-3rem)] overflow-y-auto">
+        <div className="p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100">
+          <div className="flex items-start gap-3">
+            <Avatar className="w-10 h-10 ring-2 ring-cgt-red/20 flex-shrink-0">
               <AvatarImage src={socialPost.photo} alt={socialPost.name} />
-              <AvatarFallback className="bg-cgt-red text-white font-bold text-lg">
+              <AvatarFallback className="bg-cgt-red text-white font-bold text-sm">
                 {socialPost.name
                   .split(" ")
                   .map((n) => n[0])
@@ -31,28 +31,26 @@ export const SocialWidget = () => {
               </AvatarFallback>
             </Avatar>
 
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-3">
-                <h3 className="font-bold text-cgt-gray text-lg">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-1 mb-2">
+                <h3 className="font-bold text-cgt-gray text-sm truncate">
                   {socialPost.name}
                 </h3>
-                <div className="w-2 h-2 bg-cgt-red rounded-full"></div>
-                <span className="text-sm text-gray-500 font-medium">
-                  Délégué syndical
+                <div className="w-1 h-1 bg-cgt-red rounded-full flex-shrink-0"></div>
+                <span className="text-xs text-gray-500 font-medium">
+                  Délégué
                 </span>
               </div>
 
-              <p className="text-gray-700 leading-relaxed text-lg font-medium mb-4">
+              <p className="text-gray-700 leading-relaxed text-xs font-medium mb-3 line-clamp-4">
                 {socialPost.text}
               </p>
 
               <div className="flex items-center justify-between">
-                <span className="inline-block bg-gradient-to-r from-cgt-red to-cgt-red-dark text-white px-4 py-2 rounded-full text-sm font-bold shadow-sm">
+                <span className="inline-block bg-gradient-to-r from-cgt-red to-cgt-red-dark text-white px-2 py-1 rounded-full text-xs font-bold">
                   {socialPost.hashtag}
                 </span>
-                <div className="text-xs text-gray-400 font-medium">
-                  Message officiel CGT
-                </div>
+                <div className="text-xs text-gray-400 font-medium">CGT</div>
               </div>
             </div>
           </div>

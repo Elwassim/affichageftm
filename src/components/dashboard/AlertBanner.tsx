@@ -6,7 +6,7 @@ export const AlertBanner = () => {
   if (!alertText) return null;
 
   return (
-    <div className="bg-gradient-to-r from-cgt-red-dark via-cgt-red to-cgt-red-dark text-white py-4 overflow-hidden shadow-lg relative">
+    <div className="bg-gradient-to-r from-cgt-red-dark via-cgt-red to-cgt-red-dark text-white py-2 overflow-hidden shadow-lg relative">
       {/* Background pattern */}
       <div className="absolute inset-0 opacity-10">
         <div
@@ -18,7 +18,7 @@ export const AlertBanner = () => {
       </div>
 
       <div className="relative whitespace-nowrap animate-marquee">
-        <span className="text-xl font-bold px-8 tracking-wide text-shadow">
+        <span className="text-lg font-bold px-6 tracking-wide text-shadow">
           ⚠️ ALERTE CGT • {alertText} • SOLIDARITÉ OUVRIÈRE ⚠️
         </span>
       </div>

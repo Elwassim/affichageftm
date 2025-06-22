@@ -9,48 +9,38 @@ import { CGTHeader } from "@/components/dashboard/CGTHeader";
 
 const Index = () => {
   return (
-    <div className="min-h-screen cgt-gradient">
+    <div className="h-screen cgt-gradient overflow-hidden">
       {/* Alert Banner */}
       <AlertBanner />
 
-      {/* Professional CGT Header */}
+      {/* Compact CGT Header */}
       <CGTHeader />
 
-      {/* Main Dashboard Grid */}
-      <div className="p-6 lg:p-8 pb-12">
-        <div className="max-w-7xl mx-auto space-y-8">
-          {/* Top Row - Date/Time and Weather */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <DateTimeWidget />
-            <WeatherWidget />
-          </div>
+      {/* Main Dashboard Grid - Optimized for TV */}
+      <div className="p-4 h-[calc(100vh-120px)]">
+        <div className="max-w-7xl mx-auto h-full">
+          {/* TV Grid Layout - 3 columns, 2 rows */}
+          <div className="grid grid-cols-4 grid-rows-2 gap-4 h-full">
+            {/* Row 1 */}
+            <div className="col-span-1">
+              <DateTimeWidget />
+            </div>
+            <div className="col-span-1">
+              <WeatherWidget />
+            </div>
+            <div className="col-span-1">
+              <MeetingsWidget />
+            </div>
+            <div className="col-span-1">
+              <PermanencesWidget />
+            </div>
 
-          {/* Middle Row - Meetings and Permanences */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <MeetingsWidget />
-            <PermanencesWidget />
-          </div>
-
-          {/* Bottom Row - Video and Social */}
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <div className="xl:col-span-2">
+            {/* Row 2 */}
+            <div className="col-span-3">
               <VideoWidget />
             </div>
-            <div className="xl:col-span-1">
+            <div className="col-span-1">
               <SocialWidget />
-            </div>
-          </div>
-
-          {/* CGT Footer */}
-          <div className="mt-12 pt-8 border-t border-white/20">
-            <div className="text-center text-white/90">
-              <p className="text-lg font-semibold mb-2">
-                Confédération Générale du Travail
-              </p>
-              <p className="text-sm opacity-80">
-                Défendre les droits des travailleurs • Solidarité • Justice
-                sociale
-              </p>
             </div>
           </div>
         </div>
