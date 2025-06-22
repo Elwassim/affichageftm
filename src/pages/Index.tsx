@@ -6,10 +6,18 @@ import { VideoWidget } from "@/components/dashboard/VideoWidget";
 import { AlertBanner } from "@/components/dashboard/AlertBanner";
 import { SocialWidget } from "@/components/dashboard/SocialWidget";
 import { CGTHeader } from "@/components/dashboard/CGTHeader";
+import { useRealTimeUpdates } from "@/hooks/useRealTimeUpdates";
+import { Wifi } from "lucide-react";
 
 const Index = () => {
+  const { lastUpdate, isUpdating, updateCount } = useRealTimeUpdates({
+    interval: 60000, // 1 minute
+    enableWeather: true,
+    enableDashboard: true,
+  });
+
   return (
-    <div className="h-screen cgt-gradient overflow-hidden">
+    <div className="h-screen cgt-gradient overflow-hidden relative">
       {/* Alert Banner */}
       <AlertBanner />
 
@@ -42,6 +50,16 @@ const Index = () => {
             <div className="col-span-1">
               <SocialWidget />
             </div>
+          </div>
+
+          {/* Real-time status indicator */}
+          <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1">
+            <Wifi
+              className={`w-4 h-4 ${isUpdating ? "text-yellow-400 animate-pulse" : "text-green-400"}`}
+            />
+            <span className="text-white/90 text-xs">
+              Temps réel • {updateCount} mises à jour
+            </span>
           </div>
 
           {/* CGT FTM Footer */}

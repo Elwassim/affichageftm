@@ -21,6 +21,15 @@ import {
   getRoleColor,
   type User,
 } from "@/lib/users";
+import {
+  getAuthUsers,
+  addAuthUser,
+  updateAuthUser,
+  deleteAuthUser,
+  USER_GROUPS,
+  getGroupInfo,
+  type AuthUser,
+} from "@/lib/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft, Save, Plus, Trash2, Users, LogOut } from "lucide-react";
 import { logout, getCurrentUser } from "@/lib/auth";
@@ -28,12 +37,23 @@ import { logout, getCurrentUser } from "@/lib/auth";
 const Admin = () => {
   const [data, setData] = useState(getDashboardData());
   const [usersData, setUsersData] = useState(getUsersData());
+  const [authUsers, setAuthUsers] = useState(getAuthUsers());
   const [newUser, setNewUser] = useState({
     name: "",
     email: "",
     role: "secretaire" as User["role"],
     phone: "",
     section: "",
+  });
+  const [newAuthUser, setNewAuthUser] = useState({
+    username: "",
+    password: "",
+    name: "",
+    email: "",
+    role: "secretaire" as AuthUser["role"],
+    group: "editor" as AuthUser["group"],
+    section: "",
+    active: true,
   });
   const navigate = useNavigate();
 
@@ -150,6 +170,47 @@ const Admin = () => {
     }
   };
 
+  // Auth users management
+  const handleAddAuthUser = () => {
+    if (
+      newAuthUser.username &&
+      newAuthUser.password &&
+      newAuthUser.name &&
+      newAuthUser.email
+    ) {
+      addAuthUser(newAuthUser);
+      setAuthUsers(getAuthUsers());
+      setNewAuthUser({
+        username: "",
+        password: "",
+        name: "",
+        email: "",
+        role: "secretaire",
+        group: "editor",
+        section: "",
+        active: true,
+      });
+    }
+  };
+
+  const handleUpdateAuthUser = (
+    id: string,
+    field: keyof AuthUser,
+    value: any,
+  ) => {
+    updateAuthUser(id, { [field]: value });
+    setAuthUsers(getAuthUsers());
+  };
+
+  const handleDeleteAuthUser = (id: string) => {
+    if (
+      confirm("Êtes-vous sûr de vouloir supprimer ce compte de connexion ?")
+    ) {
+      deleteAuthUser(id);
+      setAuthUsers(getAuthUsers());
+    }
+  };
+
   return (
     <div className="min-h-screen cgt-gradient">
       <div className="max-w-7xl mx-auto p-6 lg:p-8">
@@ -213,40 +274,46 @@ const Admin = () => {
         </div>
 
         <Tabs defaultValue="meetings" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-6 bg-white/95 backdrop-blur-sm p-2 rounded-xl shadow-lg border-0">
+          <TabsList className="grid w-full grid-cols-7 bg-white/95 backdrop-blur-sm p-2 rounded-xl shadow-lg border-0">
             <TabsTrigger
               value="meetings"
-              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all text-sm"
             >
               Réunions
             </TabsTrigger>
             <TabsTrigger
               value="permanences"
-              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all text-sm"
             >
               Permanences
             </TabsTrigger>
             <TabsTrigger
               value="users"
-              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all text-sm"
             >
-              Utilisateurs
+              Contacts
+            </TabsTrigger>
+            <TabsTrigger
+              value="auth-users"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all text-sm"
+            >
+              Connexions
             </TabsTrigger>
             <TabsTrigger
               value="video"
-              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all text-sm"
             >
               Vidéo
             </TabsTrigger>
             <TabsTrigger
               value="alert"
-              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all text-sm"
             >
               Alerte
             </TabsTrigger>
             <TabsTrigger
               value="social"
-              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all"
+              className="data-[state=active]:bg-cgt-red data-[state=active]:text-white font-semibold py-3 rounded-lg transition-all text-sm"
             >
               Message
             </TabsTrigger>
@@ -494,6 +561,328 @@ const Admin = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="auth-users">
+            <Card className="p-8 bg-white/95 backdrop-blur-sm border-0 professional-shadow rounded-2xl">
+              <div className="flex justify-between items-center mb-8">
+                <div>
+                  <h2 className="text-3xl font-black text-cgt-gray">
+                    Comptes de connexion CGT FTM
+                  </h2>
+                  <p className="text-gray-600 mt-2">
+                    Gestion des utilisateurs pouvant se connecter à
+                    l'administration
+                  </p>
+                </div>
+              </div>
+
+              {/* Groups info */}
+              <div className="bg-gray-50 p-6 rounded-xl mb-8">
+                <h3 className="text-xl font-bold text-cgt-gray mb-4">
+                  Groupes et permissions
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {USER_GROUPS.map((group) => (
+                    <div
+                      key={group.id}
+                      className="p-4 bg-white rounded-lg border"
+                    >
+                      <div className="flex items-center gap-2 mb-2">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs font-medium ${group.color}`}
+                        >
+                          {group.name}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        {group.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Add new auth user form */}
+              <div className="bg-blue-50 p-6 rounded-xl mb-8 border border-blue-200">
+                <h3 className="text-xl font-bold text-cgt-gray mb-4">
+                  Ajouter un compte de connexion
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div>
+                    <Label htmlFor="new-auth-username">Nom d'utilisateur</Label>
+                    <Input
+                      id="new-auth-username"
+                      value={newAuthUser.username}
+                      onChange={(e) =>
+                        setNewAuthUser({
+                          ...newAuthUser,
+                          username: e.target.value,
+                        })
+                      }
+                      placeholder="marie.dubois"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="new-auth-password">Mot de passe</Label>
+                    <Input
+                      id="new-auth-password"
+                      type="password"
+                      value={newAuthUser.password}
+                      onChange={(e) =>
+                        setNewAuthUser({
+                          ...newAuthUser,
+                          password: e.target.value,
+                        })
+                      }
+                      placeholder="••••••••"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="new-auth-name">Nom complet</Label>
+                    <Input
+                      id="new-auth-name"
+                      value={newAuthUser.name}
+                      onChange={(e) =>
+                        setNewAuthUser({ ...newAuthUser, name: e.target.value })
+                      }
+                      placeholder="Marie Dubois"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="new-auth-email">Email</Label>
+                    <Input
+                      id="new-auth-email"
+                      type="email"
+                      value={newAuthUser.email}
+                      onChange={(e) =>
+                        setNewAuthUser({
+                          ...newAuthUser,
+                          email: e.target.value,
+                        })
+                      }
+                      placeholder="marie@cgt-ftm.fr"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="new-auth-role">Rôle</Label>
+                    <select
+                      id="new-auth-role"
+                      value={newAuthUser.role}
+                      onChange={(e) =>
+                        setNewAuthUser({
+                          ...newAuthUser,
+                          role: e.target.value as AuthUser["role"],
+                        })
+                      }
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      <option value="secretaire">Secrétaire</option>
+                      <option value="delegue">Délégué syndical</option>
+                      <option value="admin">Administrateur</option>
+                    </select>
+                  </div>
+                  <div>
+                    <Label htmlFor="new-auth-group">Groupe</Label>
+                    <select
+                      id="new-auth-group"
+                      value={newAuthUser.group}
+                      onChange={(e) =>
+                        setNewAuthUser({
+                          ...newAuthUser,
+                          group: e.target.value as AuthUser["group"],
+                        })
+                      }
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {USER_GROUPS.map((group) => (
+                        <option key={group.id} value={group.id}>
+                          {group.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <Label htmlFor="new-auth-section">Section</Label>
+                    <Input
+                      id="new-auth-section"
+                      value={newAuthUser.section}
+                      onChange={(e) =>
+                        setNewAuthUser({
+                          ...newAuthUser,
+                          section: e.target.value,
+                        })
+                      }
+                      placeholder="Secrétariat FTM"
+                    />
+                  </div>
+                  <div className="flex items-end">
+                    <Button
+                      onClick={handleAddAuthUser}
+                      className="bg-cgt-red text-white hover:bg-cgt-red-dark font-semibold px-6 py-3 rounded-xl w-full"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Créer le compte
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Auth users list */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-bold text-cgt-gray">
+                  Comptes de connexion existants
+                </h3>
+                {authUsers.map((user) => {
+                  const groupInfo = getGroupInfo(user.group);
+                  return (
+                    <div
+                      key={user.id}
+                      className="grid grid-cols-1 md:grid-cols-8 gap-4 p-6 bg-gradient-to-r from-gray-50 to-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all"
+                    >
+                      <div>
+                        <Label htmlFor={`auth-username-${user.id}`}>
+                          Username
+                        </Label>
+                        <Input
+                          id={`auth-username-${user.id}`}
+                          value={user.username}
+                          onChange={(e) =>
+                            handleUpdateAuthUser(
+                              user.id,
+                              "username",
+                              e.target.value,
+                            )
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor={`auth-name-${user.id}`}>Nom</Label>
+                        <Input
+                          id={`auth-name-${user.id}`}
+                          value={user.name}
+                          onChange={(e) =>
+                            handleUpdateAuthUser(
+                              user.id,
+                              "name",
+                              e.target.value,
+                            )
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor={`auth-email-${user.id}`}>Email</Label>
+                        <Input
+                          id={`auth-email-${user.id}`}
+                          type="email"
+                          value={user.email}
+                          onChange={(e) =>
+                            handleUpdateAuthUser(
+                              user.id,
+                              "email",
+                              e.target.value,
+                            )
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor={`auth-role-${user.id}`}>Rôle</Label>
+                        <select
+                          id={`auth-role-${user.id}`}
+                          value={user.role}
+                          onChange={(e) =>
+                            handleUpdateAuthUser(
+                              user.id,
+                              "role",
+                              e.target.value,
+                            )
+                          }
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <option value="secretaire">Secrétaire</option>
+                          <option value="delegue">Délégué</option>
+                          <option value="admin">Admin</option>
+                        </select>
+                      </div>
+                      <div>
+                        <Label htmlFor={`auth-group-${user.id}`}>Groupe</Label>
+                        <select
+                          id={`auth-group-${user.id}`}
+                          value={user.group}
+                          onChange={(e) =>
+                            handleUpdateAuthUser(
+                              user.id,
+                              "group",
+                              e.target.value,
+                            )
+                          }
+                          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          {USER_GROUPS.map((group) => (
+                            <option key={group.id} value={group.id}>
+                              {group.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <Label htmlFor={`auth-section-${user.id}`}>
+                          Section
+                        </Label>
+                        <Input
+                          id={`auth-section-${user.id}`}
+                          value={user.section}
+                          onChange={(e) =>
+                            handleUpdateAuthUser(
+                              user.id,
+                              "section",
+                              e.target.value,
+                            )
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Label>Statut</Label>
+                        <div className="flex items-center gap-2 mt-2">
+                          <input
+                            type="checkbox"
+                            checked={user.active}
+                            onChange={(e) =>
+                              handleUpdateAuthUser(
+                                user.id,
+                                "active",
+                                e.target.checked,
+                              )
+                            }
+                            className="rounded"
+                          />
+                          <span className="text-sm">
+                            {user.active ? "Actif" : "Inactif"}
+                          </span>
+                        </div>
+                        {groupInfo && (
+                          <span
+                            className={`inline-block px-2 py-1 rounded-full text-xs font-medium mt-1 ${groupInfo.color}`}
+                          >
+                            {groupInfo.name}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-end">
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeleteAuthUser(user.id)}
+                          className="w-full"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </Card>
           </TabsContent>

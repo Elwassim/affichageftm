@@ -1,28 +1,24 @@
-import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
-import { fetchWeather, WeatherData } from "@/lib/weather";
 import { getDashboardData } from "@/lib/storage";
+import { useRealTimeWeather } from "@/hooks/useRealTimeUpdates";
+import { RefreshCw } from "lucide-react";
 
 export const WeatherWidget = () => {
-  const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { weatherCity } = getDashboardData();
+  const { weather, isLoading, lastFetch, refetch } = useRealTimeWeather(
+    weatherCity,
+    300000,
+  ); // 5 minutes
 
-  useEffect(() => {
-    const loadWeather = async () => {
-      const { weatherCity } = getDashboardData();
-      const weatherData = await fetchWeather(weatherCity);
-      setWeather(weatherData);
-      setLoading(false);
-    };
+  const formatLastUpdate = () => {
+    if (!lastFetch) return "";
+    return `Màj: ${lastFetch.toLocaleTimeString("fr-FR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    })}`;
+  };
 
-    loadWeather();
-
-    // Refresh weather every 30 minutes
-    const interval = setInterval(loadWeather, 30 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
-
-  if (loading) {
+  if (isLoading && !weather) {
     return (
       <Card className="p-4 bg-white text-center professional-shadow border-0 h-full flex flex-col justify-center">
         <div className="animate-pulse space-y-2">
@@ -40,12 +36,26 @@ export const WeatherWidget = () => {
         <div className="text-gray-500 font-medium text-sm">
           Météo indisponible
         </div>
+        <button
+          onClick={refetch}
+          className="mt-2 text-xs text-cgt-red hover:text-cgt-red-dark"
+        >
+          Réessayer
+        </button>
       </Card>
     );
   }
 
   return (
-    <Card className="p-4 bg-white text-center professional-shadow border-0 h-full flex flex-col justify-center">
+    <Card className="p-4 bg-white text-center professional-shadow border-0 h-full flex flex-col justify-center relative">
+      {/* Real-time indicator */}
+      <div className="absolute top-2 right-2 flex items-center gap-1">
+        <RefreshCw
+          className={`w-3 h-3 text-green-500 ${isLoading ? "animate-spin" : ""}`}
+        />
+        <span className="text-xs text-gray-400">{formatLastUpdate()}</span>
+      </div>
+
       <div className="space-y-2">
         <div className="text-3xl lg:text-4xl">{weather.icon}</div>
         <div className="text-2xl lg:text-3xl font-black text-cgt-gray">
