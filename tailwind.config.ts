@@ -26,7 +26,6 @@ export default {
           "red-dark": "hsl(var(--union-red-dark))",
           "text-light": "hsl(var(--union-text-light))",
         },
-      colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
