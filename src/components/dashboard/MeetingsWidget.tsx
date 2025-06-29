@@ -9,7 +9,7 @@ export const MeetingsWidget = () => {
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
-    if (!scrollContainer || meetings.length <= 3) return;
+    if (!scrollContainer || meetings.length <= 2) return;
 
     let scrollPosition = 0;
     const scrollSpeed = 0.5;

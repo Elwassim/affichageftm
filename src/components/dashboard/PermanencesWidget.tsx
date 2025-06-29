@@ -9,7 +9,7 @@ export const PermanencesWidget = () => {
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
-    if (!scrollContainer || permanences.length <= 3) return;
+    if (!scrollContainer || permanences.length <= 2) return;
 
     let scrollPosition = 0;
     const scrollSpeed = 0.5;
