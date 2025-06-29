@@ -61,19 +61,6 @@ const Index = () => {
               Temps réel • {updateCount} mises à jour
             </span>
           </div>
-
-          {/* CGT FTM Footer */}
-          <div className="mt-4 pt-3 border-t border-white/20">
-            <div className="text-center text-white/90">
-              <p className="text-sm font-semibold">
-                CGT FTM - Fédération des Travailleurs de la Métallurgie
-              </p>
-              <p className="text-xs opacity-80">
-                Défendre les droits des métallurgistes • Solidarité • Justice
-                sociale
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

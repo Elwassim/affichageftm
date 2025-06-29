@@ -42,7 +42,14 @@ export const SocialWidget = () => {
                 </span>
               </div>
 
-              <p className="text-gray-700 leading-relaxed text-xs font-medium mb-3 line-clamp-4">
+              <p
+                className="text-gray-700 leading-relaxed text-xs font-medium mb-3 overflow-hidden"
+                style={{
+                  display: "-webkit-box",
+                  WebkitLineClamp: 4,
+                  WebkitBoxOrient: "vertical",
+                }}
+              >
                 {socialPost.text}
               </p>
 
