@@ -25,14 +25,14 @@ export const PermanencesWidget = () => {
           <p className="text-gray-500 text-xs">Aucune permanence</p>
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-2 overflow-y-auto max-h-[180px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
           {permanences.map((permanence) => (
             <div
               key={permanence.id}
-              className="p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-2 border-cgt-red"
+              className="group p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-2 border-cgt-red hover:shadow-sm transition-shadow"
             >
               <div className="flex items-start gap-2">
-                <div className="w-8 h-8 bg-gradient-to-br from-cgt-red to-cgt-red-dark text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">
+                <div className="w-6 h-6 bg-gradient-to-br from-cgt-red to-cgt-red-dark text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">
                   {permanence.name
                     .split(" ")
                     .map((n) => n[0])
@@ -40,15 +40,15 @@ export const PermanencesWidget = () => {
                     .slice(0, 2)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-cgt-gray text-sm truncate">
+                  <h3 className="font-bold text-cgt-gray text-xs truncate leading-tight">
                     {permanence.name}
                   </h3>
-                  <div className="flex items-center gap-1 text-gray-600 text-xs mt-1">
-                    <Clock className="w-3 h-3 text-cgt-red" />
+                  <div className="flex items-center gap-1 text-gray-600 text-xs mt-0.5">
+                    <Clock className="w-2.5 h-2.5 text-cgt-red" />
                     <span className="font-medium">{permanence.time}</span>
                   </div>
-                  <div className="mt-1">
-                    <span className="inline-block bg-cgt-red/10 text-cgt-red px-2 py-0.5 rounded-full text-xs font-medium">
+                  <div className="mt-0.5">
+                    <span className="inline-block bg-cgt-red/10 text-cgt-red px-1.5 py-0.5 rounded text-xs font-medium">
                       {permanence.theme}
                     </span>
                   </div>

@@ -25,27 +25,27 @@ export const MeetingsWidget = () => {
           <p className="text-gray-500 text-xs">Aucune réunion</p>
         </div>
       ) : (
-        <div className="space-y-2">
+        <div className="space-y-2 overflow-y-auto max-h-[180px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
           {meetings.map((meeting, index) => (
             <div
               key={meeting.id}
-              className="p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-2 border-cgt-red"
+              className="group p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-2 border-cgt-red hover:shadow-sm transition-shadow"
             >
               <div className="flex items-start gap-2">
-                <span className="w-5 h-5 bg-cgt-red text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                <span className="w-4 h-4 bg-cgt-red text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
                   {index + 1}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-cgt-gray text-sm truncate">
+                  <h3 className="font-bold text-cgt-gray text-xs truncate leading-tight">
                     {meeting.title}
                   </h3>
-                  <div className="flex items-center gap-3 text-gray-600 text-xs mt-1">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-cgt-red" />
+                  <div className="flex items-center gap-2 text-gray-600 text-xs mt-0.5">
+                    <span className="flex items-center gap-0.5">
+                      <Clock className="w-2.5 h-2.5 text-cgt-red" />
                       {meeting.time}
                     </span>
-                    <span className="flex items-center gap-1 truncate">
-                      <MapPin className="w-3 h-3 text-cgt-red" />
+                    <span className="flex items-center gap-0.5 truncate">
+                      <MapPin className="w-2.5 h-2.5 text-cgt-red" />
                       {meeting.room}
                     </span>
                   </div>
