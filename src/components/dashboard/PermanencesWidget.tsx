@@ -1,9 +1,45 @@
 import { Card } from "@/components/ui/card";
 import { getDashboardData } from "@/lib/storage";
 import { Users, Clock } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 export const PermanencesWidget = () => {
   const { permanences } = getDashboardData();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer || permanences.length <= 3) return;
+
+    let scrollPosition = 0;
+    const scrollSpeed = 0.5;
+    const pauseTime = 2000;
+    let isPaused = false;
+
+    const autoScroll = () => {
+      if (isPaused) return;
+
+      scrollPosition += scrollSpeed;
+      const maxScroll =
+        scrollContainer.scrollHeight - scrollContainer.clientHeight;
+
+      if (scrollPosition >= maxScroll) {
+        isPaused = true;
+        setTimeout(() => {
+          scrollPosition = 0;
+          scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+          setTimeout(() => {
+            isPaused = false;
+          }, 1000);
+        }, pauseTime);
+      } else {
+        scrollContainer.scrollTop = scrollPosition;
+      }
+    };
+
+    const interval = setInterval(autoScroll, 50);
+    return () => clearInterval(interval);
+  }, [permanences.length]);
 
   return (
     <Card className="p-4 bg-white professional-shadow border-0 h-full">
@@ -25,7 +61,10 @@ export const PermanencesWidget = () => {
           <p className="text-gray-500 text-xs">Aucune permanence</p>
         </div>
       ) : (
-        <div className="space-y-2 overflow-y-auto max-h-[180px] scrollbar-hide">
+        <div
+          ref={scrollRef}
+          className="space-y-2 overflow-y-auto max-h-[180px] scrollbar-hide"
+        >
           {permanences.map((permanence) => (
             <div
               key={permanence.id}
