@@ -25,7 +25,7 @@ export const PermanencesWidget = () => {
           <p className="text-gray-500 text-xs">Aucune permanence</p>
         </div>
       ) : (
-        <div className="space-y-2 overflow-y-auto max-h-[180px] scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+        <div className="space-y-2 overflow-y-auto max-h-[180px] scrollbar-hide">
           {permanences.map((permanence) => (
             <div
               key={permanence.id}
