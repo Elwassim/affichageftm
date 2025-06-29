@@ -9,11 +9,11 @@ export const MeetingsWidget = () => {
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
-    if (!scrollContainer || meetings.length <= 2) return;
+    if (!scrollContainer || meetings.length <= 3) return;
 
     let scrollPosition = 0;
     const scrollSpeed = 0.5;
-    const pauseTime = 2000;
+    const pauseTime = 4000;
     let isPaused = false;
 
     const autoScroll = () => {

@@ -13,7 +13,7 @@ export const PermanencesWidget = () => {
 
     let scrollPosition = 0;
     const scrollSpeed = 0.5;
-    const pauseTime = 2000;
+    const pauseTime = 4000;
     let isPaused = false;
 
     const autoScroll = () => {
