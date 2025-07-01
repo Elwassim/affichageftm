@@ -75,17 +75,17 @@ export const MeetingsWidget = () => {
                   {index + 1}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
+                  <h3 className="font-bold text-cgt-gray text-base truncate leading-tight">
                     {meeting.title}
                   </h3>
-                  <div className="flex items-center gap-2 text-gray-600 text-xs mt-1">
+                  <div className="flex items-center gap-2 text-gray-600 text-sm mt-1">
                     <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-cgt-red" />
-                      <span className="font-medium">{meeting.time}</span>
+                      <Clock className="w-4 h-4 text-cgt-red" />
+                      <span className="font-semibold">{meeting.time}</span>
                     </span>
                     <span className="flex items-center gap-1 truncate">
-                      <MapPin className="w-3 h-3 text-cgt-red" />
-                      <span className="font-medium">{meeting.room}</span>
+                      <MapPin className="w-4 h-4 text-cgt-red" />
+                      <span className="font-semibold">{meeting.room}</span>
                     </span>
                   </div>
                 </div>
