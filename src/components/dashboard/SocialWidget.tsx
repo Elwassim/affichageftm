@@ -11,9 +11,9 @@ export const SocialWidget = () => {
       <div className="mb-2">
         <h2 className="text-base font-black text-cgt-gray flex items-center gap-2">
           <div className="w-5 h-5 bg-cgt-red rounded flex items-center justify-center">
-            <MessageCircle className="w-3 h-3 text-white" />
+            <Heart className="w-3 h-3 text-white" />
           </div>
-          Actualités
+          Hommage
         </h2>
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
