@@ -18,6 +18,12 @@ export default {
       },
     },
     extend: {
+      gridTemplateColumns: {
+        "16": "repeat(16, minmax(0, 1fr))",
+      },
+      gridColumn: {
+        "span-16": "span 16 / span 16",
+      },
       colors: {
         // CGT Professional theme colors
         cgt: {
