@@ -19,46 +19,36 @@ export const SocialWidget = () => {
       </div>
 
       <div className="h-[calc(100%-2.5rem)] overflow-y-auto">
-        <div className="p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100">
-          <div className="flex items-start gap-2">
-            <Avatar className="w-8 h-8 ring-2 ring-cgt-red/20 flex-shrink-0">
-              <AvatarImage src={socialPost.photo} alt={socialPost.name} />
-              <AvatarFallback className="bg-cgt-red text-white font-bold text-sm">
-                {socialPost.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-              </AvatarFallback>
-            </Avatar>
+        <div className="p-3 bg-gradient-to-r from-red-50 to-white rounded-lg border border-red-100 shadow-sm">
+          <div className="text-center space-y-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-cgt-red to-cgt-red-dark rounded-full flex items-center justify-center mx-auto">
+              <Heart className="w-6 h-6 text-white" />
+            </div>
 
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1 mb-1">
-                <h3 className="font-bold text-cgt-gray text-xs truncate">
-                  {socialPost.name}
-                </h3>
-                <div className="w-1 h-1 bg-cgt-red rounded-full flex-shrink-0"></div>
-                <span className="text-xs text-gray-500 font-medium">
-                  Délégué
-                </span>
-              </div>
+            <div>
+              <h3 className="font-bold text-cgt-gray text-sm mb-1">
+                Hommage aux Travailleurs
+              </h3>
+              <div className="w-8 h-px bg-cgt-red mx-auto mb-2"></div>
+            </div>
 
-              <p
-                className="text-gray-700 leading-relaxed text-xs font-medium mb-2 overflow-hidden"
-                style={{
-                  display: "-webkit-box",
-                  WebkitLineClamp: 6,
-                  WebkitBoxOrient: "vertical",
-                }}
-              >
-                {socialPost.text}
-              </p>
+            <p className="text-gray-700 leading-relaxed text-xs font-medium text-center">
+              "En mémoire de nos camarades tombés pour la défense des droits des
+              travailleurs. Leur engagement et leur sacrifice continuent
+              d'inspirer notre lutte pour la justice sociale et la dignité au
+              travail."
+            </p>
 
-              <div className="flex items-center justify-between">
-                <span className="inline-block bg-gradient-to-r from-cgt-red to-cgt-red-dark text-white px-2 py-1 rounded-full text-xs font-bold">
-                  {socialPost.hashtag}
-                </span>
-                <div className="text-xs text-gray-400 font-medium">CGT</div>
-              </div>
+            <div className="flex items-center justify-center gap-2 pt-2">
+              <div className="w-2 h-2 bg-cgt-red rounded-full"></div>
+              <span className="text-xs text-cgt-red font-bold uppercase tracking-wide">
+                Solidarité Éternelle
+              </span>
+              <div className="w-2 h-2 bg-cgt-red rounded-full"></div>
+            </div>
+
+            <div className="text-xs text-gray-500 font-medium pt-1">
+              CGT FTM - Fédération des Travailleurs de la Métallurgie
             </div>
           </div>
         </div>
