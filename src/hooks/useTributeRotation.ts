@@ -5,11 +5,27 @@ export const useTributeRotation = (intervalMs: number = 30000) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [tributes, setTributes] = useState<Tribute[]>([]);
 
+  // Update tributes data periodically
   useEffect(() => {
-    const data = getDashboardData();
-    setTributes(data.tributes);
+    const updateData = () => {
+      const data = getDashboardData();
+      setTributes(data.tributes);
+    };
+
+    updateData();
+    const dataTimer = setInterval(updateData, 5000); // Check for updates every 5 seconds
+
+    return () => clearInterval(dataTimer);
   }, []);
 
+  // Reset index if tributes list changes
+  useEffect(() => {
+    if (currentIndex >= tributes.length && tributes.length > 0) {
+      setCurrentIndex(0);
+    }
+  }, [tributes.length, currentIndex]);
+
+  // Rotation timer
   useEffect(() => {
     if (tributes.length <= 1) return;
 
