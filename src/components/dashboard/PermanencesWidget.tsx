@@ -63,7 +63,7 @@ export const PermanencesWidget = () => {
       ) : (
         <div
           ref={scrollRef}
-          className="space-y-1.5 overflow-y-auto h-[calc(100%-4rem)] scrollbar-hide"
+          className="space-y-1.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide"
         >
           {permanences.map((permanence) => (
             <div
