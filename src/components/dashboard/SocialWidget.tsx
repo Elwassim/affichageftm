@@ -1,10 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { getDashboardData } from "@/lib/storage";
-import { Heart } from "lucide-react";
+import { Heart, Clock } from "lucide-react";
+import { useTributeRotation } from "@/hooks/useTributeRotation";
 
 export const SocialWidget = () => {
-  const { socialPost } = getDashboardData();
+  const { currentTribute, totalTributes, currentIndex } =
+    useTributeRotation(30000);
 
   return (
     <Card className="p-3 bg-white professional-shadow border-0 h-full">
@@ -19,39 +20,91 @@ export const SocialWidget = () => {
       </div>
 
       <div className="h-[calc(100%-2.5rem)] overflow-y-auto">
-        <div className="p-3 bg-gradient-to-r from-red-50 to-white rounded-lg border border-red-100 shadow-sm">
-          <div className="text-center space-y-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-cgt-red to-cgt-red-dark rounded-full flex items-center justify-center mx-auto">
-              <Heart className="w-6 h-6 text-white" />
-            </div>
+        {currentTribute ? (
+          <div className="p-3 bg-gradient-to-r from-red-50 to-white rounded-lg border border-red-100 shadow-sm h-full">
+            <div className="text-center space-y-3 h-full flex flex-col">
+              {/* Progress indicator */}
+              {totalTributes > 1 && (
+                <div className="flex justify-center gap-1 mb-2">
+                  {Array.from({ length: totalTributes }).map((_, index) => (
+                    <div
+                      key={index}
+                      className={`w-2 h-2 rounded-full transition-colors ${
+                        index === currentIndex ? "bg-cgt-red" : "bg-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
 
-            <div>
-              <h3 className="font-bold text-cgt-gray text-sm mb-1">
-                Hommage aux Travailleurs
-              </h3>
-              <div className="w-8 h-px bg-cgt-red mx-auto mb-2"></div>
-            </div>
+              {/* Photo */}
+              <div className="flex justify-center">
+                <Avatar className="w-16 h-16 ring-4 ring-cgt-red/20">
+                  <AvatarImage
+                    src={currentTribute.photo}
+                    alt={currentTribute.name}
+                  />
+                  <AvatarFallback className="bg-cgt-red text-white font-bold text-lg">
+                    {currentTribute.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
 
-            <p className="text-gray-700 leading-relaxed text-xs font-medium text-center">
-              "En mémoire de nos camarades tombés pour la défense des droits des
-              travailleurs. Leur engagement et leur sacrifice continuent
-              d'inspirer notre lutte pour la justice sociale et la dignité au
-              travail."
-            </p>
+              {/* Name and title */}
+              <div>
+                <h3 className="font-bold text-cgt-gray text-sm mb-1">
+                  {currentTribute.name}
+                </h3>
+                <div className="w-8 h-px bg-cgt-red mx-auto"></div>
+              </div>
 
-            <div className="flex items-center justify-center gap-2 pt-2">
-              <div className="w-2 h-2 bg-cgt-red rounded-full"></div>
-              <span className="text-xs text-cgt-red font-bold uppercase tracking-wide">
-                Solidarité Éternelle
-              </span>
-              <div className="w-2 h-2 bg-cgt-red rounded-full"></div>
-            </div>
+              {/* Text */}
+              <div className="flex-1 flex items-center">
+                <p className="text-gray-700 leading-relaxed text-xs font-medium text-center">
+                  {currentTribute.text}
+                </p>
+              </div>
 
-            <div className="text-xs text-gray-500 font-medium pt-1">
-              CGT FTM - Fédération des Travailleurs de la Métallurgie
+              {/* Footer */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-center gap-2">
+                  <Heart className="w-3 h-3 text-cgt-red" />
+                  <span className="text-xs text-cgt-red font-bold uppercase tracking-wide">
+                    En Mémoire
+                  </span>
+                  <Heart className="w-3 h-3 text-cgt-red" />
+                </div>
+
+                {totalTributes > 1 && (
+                  <div className="flex items-center justify-center gap-1 text-xs text-gray-400">
+                    <Clock className="w-3 h-3" />
+                    <span>Rotation toutes les 30s</span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <div className="p-3 bg-gradient-to-r from-red-50 to-white rounded-lg border border-red-100 shadow-sm h-full">
+            <div className="text-center space-y-3 h-full flex flex-col items-center justify-center">
+              <div className="w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center">
+                <Heart className="w-6 h-6 text-gray-400" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-500 text-sm mb-1">
+                  Aucun hommage configuré
+                </h3>
+                <p className="text-gray-400 text-xs">
+                  Ajoutez des hommages dans le panel d'administration
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </Card>
   );
