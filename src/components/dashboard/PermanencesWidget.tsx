@@ -42,7 +42,7 @@ export const PermanencesWidget = () => {
   }, [permanences.length]);
 
   return (
-    <Card className="p-3 bg-white professional-shadow border-0 h-full">
+    <Card className="p-3 bg-white professional-shadow border-0 h-full flex flex-col">
       <div className="mb-3">
         <h2 className="text-lg font-black text-cgt-gray flex items-center gap-2">
           <div className="w-6 h-6 bg-cgt-red rounded flex items-center justify-center">
