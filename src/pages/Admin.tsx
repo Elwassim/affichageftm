@@ -206,6 +206,24 @@ const Admin = () => {
     }
   };
 
+  const handleAddTribute = () => {
+    if (newTribute.name.trim() && newTribute.text.trim()) {
+      addTribute(newTribute);
+      setNewTribute({ name: "", photo: "", text: "" });
+      setData(getDashboardData());
+      alert("Hommage ajouté avec succès !");
+    } else {
+      alert("Veuillez remplir au moins le nom et le texte de l'hommage.");
+    }
+  };
+
+  const handleRemoveTribute = (id: string) => {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cet hommage ?")) {
+      removeTribute(id);
+      setData(getDashboardData());
+    }
+  };
+
   const navigationItems = [
     { id: "meetings", label: "Réunions", icon: Calendar, color: "blue" },
     { id: "permanences", label: "Permanences", icon: Users, color: "green" },
