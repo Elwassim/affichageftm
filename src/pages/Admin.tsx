@@ -1277,6 +1277,194 @@ const Admin = () => {
                 </Card>
               </div>
             )}
+
+            {/* Tributes Tab */}
+            {activeTab === "tributes" && (
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-800">
+                    Gestion des Hommages
+                  </h2>
+                  <p className="text-slate-600 mt-1">
+                    Ajoutez et gérez les hommages qui défilent toutes les 30
+                    secondes
+                  </p>
+                </div>
+
+                {/* Add new tribute */}
+                <Card className="p-6 border-pink-200 bg-pink-50/50">
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                    <Plus className="w-5 h-5 text-pink-600" />
+                    Ajouter un hommage
+                  </h3>
+                  <div className="grid gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label
+                          htmlFor="tribute-name"
+                          className="text-sm font-medium text-slate-700"
+                        >
+                          Nom de la personne *
+                        </Label>
+                        <Input
+                          id="tribute-name"
+                          value={newTribute.name}
+                          onChange={(e) =>
+                            setNewTribute({
+                              ...newTribute,
+                              name: e.target.value,
+                            })
+                          }
+                          placeholder="Henri Krasucki"
+                          className="border-slate-200 focus:border-pink-500 focus:ring-pink-500"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label
+                          htmlFor="tribute-photo"
+                          className="text-sm font-medium text-slate-700"
+                        >
+                          URL de la photo
+                        </Label>
+                        <Input
+                          id="tribute-photo"
+                          value={newTribute.photo}
+                          onChange={(e) =>
+                            setNewTribute({
+                              ...newTribute,
+                              photo: e.target.value,
+                            })
+                          }
+                          placeholder="https://..."
+                          className="border-slate-200 focus:border-pink-500 focus:ring-pink-500"
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="tribute-text"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Texte d'hommage *
+                      </Label>
+                      <Textarea
+                        id="tribute-text"
+                        value={newTribute.text}
+                        onChange={(e) =>
+                          setNewTribute({ ...newTribute, text: e.target.value })
+                        }
+                        placeholder="Secrétaire général de la CGT de 1982 à 1992. Figure emblématique du syndicalisme français..."
+                        rows={3}
+                        className="border-slate-200 focus:border-pink-500 focus:ring-pink-500"
+                      />
+                    </div>
+                    <div className="flex justify-end">
+                      <Button
+                        onClick={handleAddTribute}
+                        className="bg-pink-600 hover:bg-pink-700 text-white"
+                        disabled={
+                          !newTribute.name.trim() || !newTribute.text.trim()
+                        }
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Ajouter l'hommage
+                      </Button>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Tributes List */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-lg font-semibold text-slate-800">
+                      Hommages existants ({data.tributes.length})
+                    </h3>
+                    {data.tributes.length > 1 && (
+                      <div className="text-sm text-slate-600 bg-slate-100 px-3 py-1 rounded-full">
+                        ⏱️ Rotation automatique : 30 secondes
+                      </div>
+                    )}
+                  </div>
+
+                  {data.tributes.length === 0 ? (
+                    <Card className="p-8 text-center">
+                      <Heart className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-600 mb-2">
+                        Aucun hommage configuré
+                      </h3>
+                      <p className="text-gray-500">
+                        Ajoutez votre premier hommage pour commencer
+                      </p>
+                    </Card>
+                  ) : (
+                    <div className="grid gap-4">
+                      {data.tributes.map((tribute, index) => (
+                        <Card
+                          key={tribute.id}
+                          className="p-6 hover:shadow-md transition-shadow border-l-4 border-pink-500"
+                        >
+                          <div className="flex items-start gap-4">
+                            <div className="flex-shrink-0">
+                              {tribute.photo ? (
+                                <img
+                                  src={tribute.photo}
+                                  alt={tribute.name}
+                                  className="w-16 h-16 rounded-full object-cover ring-4 ring-pink-100"
+                                />
+                              ) : (
+                                <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center">
+                                  <span className="text-pink-600 font-bold text-lg">
+                                    {tribute.name
+                                      .split(" ")
+                                      .map((n) => n[0])
+                                      .join("")
+                                      .slice(0, 2)}
+                                  </span>
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-start justify-between">
+                                <div>
+                                  <h4 className="text-lg font-semibold text-slate-800 mb-1">
+                                    {tribute.name}
+                                  </h4>
+                                  <div className="flex items-center gap-2 text-sm text-slate-500 mb-3">
+                                    <span className="bg-pink-100 text-pink-700 px-2 py-1 rounded-full text-xs font-medium">
+                                      Position #{index + 1}
+                                    </span>
+                                    <span>•</span>
+                                    <span>
+                                      Ajouté le{" "}
+                                      {new Date(
+                                        tribute.dateAdded,
+                                      ).toLocaleDateString("fr-FR")}
+                                    </span>
+                                  </div>
+                                  <p className="text-slate-700 text-sm leading-relaxed">
+                                    {tribute.text}
+                                  </p>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    handleRemoveTribute(tribute.id)
+                                  }
+                                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </main>
       </div>
