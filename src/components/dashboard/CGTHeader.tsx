@@ -33,22 +33,18 @@ export const CGTHeader = () => {
         </svg>
       </div>
 
-      <div className="relative p-4">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
+      <div className="relative p-2 py-3">
+        <div className="w-full flex justify-center items-center">
           <div className="flex items-center space-x-4">
             {/* CGT Official Logo */}
             <div className="flex items-center space-x-3">
-              <CGTLogo className="w-12 h-12" />
+              <CGTLogo className="w-10 h-10" />
               <div className="text-white">
-                <h1 className="text-2xl lg:text-3xl font-black tracking-tight text-shadow">
+                <h1 className="text-xl lg:text-2xl font-black tracking-tight text-shadow">
                   CGT FTM - FÉDÉRATION DES TRAVAILLEURS DE LA MÉTALLURGIE
                 </h1>
               </div>
             </div>
-          </div>
-
-          <div className="flex items-center">
-            {/* Connection button removed as requested */}
           </div>
         </div>
       </div>
