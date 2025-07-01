@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { getDashboardData } from "@/lib/storage";
-import { MessageCircle } from "lucide-react";
+import { Heart } from "lucide-react";
 
 export const SocialWidget = () => {
   const { socialPost } = getDashboardData();
