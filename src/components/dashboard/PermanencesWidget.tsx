@@ -42,11 +42,11 @@ export const PermanencesWidget = () => {
   }, [permanences.length]);
 
   return (
-    <Card className="p-4 bg-white professional-shadow border-0 h-full">
-      <div className="mb-3">
-        <h2 className="text-lg font-black text-cgt-gray flex items-center gap-2">
-          <div className="w-6 h-6 bg-cgt-red rounded flex items-center justify-center">
-            <Users className="w-4 h-4 text-white" />
+    <Card className="p-3 bg-white professional-shadow border-0 h-full">
+      <div className="mb-2">
+        <h2 className="text-base font-black text-cgt-gray flex items-center gap-2">
+          <div className="w-5 h-5 bg-cgt-red rounded flex items-center justify-center">
+            <Users className="w-3 h-3 text-white" />
           </div>
           Permanences
         </h2>
@@ -54,16 +54,16 @@ export const PermanencesWidget = () => {
       </div>
 
       {permanences.length === 0 ? (
-        <div className="text-center py-6">
-          <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-            <Users className="w-4 h-4 text-gray-400" />
+        <div className="text-center py-4">
+          <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
+            <Users className="w-3 h-3 text-gray-400" />
           </div>
           <p className="text-gray-500 text-xs">Aucune permanence</p>
         </div>
       ) : (
         <div
           ref={scrollRef}
-          className="space-y-2 overflow-y-auto max-h-[180px] scrollbar-hide"
+          className="space-y-1.5 overflow-y-auto max-h-[200px] scrollbar-hide"
         >
           {permanences.map((permanence) => (
             <div
