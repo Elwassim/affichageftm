@@ -1,11 +1,35 @@
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Heart, Clock } from "lucide-react";
-import { useTributeRotation } from "@/hooks/useTributeRotation";
+import { getDashboardData } from "@/lib/storage";
+import { useState, useEffect } from "react";
 
 export const SocialWidget = () => {
-  const { currentTribute, totalTributes, currentIndex } =
-    useTributeRotation(30000);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [tributes, setTributes] = useState<any[]>([]);
+
+  useEffect(() => {
+    try {
+      const data = getDashboardData();
+      const tributesData = data.tributes || [];
+      setTributes(tributesData);
+    } catch (error) {
+      console.error("Error loading tributes:", error);
+      setTributes([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (tributes.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % tributes.length);
+    }, 30000);
+
+    return () => clearInterval(timer);
+  }, [tributes.length]);
+
+  const currentTribute = tributes.length > 0 ? tributes[currentIndex] : null;
 
   return (
     <Card className="p-3 bg-white professional-shadow border-0 h-full">
