@@ -30,16 +30,16 @@ const Index = () => {
           {/* TV Full Screen Layout */}
           <div className="grid grid-cols-16 grid-rows-4 gap-3 h-full w-full">
             {/* Top Row - Essential Info Widgets */}
-            <div className="col-span-4 row-span-1">
+            <div className="col-span-3 row-span-1">
               <DateTimeWidget />
             </div>
-            <div className="col-span-4 row-span-1">
+            <div className="col-span-3 row-span-1">
               <WeatherWidget />
             </div>
-            <div className="col-span-4 row-span-1">
+            <div className="col-span-5 row-span-1">
               <MeetingsWidget />
             </div>
-            <div className="col-span-4 row-span-1">
+            <div className="col-span-5 row-span-1">
               <PermanencesWidget />
             </div>
 
@@ -48,7 +48,7 @@ const Index = () => {
               <VideoWidget />
             </div>
 
-            {/* Right Side - Actualités */}
+            {/* Right Side - Hommage */}
             <div className="col-span-4 row-span-3">
               <SocialWidget />
             </div>
