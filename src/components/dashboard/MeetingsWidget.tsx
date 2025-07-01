@@ -63,7 +63,7 @@ export const MeetingsWidget = () => {
       ) : (
         <div
           ref={scrollRef}
-          className="space-y-1.5 overflow-y-auto max-h-[200px] scrollbar-hide"
+          className="space-y-1.5 overflow-y-auto h-[calc(100%-4rem)] scrollbar-hide"
         >
           {meetings.map((meeting, index) => (
             <div
