@@ -44,6 +44,7 @@ import {
   Search,
   Menu,
   X,
+  Heart,
 } from "lucide-react";
 import { logout, getCurrentUser } from "@/lib/auth";
 
