@@ -8,8 +8,13 @@ export const useTributeRotation = (intervalMs: number = 30000) => {
   // Update tributes data periodically
   useEffect(() => {
     const updateData = () => {
-      const data = getDashboardData();
-      setTributes(data.tributes);
+      try {
+        const data = getDashboardData();
+        setTributes(data.tributes || []);
+      } catch (error) {
+        console.error("Error loading tributes:", error);
+        setTributes([]);
+      }
     };
 
     updateData();
