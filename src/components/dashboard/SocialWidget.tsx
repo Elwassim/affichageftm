@@ -88,7 +88,7 @@ export const SocialWidget = () => {
 
               {/* Text */}
               <div className="flex-1 flex items-center">
-                <p className="text-gray-700 leading-relaxed text-xs font-medium text-center">
+                <p className="text-gray-700 leading-relaxed text-sm font-semibold text-center">
                   {currentTribute.text}
                 </p>
               </div>
