@@ -24,19 +24,19 @@ export const VideoWidget = () => {
   };
 
   return (
-    <Card className="p-6 bg-white professional-shadow border-0 h-full">
-      <div className="mb-4">
-        <h2 className="text-xl font-black text-cgt-gray flex items-center gap-3">
-          <div className="w-8 h-8 bg-cgt-red rounded-lg flex items-center justify-center shadow-sm">
-            <Play className="w-5 h-5 text-white" />
+    <Card className="p-3 bg-white professional-shadow border-0 h-full">
+      <div className="mb-2">
+        <h2 className="text-lg font-black text-cgt-gray flex items-center gap-2">
+          <div className="w-6 h-6 bg-cgt-red rounded-lg flex items-center justify-center shadow-sm">
+            <Play className="w-4 h-4 text-white" />
           </div>
           Vidéo institutionnelle CGT FTM
         </h2>
-        <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/2 mt-2"></div>
+        <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
 
       {videoUrl ? (
-        <div className="w-full h-[calc(100%-5rem)] rounded-xl overflow-hidden bg-gray-100 shadow-2xl border border-gray-200">
+        <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200">
           <iframe
             src={getEmbedUrl(videoUrl)}
             className="w-full h-full"
