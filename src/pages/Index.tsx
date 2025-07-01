@@ -17,48 +17,50 @@ const Index = () => {
   });
 
   return (
-    <div className="h-screen cgt-gradient overflow-hidden relative">
+    <div className="h-screen w-screen cgt-gradient overflow-hidden relative">
       {/* Alert Banner */}
       <AlertBanner />
 
       {/* Compact CGT Header */}
       <CGTHeader />
 
-      {/* Main Dashboard Grid - Optimized for TV */}
-      <div className="p-4 h-[calc(100vh-120px)]">
-        <div className="max-w-7xl mx-auto h-full">
-          {/* TV Grid Layout - Optimized for larger video */}
-          <div className="grid grid-cols-12 grid-rows-3 gap-4 h-full">
-            {/* Row 1 - Top widgets */}
-            <div className="col-span-3 row-span-1">
+      {/* Main Dashboard Grid - Full Screen TV Layout */}
+      <div className="p-3 h-[calc(100vh-100px)] w-full">
+        <div className="w-full h-full">
+          {/* TV Full Screen Layout */}
+          <div className="grid grid-cols-16 grid-rows-4 gap-3 h-full w-full">
+            {/* Top Row - Essential Info Widgets */}
+            <div className="col-span-4 row-span-1">
               <DateTimeWidget />
             </div>
-            <div className="col-span-3 row-span-1">
+            <div className="col-span-4 row-span-1">
               <WeatherWidget />
             </div>
-            <div className="col-span-3 row-span-1">
+            <div className="col-span-4 row-span-1">
               <MeetingsWidget />
             </div>
-            <div className="col-span-3 row-span-1">
+            <div className="col-span-4 row-span-1">
               <PermanencesWidget />
             </div>
 
-            {/* Row 2 & 3 - Large video takes most space */}
-            <div className="col-span-9 row-span-2">
+            {/* Main Content Area */}
+            <div className="col-span-12 row-span-3">
               <VideoWidget />
             </div>
-            <div className="col-span-3 row-span-2">
+
+            {/* Right Side - Actualités */}
+            <div className="col-span-4 row-span-3">
               <SocialWidget />
             </div>
           </div>
 
           {/* Real-time status indicator */}
-          <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-1">
+          <div className="absolute bottom-2 left-2 flex items-center gap-2 bg-black/30 backdrop-blur-sm rounded-full px-2 py-1">
             <Wifi
-              className={`w-4 h-4 ${isUpdating ? "text-yellow-400 animate-pulse" : "text-green-400"}`}
+              className={`w-3 h-3 ${isUpdating ? "text-yellow-400 animate-pulse" : "text-green-400"}`}
             />
             <span className="text-white/90 text-xs">
-              Temps réel • {updateCount} mises à jour
+              Temps réel • {updateCount}
             </span>
           </div>
         </div>
