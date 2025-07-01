@@ -51,6 +51,11 @@ import { logout, getCurrentUser } from "@/lib/auth";
 const Admin = () => {
   const [data, setData] = useState(getDashboardData());
   const [authUsers, setAuthUsers] = useState(getAuthUsers());
+  const [newTribute, setNewTribute] = useState({
+    name: "",
+    photo: "",
+    text: "",
+  });
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("meetings");
   const [newAuthUser, setNewAuthUser] = useState({
