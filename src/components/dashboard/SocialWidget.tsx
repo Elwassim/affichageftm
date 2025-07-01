@@ -32,8 +32,8 @@ export const SocialWidget = () => {
             </Avatar>
 
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1 mb-2">
-                <h3 className="font-bold text-cgt-gray text-sm truncate">
+              <div className="flex items-center gap-1 mb-1">
+                <h3 className="font-bold text-cgt-gray text-xs truncate">
                   {socialPost.name}
                 </h3>
                 <div className="w-1 h-1 bg-cgt-red rounded-full flex-shrink-0"></div>
@@ -43,10 +43,10 @@ export const SocialWidget = () => {
               </div>
 
               <p
-                className="text-gray-700 leading-relaxed text-xs font-medium mb-3 overflow-hidden"
+                className="text-gray-700 leading-relaxed text-xs font-medium mb-2 overflow-hidden"
                 style={{
                   display: "-webkit-box",
-                  WebkitLineClamp: 4,
+                  WebkitLineClamp: 6,
                   WebkitBoxOrient: "vertical",
                 }}
               >
