@@ -113,7 +113,20 @@ const DEFAULT_DATA: DashboardData = {
 
 export const getDashboardData = (): DashboardData => {
   const stored = localStorage.getItem("union-dashboard-data");
-  return stored ? JSON.parse(stored) : DEFAULT_DATA;
+  if (!stored) return DEFAULT_DATA;
+
+  try {
+    const data = JSON.parse(stored);
+    // Migration: add tributes field if missing
+    if (!data.tributes) {
+      data.tributes = DEFAULT_DATA.tributes;
+      localStorage.setItem("union-dashboard-data", JSON.stringify(data));
+    }
+    return data;
+  } catch (error) {
+    console.error("Error parsing stored data:", error);
+    return DEFAULT_DATA;
+  }
 };
 
 export const saveDashboardData = (data: DashboardData): void => {
