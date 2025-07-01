@@ -20,6 +20,14 @@ export interface SocialPost {
   hashtag: string;
 }
 
+export interface Tribute {
+  id: string;
+  name: string;
+  photo: string;
+  text: string;
+  dateAdded: string;
+}
+
 export interface DashboardData {
   meetings: Meeting[];
   permanences: Permanence[];
@@ -27,6 +35,7 @@ export interface DashboardData {
   alertText: string;
   socialPost: SocialPost;
   weatherCity: string;
+  tributes: Tribute[];
 }
 
 const DEFAULT_DATA: DashboardData = {
@@ -82,6 +91,24 @@ const DEFAULT_DATA: DashboardData = {
     hashtag: "#CGTFTM",
   },
   weatherCity: "Paris",
+  tributes: [
+    {
+      id: "1",
+      name: "Henri Krasucki",
+      photo:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
+      text: "Secrétaire général de la CGT de 1982 à 1992. Figure emblématique du syndicalisme français, il a consacré sa vie à la défense des travailleurs et à la justice sociale.",
+      dateAdded: new Date().toISOString(),
+    },
+    {
+      id: "2",
+      name: "Pierre Mauroy",
+      photo:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+      text: "Ancien Premier ministre et grand défenseur des droits syndicaux. Son engagement pour les travailleurs de la métallurgie restera dans nos mémoires.",
+      dateAdded: new Date().toISOString(),
+    },
+  ],
 };
 
 export const getDashboardData = (): DashboardData => {
@@ -126,5 +153,30 @@ export const updateSocialPost = (socialPost: SocialPost): void => {
 export const updateWeatherCity = (city: string): void => {
   const data = getDashboardData();
   data.weatherCity = city;
+  saveDashboardData(data);
+};
+
+export const updateTributes = (tributes: Tribute[]): void => {
+  const data = getDashboardData();
+  data.tributes = tributes;
+  saveDashboardData(data);
+};
+
+export const addTribute = (
+  tribute: Omit<Tribute, "id" | "dateAdded">,
+): void => {
+  const data = getDashboardData();
+  const newTribute: Tribute = {
+    ...tribute,
+    id: Date.now().toString(),
+    dateAdded: new Date().toISOString(),
+  };
+  data.tributes = [...data.tributes, newTribute];
+  saveDashboardData(data);
+};
+
+export const removeTribute = (id: string): void => {
+  const data = getDashboardData();
+  data.tributes = data.tributes.filter((t) => t.id !== id);
   saveDashboardData(data);
 };
