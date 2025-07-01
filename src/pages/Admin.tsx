@@ -8,9 +8,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   getDashboardData,
   saveDashboardData,
+  addTribute,
+  removeTribute,
   type Meeting,
   type Permanence,
   type SocialPost,
+  type Tribute,
 } from "@/lib/storage";
 import {
   getAuthUsers,
@@ -204,6 +207,7 @@ const Admin = () => {
     { id: "video", label: "Média", icon: Video, color: "orange" },
     { id: "alert", label: "Alertes", icon: AlertTriangle, color: "red" },
     { id: "social", label: "Messages", icon: MessageSquare, color: "indigo" },
+    { id: "tributes", label: "Hommages", icon: Heart, color: "pink" },
   ];
 
   return (
