@@ -1340,43 +1340,135 @@ const Admin = () => {
                             </div>
                             <div>
                               <label className="admin-label">Email</label>
-                              <input
-                                type="email"
-                                value={user.email || "Non renseigné"}
-                                readOnly
-                                className="admin-input w-full bg-gray-50"
-                              />
+                              {editingUser === user.id ? (
+                                <input
+                                  type="email"
+                                  value={editUserData.email || ""}
+                                  onChange={(e) =>
+                                    setEditUserData({
+                                      ...editUserData,
+                                      email: e.target.value,
+                                    })
+                                  }
+                                  className="admin-input w-full"
+                                />
+                              ) : (
+                                <input
+                                  type="email"
+                                  value={user.email || "Non renseigné"}
+                                  readOnly
+                                  className="admin-input w-full bg-gray-50"
+                                />
+                              )}
                             </div>
                             <div>
                               <label className="admin-label">Rôle</label>
-                              <input
-                                type="text"
-                                value={user.role}
-                                readOnly
-                                className="admin-input w-full bg-gray-50"
-                              />
+                              {editingUser === user.id ? (
+                                <select
+                                  value={editUserData.role || user.role}
+                                  onChange={(e) =>
+                                    setEditUserData({
+                                      ...editUserData,
+                                      role: e.target.value,
+                                    })
+                                  }
+                                  className="admin-input w-full"
+                                >
+                                  <option value="user">Utilisateur</option>
+                                  <option value="admin">Administrateur</option>
+                                  <option value="moderator">Modérateur</option>
+                                </select>
+                              ) : (
+                                <input
+                                  type="text"
+                                  value={user.role}
+                                  readOnly
+                                  className="admin-input w-full bg-gray-50"
+                                />
+                              )}
                             </div>
                             <div>
                               <label className="admin-label">Statut</label>
-                              <div className="flex items-center space-x-2">
-                                <span
-                                  className={`inline-block w-2 h-2 rounded-full ${user.is_active ? "bg-green-500" : "bg-red-500"}`}
-                                ></span>
-                                <span className="text-sm">
-                                  {user.is_active ? "Actif" : "Inactif"}
-                                </span>
-                                {user.is_admin && (
-                                  <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs font-medium">
-                                    Admin
+                              {editingUser === user.id ? (
+                                <div className="space-y-2">
+                                  <label className="flex items-center space-x-2">
+                                    <input
+                                      type="checkbox"
+                                      checked={editUserData.is_active ?? user.is_active}
+                                      onChange={(e) =>
+                                        setEditUserData({
+                                          ...editUserData,
+                                          is_active: e.target.checked,
+                                        })
+                                      }
+                                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                                    />
+                                    <span className="text-sm text-slate-700">
+                                      Actif
+                                    </span>
+                                  </label>
+                                  <label className="flex items-center space-x-2">
+                                    <input
+                                      type="checkbox"
+                                      checked={editUserData.is_admin ?? user.is_admin}
+                                      onChange={(e) =>
+                                        setEditUserData({
+                                          ...editUserData,
+                                          is_admin: e.target.checked,
+                                        })
+                                      }
+                                      className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                                    />
+                                    <span className="text-sm text-slate-700">
+                                      Admin
+                                    </span>
+                                  </label>
+                                </div>
+                              ) : (
+                                <div className="flex items-center space-x-2">
+                                  <span
+                                    className={`inline-block w-2 h-2 rounded-full ${user.is_active ? "bg-green-500" : "bg-red-500"}`}
+                                  ></span>
+                                  <span className="text-sm">
+                                    {user.is_active ? "Actif" : "Inactif"}
                                   </span>
-                                )}
-                              </div>
+                                  {user.is_admin && (
+                                    <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs font-medium">
+                                      Admin
+                                    </span>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           </div>
-                          <div className="ml-4">
-                            <button
-                              onClick={() => handleDeleteUser(user.id)}
-                              className="admin-btn-danger"
+                          <div className="ml-4 flex space-x-2">
+                            {editingUser === user.id ? (
+                              <>
+                                <button
+                                  onClick={() => handleSaveUser(user.id)}
+                                  className="admin-btn-primary text-sm px-3 py-1"
+                                >
+                                  <Save className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={handleCancelEdit}
+                                  className="admin-btn-secondary text-sm px-3 py-1"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              </>
+                            ) : (
+                              <>
+                                <button
+                                  onClick={() => handleEditUser(user)}
+                                  className="admin-btn-secondary text-sm px-3 py-1"
+                                  title="Modifier cet utilisateur"
+                                >
+                                  <Settings className="w-4 h-4" />
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteUser(user.id)}
+                                  className="admin-btn-danger"
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
