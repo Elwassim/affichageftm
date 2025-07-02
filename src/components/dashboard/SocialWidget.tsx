@@ -26,9 +26,9 @@ export const SocialWidget = () => {
           <div className="p-3 bg-gradient-to-r from-red-50 to-white rounded-lg border border-red-100 shadow-sm h-full">
             <div className="text-center space-y-3 h-full flex flex-col">
               {/* Progress indicator */}
-              {tributes.length > 1 && (
+              {totalTributes > 1 && (
                 <div className="flex justify-center gap-1 mb-2">
-                  {Array.from({ length: tributes.length }).map((_, index) => (
+                  {Array.from({ length: totalTributes }).map((_, index) => (
                     <div
                       key={index}
                       className={`w-2 h-2 rounded-full transition-colors ${
@@ -81,7 +81,7 @@ export const SocialWidget = () => {
                   <Heart className="w-3 h-3 text-cgt-red" />
                 </div>
 
-                {tributes.length > 1 && (
+                {totalTributes > 1 && (
                   <div className="flex items-center justify-center gap-1 text-xs text-gray-400">
                     <Clock className="w-3 h-3" />
                     <span>Rotation toutes les 30s</span>
