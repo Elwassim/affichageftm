@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getDashboardData, type Tribute } from "@/lib/storage";
+import { getTributes, type Tribute } from "@/lib/database";
 
 export const useTributeRotation = (intervalMs: number = 30000) => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -7,10 +7,10 @@ export const useTributeRotation = (intervalMs: number = 30000) => {
 
   // Update tributes data periodically
   useEffect(() => {
-    const updateData = () => {
+    const updateData = async () => {
       try {
-        const data = getDashboardData();
-        setTributes(data.tributes || []);
+        const tributesData = await getTributes();
+        setTributes(tributesData || []);
       } catch (error) {
         console.error("Error loading tributes:", error);
         setTributes([]);
@@ -18,7 +18,7 @@ export const useTributeRotation = (intervalMs: number = 30000) => {
     };
 
     updateData();
-    const dataTimer = setInterval(updateData, 5000); // Check for updates every 5 seconds
+    const dataTimer = setInterval(updateData, 10000); // Check for updates every 10 seconds
 
     return () => clearInterval(dataTimer);
   }, []);
