@@ -446,12 +446,73 @@ export const getDashboardDataFromDB = async (): Promise<DashboardData> => {
   };
 };
 
-// Export pour compatibilité
-export {
-  updateMeeting as updateMeetingInDB,
-  deleteMeeting as deleteMeetingFromDB,
-  createMeeting as addMeetingToDB,
-  createPermanence as addPermanenceToDB,
-  createTribute as addTributeToDB,
-  deleteTribute as deleteTributeFromDB,
+// ===== FONCTIONS ADMIN SPÉCIFIQUES =====
+export const updateMeetingInDB = updateMeeting;
+export const deleteMeetingFromDB = deleteMeeting;
+export const addMeetingToDB = createMeeting;
+export const addPermanenceToDB = createPermanence;
+export const addTributeToDB = createTribute;
+export const deleteTributeFromDB = deleteTribute;
+
+export const updatePermanence = async (
+  id: string,
+  updates: Partial<Permanence>,
+): Promise<boolean> => {
+  if (!useSupabase) {
+    const localData = getLocalData();
+    const updatedPermanences = localData.permanences.map((p) =>
+      p.id === id ? { ...p, ...updates } : p,
+    );
+    saveLocalData({ ...localData, permanences: updatedPermanences });
+    return true;
+  }
+
+  try {
+    const { error } = await supabase!
+      .from("permanences")
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Erreur mise à jour permanence:", error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Erreur Supabase update permanence:", error);
+    return false;
+  }
+};
+
+export const deletePermanence = async (id: string): Promise<boolean> => {
+  if (!useSupabase) {
+    const localData = getLocalData();
+    const filteredPermanences = localData.permanences.filter(
+      (p) => p.id !== id,
+    );
+    saveLocalData({ ...localData, permanences: filteredPermanences });
+    return true;
+  }
+
+  try {
+    const { error } = await supabase!.from("permanences").delete().eq("id", id);
+
+    if (error) {
+      console.error("Erreur suppression permanence:", error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Erreur Supabase delete permanence:", error);
+    return false;
+  }
+};
+
+export const updateConfig = async (
+  key: string,
+  value: any,
+): Promise<boolean> => {
+  return await setConfig(key, value);
 };
