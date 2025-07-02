@@ -71,8 +71,47 @@ const MEETING_CATEGORIES = [
 ];
 
 const Admin = () => {
-  const [data, setData] = useState(getDashboardData());
+  const [data, setData] = useState<any>(null);
   const [authUsers, setAuthUsers] = useState(getAuthUsers());
+  const [loading, setLoading] = useState(true);
+
+  // Charger les données depuis la base
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [
+          dashboardData,
+          allMeetings,
+          allPermanences,
+          allTributes,
+          videoUrl,
+          alertText,
+        ] = await Promise.all([
+          getDashboardDataFromDB(),
+          getAllMeetings(),
+          getPermanences(),
+          getTributes(),
+          getConfig("videoUrl"),
+          getConfig("alertText"),
+        ]);
+
+        setData({
+          ...dashboardData,
+          meetings: allMeetings,
+          permanences: allPermanences,
+          tributes: allTributes,
+          videoUrl: videoUrl || "",
+          alertText: alertText || "",
+        });
+      } catch (error) {
+        console.error("Error loading admin data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
   const [newTribute, setNewTribute] = useState({
     name: "",
     photo: "",
