@@ -17,6 +17,20 @@
   margin-bottom: 8px;
 }
 
+.admin-section-title h2 {
+  color: #1f2937 !important;
+  font-weight: 700 !important;
+}
+
+.admin-section-title h3 {
+  color: #1f2937 !important;
+  font-weight: 600 !important;
+}
+
+.admin-section-title p {
+  color: #4b5563 !important;
+}
+
 .admin-section-icon {
   width: 40px;
   height: 40px;
@@ -32,7 +46,8 @@
   gap: 16px;
   margin-top: 16px;
   font-size: 14px;
-  color: #64748b;
+  color: #4b5563 !important;
+  font-weight: 500;
 }
 
 .admin-connection-status {
@@ -81,6 +96,8 @@
   padding: 12px;
   font-size: 14px;
   transition: all 0.2s;
+  color: #1f2937 !important;
+  background-color: #ffffff;
 }
 
 .admin-input:focus {
@@ -89,11 +106,26 @@
   outline: none;
 }
 
+/* Inputs en lecture seule */
+.admin-input:read-only,
+.admin-input:disabled {
+  background-color: #f9fafb !important;
+  color: #4b5563 !important;
+  border-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.admin-input:read-only:focus,
+.admin-input:disabled:focus {
+  border-color: #d1d5db;
+  box-shadow: none;
+}
+
 /* Labels plus visibles */
 .admin-label {
   font-weight: 600;
   font-size: 14px;
-  color: #374151;
+  color: #1f2937 !important;
   margin-bottom: 6px;
   display: block;
 }
@@ -159,6 +191,95 @@
 .admin-list-item:hover {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);
+}
+
+/* Texte dans les listes */
+.admin-list-item h3,
+.admin-list-item h4 {
+  color: #1f2937 !important;
+  font-weight: 600 !important;
+}
+
+.admin-list-item p,
+.admin-list-item span {
+  color: #4b5563 !important;
+}
+
+.admin-list-item .text-xs {
+  color: #6b7280 !important;
+}
+
+/* Améliorer la visibilité des badges */
+.admin-list-item .bg-blue-100 {
+  background-color: #dbeafe !important;
+  color: #1e40af !important;
+  font-weight: 600 !important;
+}
+
+.admin-list-item .bg-pink-100 {
+  background-color: #fce7f3 !important;
+  color: #be185d !important;
+  font-weight: 600 !important;
+}
+
+.admin-list-item .bg-green-100 {
+  background-color: #dcfce7 !important;
+  color: #166534 !important;
+  font-weight: 600 !important;
+}
+
+.admin-list-item .bg-purple-100 {
+  background-color: #ede9fe !important;
+  color: #7c3aed !important;
+  font-weight: 600 !important;
+}
+
+/* Améliorations générales du texte */
+.admin-main-content h1,
+.admin-main-content h2,
+.admin-main-content h3,
+.admin-main-content h4 {
+  color: #1f2937 !important;
+  font-weight: 600 !important;
+}
+
+.admin-main-content p {
+  color: #4b5563 !important;
+  line-height: 1.6;
+}
+
+.admin-main-content .text-sm {
+  color: #6b7280 !important;
+}
+
+.admin-main-content .text-xs {
+  color: #9ca3af !important;
+}
+
+/* Améliorer les textarea */
+.admin-input[type="textarea"],
+textarea.admin-input {
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+  resize: vertical;
+  min-height: 80px;
+}
+
+/* Améliorer les select */
+select.admin-input {
+  color: #1f2937 !important;
+  background-color: #ffffff !important;
+}
+
+select.admin-input:disabled {
+  color: #6b7280 !important;
+  background-color: #f9fafb !important;
+}
+
+/* Améliorer les placeholders */
+.admin-input::placeholder {
+  color: #9ca3af !important;
+  opacity: 1;
 }
 
 /* Responsive */
