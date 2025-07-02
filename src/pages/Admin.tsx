@@ -670,7 +670,8 @@ const Admin = () => {
                         Réunions CGT FTM
                       </h2>
                       <p className="text-slate-600">
-                        Planifiez et organisez les assemblées syndicales par catégorie
+                        Planifiez et organisez les assemblées syndicales par
+                        catégorie
                       </p>
                     </div>
                   </div>
@@ -681,11 +682,6 @@ const Admin = () => {
                     </span>
                     <span>{data?.meetings?.length || 0} réunions au total</span>
                   </div>
-                </div>
-                  <p className="text-slate-600 mt-1">
-                    Planifiez et organisez les assembl���es syndicales par
-                    catégorie
-                  </p>
                 </div>
 
                 {/* Add new meeting */}
