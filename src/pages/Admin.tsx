@@ -183,13 +183,25 @@ const Admin = () => {
     }));
   };
 
-  const updateMeeting = (id: string, field: keyof Meeting, value: string) => {
-    setData((prev) => ({
-      ...prev,
-      meetings: prev.meetings.map((m) =>
-        m.id === id ? { ...m, [field]: value } : m,
-      ),
-    }));
+  const updateMeetingField = async (
+    id: string,
+    field: keyof Meeting,
+    value: string,
+  ) => {
+    try {
+      const success = await updateMeeting(id, { [field]: value });
+      if (success) {
+        // Mettre à jour localement aussi pour une réactivité immédiate
+        setData((prev: any) => ({
+          ...prev,
+          meetings: prev.meetings.map((m: Meeting) =>
+            m.id === id ? { ...m, [field]: value } : m,
+          ),
+        }));
+      }
+    } catch (error) {
+      console.error("Error updating meeting:", error);
+    }
   };
 
   // Permanence functions
