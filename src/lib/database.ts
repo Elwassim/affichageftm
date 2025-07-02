@@ -274,7 +274,13 @@ export const createPermanence = async (
   try {
     const { data, error } = await supabase!
       .from("permanences")
-      .insert([permanence])
+      .insert([
+        {
+          name: permanence.name,
+          schedule: permanence.schedule,
+          type: permanence.type,
+        },
+      ])
       .select()
       .single();
 
@@ -658,3 +664,12 @@ export const updateConfig = async (
 ): Promise<boolean> => {
   return await setConfig(key, value);
 };
+
+// ===== EXPORTS POUR L'ADMIN =====
+export const addUserToDB = createUser;
+export const getUsersFromDB = getUsers;
+export const updateUserInDB = updateUser;
+export const deleteUserFromDB = deleteUser;
+export const addPermanenceToDB = createPermanence;
+export const updatePermanenceInDB = updatePermanence;
+export const deletePermanenceFromDB = deletePermanence;
