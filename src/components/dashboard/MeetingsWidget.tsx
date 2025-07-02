@@ -75,35 +75,55 @@ export const MeetingsWidget = () => {
       ) : (
         <div
           ref={scrollRef}
-          className="space-y-1.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide"
+          className="space-y-2 overflow-y-auto flex-1 min-h-0 scrollbar-hide"
         >
-          {meetings.map((meeting, index) => (
-            <div
-              key={meeting.id}
-              className="group p-2.5 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-3 border-cgt-red hover:shadow-md transition-shadow"
-            >
-              <div className="flex items-start gap-2">
-                <span className="w-5 h-5 bg-cgt-red text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
-                  {index + 1}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-bold text-cgt-gray text-base truncate leading-tight">
-                    {meeting.title}
-                  </h3>
-                  <div className="flex items-center gap-2 text-gray-600 text-sm mt-1">
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-4 h-4 text-cgt-red" />
-                      <span className="font-semibold">{meeting.time}</span>
-                    </span>
-                    <span className="flex items-center gap-1 truncate">
-                      <MapPin className="w-4 h-4 text-cgt-red" />
-                      <span className="font-semibold">{meeting.room}</span>
-                    </span>
-                  </div>
+          {Object.entries(groupedMeetings).map(
+            ([category, categoryMeetings]) => (
+              <div key={category} className="space-y-1">
+                {/* Category Header */}
+                <div className="flex items-center gap-2 px-2">
+                  <div className="w-2 h-2 bg-cgt-red rounded-full"></div>
+                  <h4 className="text-xs font-bold text-cgt-red uppercase tracking-wide">
+                    {category}
+                  </h4>
+                  <div className="flex-1 h-px bg-cgt-red/30"></div>
                 </div>
+
+                {/* Meetings in category */}
+                {categoryMeetings.map((meeting, index) => (
+                  <div
+                    key={meeting.id}
+                    className="group p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-2 border-cgt-red hover:shadow-sm transition-shadow ml-2"
+                  >
+                    <div className="flex items-start gap-2">
+                      <span className="w-4 h-4 bg-cgt-red text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
+                        {index + 1}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
+                          {meeting.title}
+                        </h3>
+                        <div className="flex items-center gap-2 text-gray-600 text-xs mt-0.5">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-cgt-red" />
+                            <span className="font-semibold">
+                              {meeting.time}
+                            </span>
+                          </span>
+                          <span className="flex items-center gap-1 truncate">
+                            <MapPin className="w-3 h-3 text-cgt-red" />
+                            <span className="font-semibold">
+                              {meeting.room}
+                            </span>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
-          ))}
+            ),
+          )}
         </div>
       )}
     </Card>
