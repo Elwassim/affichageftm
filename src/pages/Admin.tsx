@@ -118,6 +118,17 @@ const Admin = () => {
     setLocalConfig(config);
   }, [config]);
 
+  // Debug: Log users data
+  useEffect(() => {
+    console.log("👥 Admin Panel - Users state:", {
+      usersCount: users.length,
+      users: users,
+      loading,
+      error,
+      isConnected: dbConnected,
+    });
+  }, [users, loading, error, dbConnected]);
+
   const navigate = useNavigate();
 
   const navigationItems = [
