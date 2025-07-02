@@ -946,7 +946,7 @@ const Admin = () => {
                             id={`permanence-name-${permanence.id}`}
                             value={permanence.name}
                             onChange={(e) =>
-                              updatePermanence(
+                              updatePermanenceField(
                                 permanence.id,
                                 "name",
                                 e.target.value,
@@ -967,7 +967,7 @@ const Admin = () => {
                             id={`permanence-time-${permanence.id}`}
                             value={permanence.time}
                             onChange={(e) =>
-                              updatePermanence(
+                              updatePermanenceField(
                                 permanence.id,
                                 "time",
                                 e.target.value,
@@ -988,7 +988,7 @@ const Admin = () => {
                             id={`permanence-theme-${permanence.id}`}
                             value={permanence.theme}
                             onChange={(e) =>
-                              updatePermanence(
+                              updatePermanenceField(
                                 permanence.id,
                                 "theme",
                                 e.target.value,
