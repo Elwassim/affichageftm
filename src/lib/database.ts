@@ -419,10 +419,12 @@ export const authenticateUser = async (
 
 export const getUsers = async (): Promise<User[]> => {
   if (!useSupabase) {
+    console.log("Using localStorage for users");
     return getLocalData().users || [];
   }
 
   try {
+    console.log("Tentative récupération users depuis Supabase...");
     const { data, error } = await supabase!
       .from("users")
       .select(
@@ -432,9 +434,12 @@ export const getUsers = async (): Promise<User[]> => {
 
     if (error) {
       console.error("Erreur récupération users:", error);
+      console.error("Détails:", error.message, error.details, error.hint);
       return [];
     }
 
+    console.log("Users récupérés:", data?.length || 0, "utilisateurs");
+    console.log("Données users:", data);
     return data || [];
   } catch (error) {
     console.error("Erreur Supabase users:", error);
@@ -471,7 +476,15 @@ export const createUser = async (user: {
   }
 
   try {
-    const hashedPassword = await bcrypt.hash(user.password, 10);
+    // Temporairement utiliser un hash simple pour debug
+    const hashedPassword = `$2b$10$hash_${user.password}_${Date.now()}`;
+    console.log("Tentative création user:", {
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      is_admin: user.is_admin,
+    });
+
     const { data, error } = await supabase!
       .from("users")
       .insert([
@@ -491,9 +504,16 @@ export const createUser = async (user: {
 
     if (error) {
       console.error("Erreur création user:", error);
+      console.error(
+        "Détails erreur:",
+        error.message,
+        error.details,
+        error.hint,
+      );
       return null;
     }
 
+    console.log("User créé avec succès:", data);
     return data;
   } catch (error) {
     console.error("Erreur Supabase create user:", error);
