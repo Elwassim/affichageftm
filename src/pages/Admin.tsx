@@ -19,6 +19,9 @@ import {
   Menu,
   X,
   RefreshCw,
+  Settings,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -41,7 +44,7 @@ import {
   getConfig,
   updateConfig,
 } from "../lib/database";
-import type { Meeting, Tribute, Permanence } from "../lib/supabase";
+import type { Meeting, Tribute, Permanence, User } from "../lib/supabase";
 
 const MEETING_CATEGORIES = [
   "Assemblée Générale",
@@ -65,6 +68,7 @@ const Admin = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [tributes, setTributes] = useState<Tribute[]>([]);
   const [permanences, setPermanences] = useState<Permanence[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   // États pour les formulaires
   const [newMeeting, setNewMeeting] = useState({
@@ -87,6 +91,22 @@ const Admin = () => {
     type: "Standard",
   });
 
+  const [newUser, setNewUser] = useState({
+    username: "",
+    password: "",
+    email: "",
+    role: "user",
+    is_admin: false,
+  });
+
+  const [config, setConfig] = useState({
+    videoUrl: "",
+    weatherCity: "Paris",
+    alertText: "",
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+
   const navigate = useNavigate();
 
   const navigationItems = [
@@ -94,6 +114,8 @@ const Admin = () => {
     { id: "tributes", label: "Hommages", icon: Heart, color: "pink" },
     { id: "permanences", label: "Permanences", icon: Users, color: "green" },
     { id: "video", label: "Médias", icon: Video, color: "orange" },
+    { id: "users", label: "Utilisateurs", icon: Shield, color: "purple" },
+    { id: "settings", label: "Paramètres", icon: Settings, color: "gray" },
   ];
 
   // Chargement initial des données
@@ -104,15 +126,30 @@ const Admin = () => {
   const loadAllData = async () => {
     setLoading(true);
     try {
-      const [meetingsData, tributesData, permanencesData] = await Promise.all([
+      const [
+        meetingsData,
+        tributesData,
+        permanencesData,
+        videoUrl,
+        weatherCity,
+        alertText,
+      ] = await Promise.all([
         getAllMeetings(),
         getTributes(),
         getPermanences(),
+        getConfig("videoUrl"),
+        getConfig("weatherCity"),
+        getConfig("alertText"),
       ]);
 
       setMeetings(meetingsData);
       setTributes(tributesData);
       setPermanences(permanencesData);
+      setConfig({
+        videoUrl: videoUrl || "",
+        weatherCity: weatherCity || "Paris",
+        alertText: alertText || "",
+      });
       setDbConnected(true);
     } catch (error) {
       console.error("Erreur chargement données:", error);
@@ -305,6 +342,87 @@ const Admin = () => {
       toast({
         title: "Erreur",
         description: "Impossible de supprimer la permanence.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // CONFIG FUNCTIONS
+  const handleUpdateConfig = async (key: string, value: string) => {
+    try {
+      const success = await updateConfig(key, value);
+      if (success) {
+        setConfig({ ...config, [key]: value });
+        toast({
+          title: "Succès",
+          description: "Configuration mise à jour avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de mettre à jour la configuration.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // USER FUNCTIONS
+  const handleAddUser = async () => {
+    if (!newUser.username.trim() || !newUser.password.trim()) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs obligatoires.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      // Pour l'instant on simule l'ajout d'utilisateur
+      const mockUser: User = {
+        id: Date.now().toString(),
+        username: newUser.username,
+        email: newUser.email,
+        role: newUser.role,
+        is_admin: newUser.is_admin,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+
+      setUsers([...users, mockUser]);
+      setNewUser({
+        username: "",
+        password: "",
+        email: "",
+        role: "user",
+        is_admin: false,
+      });
+      toast({
+        title: "Succès",
+        description: "Utilisateur ajouté avec succès.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'ajouter l'utilisateur.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteUser = async (id: string) => {
+    try {
+      setUsers(users.filter((u) => u.id !== id));
+      toast({
+        title: "Succès",
+        description: "Utilisateur supprimé avec succès.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer l'utilisateur.",
         variant: "destructive",
       });
     }
@@ -1009,19 +1127,543 @@ const Admin = () => {
 
             {/* Video Tab */}
             {activeTab === "video" && (
-              <div className="admin-section-header">
-                <div className="admin-section-title">
-                  <div className="admin-section-icon bg-orange-100">
-                    <Video className="w-6 h-6 text-orange-600" />
+              <div className="space-y-8">
+                {/* Section Header */}
+                <div className="admin-section-header">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-orange-100">
+                      <Video className="w-6 h-6 text-orange-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-slate-800">
+                        Médias
+                      </h2>
+                      <p className="text-slate-600">
+                        Gestion des vidéos et contenus multimédias
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-800">
-                      Médias
-                    </h2>
-                    <p className="text-slate-600">
-                      Gestion des vidéos et contenus multimédias (En
-                      développement)
+                  <div className="admin-section-stats">
+                    <span className="admin-connection-status">
+                      <div
+                        className={`admin-connection-dot ${dbConnected ? "bg-green-500" : "bg-red-500"}`}
+                      ></div>
+                      {dbConnected
+                        ? "Base de données connectée"
+                        : "Connexion échouée"}
+                    </span>
+                    <span>URL vidéo configurée</span>
+                  </div>
+                </div>
+
+                {/* Video Configuration */}
+                <div className="admin-add-card">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-orange-500">
+                      <Settings className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-800">
+                        Configuration vidéo
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        URL de la vidéo principale du tableau de bord
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <label className="admin-label">URL de la vidéo *</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="url"
+                        value={config.videoUrl}
+                        onChange={(e) =>
+                          setConfig({ ...config, videoUrl: e.target.value })
+                        }
+                        placeholder="https://www.youtube.com/watch?v=..."
+                        className="admin-input flex-1"
+                      />
+                      <button
+                        onClick={() =>
+                          handleUpdateConfig("videoUrl", config.videoUrl)
+                        }
+                        disabled={!config.videoUrl.trim()}
+                        className="admin-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        Sauvegarder
+                      </button>
+                    </div>
+                    <p className="text-xs text-slate-500 mt-2">
+                      Formats supportés : YouTube, Vimeo, liens directs MP4
                     </p>
+                  </div>
+
+                  {config.videoUrl && (
+                    <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                      <h4 className="text-sm font-semibold text-slate-700 mb-2">
+                        Aperçu :
+                      </h4>
+                      <div className="bg-white rounded border p-2 text-sm text-slate-600">
+                        {config.videoUrl}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Alert Banner Configuration */}
+                <div className="admin-add-card">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-red-500">
+                      <Settings className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-800">
+                        Message d'alerte
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        Bandeau défilant en haut du tableau de bord
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <label className="admin-label">Texte d'alerte</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={config.alertText}
+                        onChange={(e) =>
+                          setConfig({ ...config, alertText: e.target.value })
+                        }
+                        placeholder="🚨 Message important CGT FTM..."
+                        className="admin-input flex-1"
+                      />
+                      <button
+                        onClick={() =>
+                          handleUpdateConfig("alertText", config.alertText)
+                        }
+                        className="admin-btn-primary"
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        Sauvegarder
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Weather Configuration */}
+                <div className="admin-add-card">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-blue-500">
+                      <Settings className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-800">
+                        Ville météo
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        Ville pour l'affichage météorologique
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <label className="admin-label">Nom de la ville</label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={config.weatherCity}
+                        onChange={(e) =>
+                          setConfig({
+                            ...config,
+                            weatherCity: e.target.value,
+                          })
+                        }
+                        placeholder="Paris"
+                        className="admin-input flex-1"
+                      />
+                      <button
+                        onClick={() =>
+                          handleUpdateConfig("weatherCity", config.weatherCity)
+                        }
+                        className="admin-btn-primary"
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        Sauvegarder
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Users Tab */}
+            {activeTab === "users" && (
+              <div className="space-y-8">
+                {/* Section Header */}
+                <div className="admin-section-header">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-purple-100">
+                      <Shield className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-slate-800">
+                        Gestion des utilisateurs
+                      </h2>
+                      <p className="text-slate-600">
+                        Gérez les comptes d'accès au panel d'administration
+                      </p>
+                    </div>
+                  </div>
+                  <div className="admin-section-stats">
+                    <span className="admin-connection-status">
+                      <div
+                        className={`admin-connection-dot ${dbConnected ? "bg-green-500" : "bg-red-500"}`}
+                      ></div>
+                      {dbConnected
+                        ? "Base de données connectée"
+                        : "Connexion échouée"}
+                    </span>
+                    <span>{users.length} utilisateurs</span>
+                  </div>
+                </div>
+
+                {/* Add User Form */}
+                <div className="admin-add-card">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-purple-500">
+                      <Plus className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-800">
+                        Ajouter un utilisateur
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        Nouveau compte d'accès à l'administration
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="admin-form-grid mt-6">
+                    <div>
+                      <label className="admin-label">Nom d'utilisateur *</label>
+                      <input
+                        type="text"
+                        value={newUser.username}
+                        onChange={(e) =>
+                          setNewUser({ ...newUser, username: e.target.value })
+                        }
+                        placeholder="admin_cgt"
+                        className="admin-input w-full"
+                      />
+                    </div>
+                    <div>
+                      <label className="admin-label">Email</label>
+                      <input
+                        type="email"
+                        value={newUser.email}
+                        onChange={(e) =>
+                          setNewUser({ ...newUser, email: e.target.value })
+                        }
+                        placeholder="admin@cgt-ftm.fr"
+                        className="admin-input w-full"
+                      />
+                    </div>
+                    <div>
+                      <label className="admin-label">Mot de passe *</label>
+                      <div className="relative">
+                        <input
+                          type={showPassword ? "text" : "password"}
+                          value={newUser.password}
+                          onChange={(e) =>
+                            setNewUser({ ...newUser, password: e.target.value })
+                          }
+                          placeholder="••••••••"
+                          className="admin-input w-full pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        >
+                          {showPassword ? (
+                            <EyeOff className="w-4 h-4" />
+                          ) : (
+                            <Eye className="w-4 h-4" />
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="admin-label">Rôle</label>
+                      <select
+                        value={newUser.role}
+                        onChange={(e) =>
+                          setNewUser({ ...newUser, role: e.target.value })
+                        }
+                        className="admin-input w-full"
+                      >
+                        <option value="user">Utilisateur</option>
+                        <option value="admin">Administrateur</option>
+                        <option value="moderator">Modérateur</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <label className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        checked={newUser.is_admin}
+                        onChange={(e) =>
+                          setNewUser({ ...newUser, is_admin: e.target.checked })
+                        }
+                        className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                      />
+                      <span className="text-sm text-slate-700">
+                        Droits d'administration
+                      </span>
+                    </label>
+                  </div>
+
+                  <div className="flex justify-end mt-6">
+                    <button
+                      onClick={handleAddUser}
+                      disabled={
+                        !newUser.username.trim() || !newUser.password.trim()
+                      }
+                      className="admin-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Ajouter l'utilisateur
+                    </button>
+                  </div>
+                </div>
+
+                {/* Users List */}
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4">
+                    Utilisateurs existants ({users.length})
+                  </h3>
+
+                  {users.length === 0 ? (
+                    <div className="text-center py-8 text-slate-500">
+                      Aucun utilisateur trouvé. Ajoutez le premier utilisateur
+                      ci-dessus.
+                    </div>
+                  ) : (
+                    users.map((user) => (
+                      <div key={user.id} className="admin-list-item">
+                        <div className="flex items-center justify-between">
+                          <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                              <label className="admin-label">
+                                Nom d'utilisateur
+                              </label>
+                              <input
+                                type="text"
+                                value={user.username}
+                                readOnly
+                                className="admin-input w-full bg-gray-50"
+                              />
+                            </div>
+                            <div>
+                              <label className="admin-label">Email</label>
+                              <input
+                                type="email"
+                                value={user.email || "Non renseigné"}
+                                readOnly
+                                className="admin-input w-full bg-gray-50"
+                              />
+                            </div>
+                            <div>
+                              <label className="admin-label">Rôle</label>
+                              <input
+                                type="text"
+                                value={user.role}
+                                readOnly
+                                className="admin-input w-full bg-gray-50"
+                              />
+                            </div>
+                            <div>
+                              <label className="admin-label">Statut</label>
+                              <div className="flex items-center space-x-2">
+                                <span
+                                  className={`inline-block w-2 h-2 rounded-full ${user.is_active ? "bg-green-500" : "bg-red-500"}`}
+                                ></span>
+                                <span className="text-sm">
+                                  {user.is_active ? "Actif" : "Inactif"}
+                                </span>
+                                {user.is_admin && (
+                                  <span className="bg-purple-100 text-purple-700 px-2 py-1 rounded-full text-xs font-medium">
+                                    Admin
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                          <div className="ml-4">
+                            <button
+                              onClick={() => handleDeleteUser(user.id)}
+                              className="admin-btn-danger"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                        <div className="mt-3 flex items-center gap-2 text-xs text-slate-500">
+                          <span>
+                            Créé le{" "}
+                            {new Date(user.created_at).toLocaleDateString(
+                              "fr-FR",
+                            )}
+                          </span>
+                          {user.updated_at !== user.created_at && (
+                            <>
+                              <span>•</span>
+                              <span>
+                                Modifié le{" "}
+                                {new Date(user.updated_at).toLocaleDateString(
+                                  "fr-FR",
+                                )}
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Settings Tab */}
+            {activeTab === "settings" && (
+              <div className="space-y-8">
+                {/* Section Header */}
+                <div className="admin-section-header">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-gray-100">
+                      <Settings className="w-6 h-6 text-gray-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-slate-800">
+                        Paramètres système
+                      </h2>
+                      <p className="text-slate-600">
+                        Configuration générale de l'application
+                      </p>
+                    </div>
+                  </div>
+                  <div className="admin-section-stats">
+                    <span className="admin-connection-status">
+                      <div
+                        className={`admin-connection-dot ${dbConnected ? "bg-green-500" : "bg-red-500"}`}
+                      ></div>
+                      {dbConnected
+                        ? "Base de données connectée"
+                        : "Connexion échouée"}
+                    </span>
+                    <span>Configuration système</span>
+                  </div>
+                </div>
+
+                {/* System Status */}
+                <div className="admin-add-card">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-green-500">
+                      <Shield className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-800">
+                        État du système
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        Informations sur l'état de l'application
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-green-800">
+                          Base de données
+                        </span>
+                        <div
+                          className={`w-3 h-3 rounded-full ${dbConnected ? "bg-green-500" : "bg-red-500"}`}
+                        ></div>
+                      </div>
+                      <p className="text-xs text-green-600 mt-1">
+                        {dbConnected ? "Connectée" : "Déconnectée"}
+                      </p>
+                    </div>
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-blue-800">
+                          Données synchronisées
+                        </span>
+                        <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                      </div>
+                      <p className="text-xs text-blue-600 mt-1">
+                        {meetings.length + tributes.length + permanences.length}{" "}
+                        entrées
+                      </p>
+                    </div>
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-medium text-purple-800">
+                          Version
+                        </span>
+                        <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                      </div>
+                      <p className="text-xs text-purple-600 mt-1">v1.0.0</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Backup & Maintenance */}
+                <div className="admin-add-card">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-yellow-500">
+                      <Settings className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-800">
+                        Maintenance
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        Actions de maintenance système
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <button
+                      onClick={loadAllData}
+                      className="flex items-center justify-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <RefreshCw className="w-5 h-5 mr-2 text-blue-600" />
+                      <span className="text-sm font-medium">
+                        Recharger les données
+                      </span>
+                    </button>
+                    <button
+                      onClick={() =>
+                        toast({
+                          title: "Fonctionnalité",
+                          description: "Export disponible prochainement.",
+                        })
+                      }
+                      className="flex items-center justify-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                    >
+                      <Save className="w-5 h-5 mr-2 text-green-600" />
+                      <span className="text-sm font-medium">
+                        Exporter les données
+                      </span>
+                    </button>
                   </div>
                 </div>
               </div>
