@@ -654,8 +654,8 @@ const Admin = () => {
         </header>
 
         {/* Content Area */}
-        <main className="p-6">
-          <div className="max-w-7xl mx-auto">
+        <main className="p-8 bg-slate-50 min-h-screen">
+          <div className="max-w-7xl mx-auto space-y-8">
             {/* Meetings Tab */}
             {activeTab === "meetings" && (
               <div className="space-y-6">
