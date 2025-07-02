@@ -1,0 +1,177 @@
+/* Améliorations visuelles pour le panel admin */
+
+/* Headers de section plus visibles */
+.admin-section-header {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.admin-section-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.admin-section-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-section-stats {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.admin-connection-status {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.admin-connection-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #10b981;
+  border-radius: 50%;
+}
+
+/* Cards améliorées */
+.admin-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.admin-add-card {
+  background: linear-gradient(135deg, #dbeafe 0%, #e0e7ff 100%);
+  border: 1px solid #bfdbfe;
+  border-radius: 16px;
+  box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+/* Inputs améliorés */
+.admin-input {
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.admin-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+}
+
+/* Labels plus visibles */
+.admin-label {
+  font-weight: 600;
+  font-size: 14px;
+  color: #374151;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Boutons améliorés */
+.admin-btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-weight: 600;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+  transition: all 0.2s;
+}
+
+.admin-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4);
+}
+
+.admin-btn-danger {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.admin-btn-danger:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.3);
+}
+
+/* Layout amélioré */
+.admin-main-content {
+  padding: 32px;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.admin-content-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Items de liste plus lisibles */
+.admin-list-item {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  border-left: 4px solid #3b82f6;
+  transition: all 0.2s;
+}
+
+.admin-list-item:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-main-content {
+    padding: 16px;
+  }
+
+  .admin-section-header {
+    padding: 16px;
+  }
+}
