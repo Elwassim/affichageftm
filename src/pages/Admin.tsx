@@ -292,31 +292,34 @@ const Admin = () => {
     }
   };
 
-  const handleAddMeeting = () => {
+  const handleAddMeeting = async () => {
     if (
       newMeeting.title.trim() &&
       newMeeting.time.trim() &&
       newMeeting.room.trim() &&
       newMeeting.date.trim()
     ) {
-      const meeting = {
-        ...newMeeting,
-        id: Date.now().toString(),
-      };
-      const updatedData = {
-        ...data,
-        meetings: [...data.meetings, meeting],
-      };
-      setData(updatedData);
-      saveDashboardData(updatedData);
-      setNewMeeting({
-        title: "",
-        time: "",
-        room: "",
-        category: "Assemblée Générale",
-        date: new Date().toISOString().split("T")[0],
-      });
-      alert("Réunion ajoutée avec succès !");
+      try {
+        const result = await createMeeting(newMeeting);
+        if (result) {
+          // Recharger toutes les réunions
+          const allMeetings = await getAllMeetings();
+          setData({ ...data, meetings: allMeetings });
+          setNewMeeting({
+            title: "",
+            time: "",
+            room: "",
+            category: "Assemblée Générale",
+            date: new Date().toISOString().split("T")[0],
+          });
+          alert("Réunion ajoutée avec succès !");
+        } else {
+          alert("Erreur lors de l'ajout de la réunion");
+        }
+      } catch (error) {
+        console.error("Error adding meeting:", error);
+        alert("Erreur lors de l'ajout de la réunion");
+      }
     } else {
       alert("Veuillez remplir tous les champs obligatoires.");
     }
