@@ -424,25 +424,53 @@ export const getUsers = async (): Promise<User[]> => {
   }
 
   try {
-    console.log("Tentative récupération users depuis Supabase...");
-    const { data, error } = await supabase!
+    console.log("🔍 Tentative récupération users depuis Supabase...");
+    console.log("🔗 Supabase URL:", import.meta.env.VITE_SUPABASE_URL);
+    console.log(
+      "🔑 Supabase Key présente:",
+      !!import.meta.env.VITE_SUPABASE_ANON_KEY,
+    );
+
+    // Test 1: Requête simple sans sélection de colonnes
+    console.log("📋 Test 1: Requête simple...");
+    const simpleQuery = await supabase!.from("users").select("*");
+    console.log("📊 Résultat requête simple:", {
+      data: simpleQuery.data,
+      error: simpleQuery.error,
+      count: simpleQuery.data?.length || 0,
+    });
+
+    // Test 2: Requête avec colonnes spécifiques
+    console.log("📋 Test 2: Requête avec colonnes spécifiques...");
+    const { data, error, count } = await supabase!
       .from("users")
       .select(
         "id, username, email, role, is_admin, is_active, created_at, updated_at",
+        { count: "exact" },
       )
       .order("created_at", { ascending: true });
 
+    console.log("📊 Résultat requête détaillée:", {
+      data,
+      error,
+      count,
+      dataLength: data?.length || 0,
+    });
+
     if (error) {
-      console.error("Erreur récupération users:", error);
-      console.error("Détails:", error.message, error.details, error.hint);
+      console.error("❌ Erreur récupération users:", error);
+      console.error("📝 Message:", error.message);
+      console.error("🔍 Détails:", error.details);
+      console.error("💡 Hint:", error.hint);
+      console.error("🏷️ Code:", error.code);
       return [];
     }
 
-    console.log("Users récupérés:", data?.length || 0, "utilisateurs");
-    console.log("Données users:", data);
+    console.log("✅ Users récupérés:", data?.length || 0, "utilisateurs");
+    console.log("📄 Données complètes:", JSON.stringify(data, null, 2));
     return data || [];
   } catch (error) {
-    console.error("Erreur Supabase users:", error);
+    console.error("💥 Erreur catch Supabase users:", error);
     return [];
   }
 };
