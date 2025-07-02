@@ -1,23 +1,11 @@
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Heart, Clock } from "lucide-react";
-import { getDashboardData } from "@/lib/storage";
-import { useState, useEffect } from "react";
+import { useTributeRotation } from "@/hooks/useTributeRotation";
 
 export const SocialWidget = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [tributes, setTributes] = useState<any[]>([]);
-
-  useEffect(() => {
-    try {
-      const data = getDashboardData();
-      const tributesData = data.tributes || [];
-      setTributes(tributesData);
-    } catch (error) {
-      console.error("Error loading tributes:", error);
-      setTributes([]);
-    }
-  }, []);
+  const { currentTribute, totalTributes, currentIndex } =
+    useTributeRotation(30000);
 
   useEffect(() => {
     if (tributes.length <= 1) return;
