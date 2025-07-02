@@ -68,8 +68,24 @@ const MEETING_CATEGORIES = [
 ];
 
 const Admin = () => {
-  const [data, setData] = useState(getDashboardData());
+  const [data, setData] = useState<any>(null);
   const [authUsers, setAuthUsers] = useState(getAuthUsers());
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const dashboardData = await getDashboardDataFromDB();
+        setData(dashboardData);
+      } catch (error) {
+        console.error("Error loading dashboard data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
+  }, []);
   const [newTribute, setNewTribute] = useState({
     name: "",
     photo: "",
