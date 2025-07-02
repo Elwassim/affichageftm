@@ -226,7 +226,7 @@ const Admin = () => {
       });
 
       if (tribute) {
-        setTributes([...tributes, tribute]);
+        await refresh();
         setNewTribute({
           name: "",
           photo: "",
@@ -250,7 +250,7 @@ const Admin = () => {
     try {
       const success = await deleteTributeFromDB(id);
       if (success) {
-        setTributes(tributes.filter((t) => t.id !== id));
+        await refresh();
         toast({
           title: "Succès",
           description: "Hommage supprimé avec succès.",
@@ -284,7 +284,7 @@ const Admin = () => {
       });
 
       if (permanence) {
-        setPermanences([...permanences, permanence]);
+        await refresh();
         setNewPermanence({
           name: "",
           schedule: "",
@@ -308,7 +308,7 @@ const Admin = () => {
     try {
       const success = await deletePermanence(id);
       if (success) {
-        setPermanences(permanences.filter((p) => p.id !== id));
+        await refresh();
         toast({
           title: "Succès",
           description: "Permanence supprimée avec succès.",
@@ -540,7 +540,12 @@ const Admin = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Button onClick={loadAllData} variant="outline" size="sm">
+              {lastSync && (
+                <span className="text-xs text-slate-500">
+                  Dernière sync: {lastSync.toLocaleTimeString()}
+                </span>
+              )}
+              <Button onClick={refresh} variant="outline" size="sm">
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Actualiser
               </Button>
@@ -1155,18 +1160,21 @@ const Admin = () => {
                     <div className="flex gap-2">
                       <input
                         type="url"
-                        value={config.videoUrl}
+                        value={localConfig.videoUrl}
                         onChange={(e) =>
-                          setConfig({ ...config, videoUrl: e.target.value })
+                          setLocalConfig({
+                            ...localConfig,
+                            videoUrl: e.target.value,
+                          })
                         }
                         placeholder="https://www.youtube.com/watch?v=..."
                         className="admin-input flex-1"
                       />
                       <button
                         onClick={() =>
-                          handleUpdateConfig("videoUrl", config.videoUrl)
+                          handleUpdateConfig("videoUrl", localConfig.videoUrl)
                         }
-                        disabled={!config.videoUrl.trim()}
+                        disabled={!localConfig.videoUrl.trim()}
                         className="admin-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Save className="w-4 h-4 mr-2" />
@@ -1178,13 +1186,13 @@ const Admin = () => {
                     </p>
                   </div>
 
-                  {config.videoUrl && (
+                  {localConfig.videoUrl && (
                     <div className="mt-6 p-4 bg-gray-50 rounded-lg">
                       <h4 className="text-sm font-semibold text-slate-700 mb-2">
                         Aperçu :
                       </h4>
                       <div className="bg-white rounded border p-2 text-sm text-slate-600">
-                        {config.videoUrl}
+                        {localConfig.videoUrl}
                       </div>
                     </div>
                   )}
@@ -1211,16 +1219,19 @@ const Admin = () => {
                     <div className="flex gap-2">
                       <input
                         type="text"
-                        value={config.alertText}
+                        value={localConfig.alertText}
                         onChange={(e) =>
-                          setConfig({ ...config, alertText: e.target.value })
+                          setLocalConfig({
+                            ...localConfig,
+                            alertText: e.target.value,
+                          })
                         }
                         placeholder="🚨 Message important CGT FTM..."
                         className="admin-input flex-1"
                       />
                       <button
                         onClick={() =>
-                          handleUpdateConfig("alertText", config.alertText)
+                          handleUpdateConfig("alertText", localConfig.alertText)
                         }
                         className="admin-btn-primary"
                       >
@@ -1252,10 +1263,10 @@ const Admin = () => {
                     <div className="flex gap-2">
                       <input
                         type="text"
-                        value={config.weatherCity}
+                        value={localConfig.weatherCity}
                         onChange={(e) =>
-                          setConfig({
-                            ...config,
+                          setLocalConfig({
+                            ...localConfig,
                             weatherCity: e.target.value,
                           })
                         }
@@ -1264,7 +1275,10 @@ const Admin = () => {
                       />
                       <button
                         onClick={() =>
-                          handleUpdateConfig("weatherCity", config.weatherCity)
+                          handleUpdateConfig(
+                            "weatherCity",
+                            localConfig.weatherCity,
+                          )
                         }
                         className="admin-btn-primary"
                       >
@@ -1620,7 +1634,7 @@ const Admin = () => {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
                     <button
-                      onClick={loadAllData}
+                      onClick={refresh}
                       className="flex items-center justify-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
                     >
                       <RefreshCw className="w-5 h-5 mr-2 text-blue-600" />
