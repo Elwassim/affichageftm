@@ -124,6 +124,30 @@ export const getMeetings = async (): Promise<Meeting[]> => {
   }
 };
 
+export const getAllMeetings = async (): Promise<Meeting[]> => {
+  if (!useSupabase) {
+    return getLocalData().meetings;
+  }
+
+  try {
+    const { data, error } = await supabase!
+      .from("meetings")
+      .select("*")
+      .order("date", { ascending: true })
+      .order("time", { ascending: true });
+
+    if (error) {
+      console.error("Erreur récupération all meetings:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Erreur Supabase all meetings:", error);
+    return [];
+  }
+};
+
 export const createMeeting = async (
   meeting: Omit<Meeting, "id" | "created_at" | "updated_at">,
 ): Promise<Meeting | null> => {
