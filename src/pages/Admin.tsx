@@ -6,15 +6,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  getDashboardData,
-  saveDashboardData,
-  addTribute,
-  removeTribute,
+  getDashboardDataFromDB,
+  getMeetings,
+  createMeeting,
+  updateMeetingInDB,
+  deleteMeetingFromDB,
+  getPermanences,
+  createPermanence,
+  getTributes,
+  createTribute,
+  deleteTributeFromDB,
+  getConfig,
+  setConfig,
   type Meeting,
   type Permanence,
   type SocialPost,
   type Tribute,
-} from "@/lib/storage";
+} from "@/lib/database";
 import {
   getAuthUsers,
   addAuthUser,
