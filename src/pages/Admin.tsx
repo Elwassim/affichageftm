@@ -6,24 +6,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  getDashboardDataFromDB,
-  getMeetings,
-  getAllMeetings,
-  createMeeting,
-  updateMeetingInDB,
-  deleteMeetingFromDB,
-  getPermanences,
-  createPermanence,
-  getTributes,
-  createTribute,
-  deleteTributeFromDB,
-  getConfig,
-  setConfig,
+  getDashboardData,
+  saveDashboardData,
+  addTribute,
+  removeTribute,
   type Meeting,
   type Permanence,
   type SocialPost,
   type Tribute,
-} from "@/lib/database";
+} from "@/lib/storage";
 import {
   getAuthUsers,
   addAuthUser,
@@ -98,7 +89,7 @@ const Admin = () => {
     title: "",
     time: "",
     room: "",
-    category: "Assemblée Générale",
+    category: "Assembl��e Générale",
     date: new Date().toISOString().split("T")[0], // Date d'aujourd'hui par défaut
   });
   const [sidebarOpen, setSidebarOpen] = useState(true);
