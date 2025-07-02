@@ -570,10 +570,10 @@ const Admin = () => {
                       <Calendar className="w-6 h-6 text-blue-600" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-slate-800">
+                      <h2 className="text-2xl font-bold text-gray-900">
                         Réunions CGT FTM
                       </h2>
-                      <p className="text-slate-600">
+                      <p className="text-gray-700">
                         Planifiez et organisez les assemblées syndicales
                       </p>
                     </div>
@@ -598,10 +598,10 @@ const Admin = () => {
                       <Plus className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-slate-800">
+                      <h3 className="text-lg font-semibold text-gray-900">
                         Ajouter une réunion
                       </h3>
-                      <p className="text-sm text-slate-600">
+                      <p className="text-sm text-gray-700">
                         Nouvelle entrée au calendrier syndical
                       </p>
                     </div>
@@ -698,7 +698,7 @@ const Admin = () => {
 
                 {/* Meetings List */}
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-800 mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">
                     Réunions existantes ({meetings.length})
                   </h3>
 
@@ -782,10 +782,10 @@ const Admin = () => {
                       <Heart className="w-6 h-6 text-pink-600" />
                     </div>
                     <div>
-                      <h2 className="text-2xl font-bold text-slate-800">
+                      <h2 className="text-2xl font-bold text-gray-900">
                         Hommages
                       </h2>
-                      <p className="text-slate-600">
+                      <p className="text-gray-700">
                         Gérez les hommages avec rotation automatique
                       </p>
                     </div>
