@@ -191,7 +191,7 @@ const Admin = () => {
     try {
       const success = await updateMeeting(id, { [field]: value });
       if (success) {
-        // Mettre à jour localement aussi pour une réactivité immédiate
+        // Mettre �� jour localement aussi pour une réactivité immédiate
         setData((prev: any) => ({
           ...prev,
           meetings: prev.meetings.map((m: Meeting) =>
@@ -225,17 +225,25 @@ const Admin = () => {
     }));
   };
 
-  const updatePermanence = (
+  const updatePermanenceField = async (
     id: string,
     field: keyof Permanence,
     value: string,
   ) => {
-    setData((prev) => ({
-      ...prev,
-      permanences: prev.permanences.map((p) =>
-        p.id === id ? { ...p, [field]: value } : p,
-      ),
-    }));
+    try {
+      const success = await updatePermanence(id, { [field]: value });
+      if (success) {
+        // Mettre à jour localement aussi pour une réactivité immédiate
+        setData((prev: any) => ({
+          ...prev,
+          permanences: prev.permanences.map((p: Permanence) =>
+            p.id === id ? { ...p, [field]: value } : p,
+          ),
+        }));
+      }
+    } catch (error) {
+      console.error("Error updating permanence:", error);
+    }
   };
 
   const updateSocialPost = (field: keyof SocialPost, value: string) => {
@@ -638,7 +646,7 @@ const Admin = () => {
                     Réunions CGT FTM
                   </h2>
                   <p className="text-slate-600 mt-1">
-                    Planifiez et organisez les assemblées syndicales par
+                    Planifiez et organisez les assembl��es syndicales par
                     catégorie
                   </p>
                 </div>
