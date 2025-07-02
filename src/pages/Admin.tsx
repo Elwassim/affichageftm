@@ -18,28 +18,30 @@ import {
   Shield,
   Menu,
   X,
+  RefreshCw,
 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 // Import des styles améliorés
 import "../styles/admin-improvements.css";
 
-// Types temporaires pour éviter les erreurs
-interface Meeting {
-  id: string;
-  title: string;
-  time: string;
-  room: string;
-  category: string;
-  date: string;
-}
-
-interface Tribute {
-  id: string;
-  name: string;
-  photo: string;
-  text: string;
-  date_added: string;
-}
+// Import database functions
+import {
+  getAllMeetings,
+  addMeetingToDB,
+  updateMeetingInDB,
+  deleteMeetingFromDB,
+  getTributes,
+  addTributeToDB,
+  deleteTributeFromDB,
+  getPermanences,
+  addPermanenceToDB,
+  updatePermanence,
+  deletePermanence,
+  getConfig,
+  updateConfig,
+} from "../lib/database";
+import type { Meeting, Tribute, Permanence } from "../lib/supabase";
 
 const MEETING_CATEGORIES = [
   "Assemblée Générale",
@@ -55,30 +57,16 @@ const MEETING_CATEGORIES = [
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("meetings");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [dbConnected, setDbConnected] = useState(false);
+  const { toast } = useToast();
 
-  // États temporaires avec données par défaut
-  const [meetings] = useState<Meeting[]>([
-    {
-      id: "1",
-      title: "Assemblée Générale",
-      time: "14:00",
-      room: "Salle Rouge",
-      category: "Assemblée Générale",
-      date: new Date().toISOString().split("T")[0],
-    },
-  ]);
+  // États pour les données
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
+  const [tributes, setTributes] = useState<Tribute[]>([]);
+  const [permanences, setPermanences] = useState<Permanence[]>([]);
 
-  const [tributes] = useState<Tribute[]>([
-    {
-      id: "1",
-      name: "Henri Krasucki",
-      photo: "",
-      text: "Secrétaire général de la CGT",
-      date_added: new Date().toISOString(),
-    },
-  ]);
-
+  // États pour les formulaires
   const [newMeeting, setNewMeeting] = useState({
     title: "",
     time: "",
@@ -93,16 +81,241 @@ const Admin = () => {
     text: "",
   });
 
+  const [newPermanence, setNewPermanence] = useState({
+    name: "",
+    schedule: "",
+    type: "Standard",
+  });
+
   const navigate = useNavigate();
 
   const navigationItems = [
     { id: "meetings", label: "Réunions", icon: Calendar, color: "blue" },
     { id: "tributes", label: "Hommages", icon: Heart, color: "pink" },
+    { id: "permanences", label: "Permanences", icon: Users, color: "green" },
     { id: "video", label: "Médias", icon: Video, color: "orange" },
   ];
 
+  // Chargement initial des données
+  useEffect(() => {
+    loadAllData();
+  }, []);
+
+  const loadAllData = async () => {
+    setLoading(true);
+    try {
+      const [meetingsData, tributesData, permanencesData] = await Promise.all([
+        getAllMeetings(),
+        getTributes(),
+        getPermanences(),
+      ]);
+
+      setMeetings(meetingsData);
+      setTributes(tributesData);
+      setPermanences(permanencesData);
+      setDbConnected(true);
+    } catch (error) {
+      console.error("Erreur chargement données:", error);
+      setDbConnected(false);
+      toast({
+        title: "Erreur de connexion",
+        description: "Impossible de charger les données de la base.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // MEETINGS FUNCTIONS
+  const handleAddMeeting = async () => {
+    if (
+      !newMeeting.title.trim() ||
+      !newMeeting.time.trim() ||
+      !newMeeting.room.trim()
+    ) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs obligatoires.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const meeting = await addMeetingToDB({
+        title: newMeeting.title,
+        time: newMeeting.time,
+        room: newMeeting.room,
+        category: newMeeting.category,
+        date: newMeeting.date,
+      });
+
+      if (meeting) {
+        setMeetings([...meetings, meeting]);
+        setNewMeeting({
+          title: "",
+          time: "",
+          room: "",
+          category: "Assemblée Générale",
+          date: new Date().toISOString().split("T")[0],
+        });
+        toast({
+          title: "Succès",
+          description: "Réunion ajoutée avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'ajouter la réunion.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteMeeting = async (id: string) => {
+    try {
+      const success = await deleteMeetingFromDB(id);
+      if (success) {
+        setMeetings(meetings.filter((m) => m.id !== id));
+        toast({
+          title: "Succès",
+          description: "Réunion supprimée avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer la réunion.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // TRIBUTES FUNCTIONS
+  const handleAddTribute = async () => {
+    if (!newTribute.name.trim() || !newTribute.text.trim()) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs obligatoires.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const tribute = await addTributeToDB({
+        name: newTribute.name,
+        photo: newTribute.photo,
+        text: newTribute.text,
+        date_added: new Date().toISOString(),
+      });
+
+      if (tribute) {
+        setTributes([...tributes, tribute]);
+        setNewTribute({
+          name: "",
+          photo: "",
+          text: "",
+        });
+        toast({
+          title: "Succès",
+          description: "Hommage ajouté avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'ajouter l'hommage.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeleteTribute = async (id: string) => {
+    try {
+      const success = await deleteTributeFromDB(id);
+      if (success) {
+        setTributes(tributes.filter((t) => t.id !== id));
+        toast({
+          title: "Succès",
+          description: "Hommage supprimé avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer l'hommage.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // PERMANENCES FUNCTIONS
+  const handleAddPermanence = async () => {
+    if (!newPermanence.name.trim() || !newPermanence.schedule.trim()) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs obligatoires.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    try {
+      const permanence = await addPermanenceToDB({
+        name: newPermanence.name,
+        schedule: newPermanence.schedule,
+        type: newPermanence.type,
+      });
+
+      if (permanence) {
+        setPermanences([...permanences, permanence]);
+        setNewPermanence({
+          name: "",
+          schedule: "",
+          type: "Standard",
+        });
+        toast({
+          title: "Succès",
+          description: "Permanence ajoutée avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible d'ajouter la permanence.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleDeletePermanence = async (id: string) => {
+    try {
+      const success = await deletePermanence(id);
+      if (success) {
+        setPermanences(permanences.filter((p) => p.id !== id));
+        toast({
+          title: "Succès",
+          description: "Permanence supprimée avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer la permanence.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSave = () => {
-    console.log("Sauvegarde...");
+    toast({
+      title: "Sauvegarde automatique",
+      description:
+        "Toutes les modifications sont automatiquement sauvegardées.",
+    });
   };
 
   const handleLogout = () => {
@@ -230,10 +443,16 @@ const Admin = () => {
                 </p>
               </div>
             </div>
-            <Button onClick={handleSave} className="admin-btn-primary">
-              <Save className="w-4 h-4 mr-2" />
-              Sauvegarder
-            </Button>
+            <div className="flex items-center space-x-4">
+              <Button onClick={loadAllData} variant="outline" size="sm">
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Actualiser
+              </Button>
+              <Button onClick={handleSave} className="admin-btn-primary">
+                <Save className="w-4 h-4 mr-2" />
+                Sauvegarder
+              </Button>
+            </div>
           </div>
         </header>
 
@@ -260,8 +479,12 @@ const Admin = () => {
                   </div>
                   <div className="admin-section-stats">
                     <span className="admin-connection-status">
-                      <div className="admin-connection-dot"></div>
-                      Base de données connectée
+                      <div
+                        className={`admin-connection-dot ${dbConnected ? "bg-green-500" : "bg-red-500"}`}
+                      ></div>
+                      {dbConnected
+                        ? "Base de données connectée"
+                        : "Connexion échouée"}
                     </span>
                     <span>{meetings.length} réunions au total</span>
                   </div>
@@ -358,7 +581,7 @@ const Admin = () => {
 
                   <div className="flex justify-end mt-6">
                     <button
-                      onClick={() => console.log("Ajouter réunion")}
+                      onClick={handleAddMeeting}
                       disabled={
                         !newMeeting.title.trim() ||
                         !newMeeting.time.trim() ||
@@ -387,8 +610,8 @@ const Admin = () => {
                             <input
                               type="text"
                               value={meeting.title}
-                              onChange={() => {}}
-                              className="admin-input w-full"
+                              readOnly
+                              className="admin-input w-full bg-gray-50"
                             />
                           </div>
                           <div>
@@ -396,8 +619,8 @@ const Admin = () => {
                             <input
                               type="time"
                               value={meeting.time}
-                              onChange={() => {}}
-                              className="admin-input w-full"
+                              readOnly
+                              className="admin-input w-full bg-gray-50"
                             />
                           </div>
                           <div>
@@ -405,16 +628,16 @@ const Admin = () => {
                             <input
                               type="text"
                               value={meeting.room}
-                              onChange={() => {}}
-                              className="admin-input w-full"
+                              readOnly
+                              className="admin-input w-full bg-gray-50"
                             />
                           </div>
                           <div>
                             <label className="admin-label">Catégorie</label>
                             <select
                               value={meeting.category}
-                              onChange={() => {}}
-                              className="admin-input w-full"
+                              disabled
+                              className="admin-input w-full bg-gray-50"
                             >
                               {MEETING_CATEGORIES.map((category) => (
                                 <option key={category} value={category}>
@@ -426,7 +649,7 @@ const Admin = () => {
                         </div>
                         <div className="ml-4">
                           <button
-                            onClick={() => console.log("Supprimer", meeting.id)}
+                            onClick={() => handleDeleteMeeting(meeting.id)}
                             className="admin-btn-danger"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -468,7 +691,9 @@ const Admin = () => {
                   </div>
                   <div className="admin-section-stats">
                     <span className="admin-connection-status">
-                      <div className="admin-connection-dot"></div>
+                      <div
+                        className={`admin-connection-dot ${dbConnected ? "bg-green-500" : "bg-red-500"}`}
+                      ></div>
                       Rotation toutes les 30 secondes
                     </span>
                     <span>{tributes.length} hommages configurés</span>
@@ -538,7 +763,7 @@ const Admin = () => {
 
                   <div className="flex justify-end mt-6">
                     <button
-                      onClick={() => console.log("Ajouter hommage")}
+                      onClick={handleAddTribute}
                       disabled={
                         !newTribute.name.trim() || !newTribute.text.trim()
                       }
@@ -601,9 +826,7 @@ const Admin = () => {
                               </p>
                             </div>
                             <button
-                              onClick={() =>
-                                console.log("Supprimer", tribute.id)
-                              }
+                              onClick={() => handleDeleteTribute(tribute.id)}
                               className="admin-btn-danger"
                             >
                               <Trash2 className="w-4 h-4" />
@@ -617,7 +840,174 @@ const Admin = () => {
               </div>
             )}
 
-            {/* Other tabs */}
+            {/* Permanences Tab */}
+            {activeTab === "permanences" && (
+              <div className="space-y-8">
+                {/* Section Header */}
+                <div className="admin-section-header">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-green-100">
+                      <Users className="w-6 h-6 text-green-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-slate-800">
+                        Permanences
+                      </h2>
+                      <p className="text-slate-600">
+                        Gérez les horaires des permanents syndicaux
+                      </p>
+                    </div>
+                  </div>
+                  <div className="admin-section-stats">
+                    <span className="admin-connection-status">
+                      <div
+                        className={`admin-connection-dot ${dbConnected ? "bg-green-500" : "bg-red-500"}`}
+                      ></div>
+                      {dbConnected
+                        ? "Base de données connectée"
+                        : "Connexion échouée"}
+                    </span>
+                    <span>{permanences.length} permanences configurées</span>
+                  </div>
+                </div>
+
+                {/* Add Permanence Form */}
+                <div className="admin-add-card">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-green-500">
+                      <Plus className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-800">
+                        Ajouter une permanence
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        Nouveau créneau de permanence
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="admin-form-grid mt-6">
+                    <div>
+                      <label className="admin-label">Nom du permanent *</label>
+                      <input
+                        type="text"
+                        value={newPermanence.name}
+                        onChange={(e) =>
+                          setNewPermanence({
+                            ...newPermanence,
+                            name: e.target.value,
+                          })
+                        }
+                        placeholder="Marie Dupont"
+                        className="admin-input w-full"
+                      />
+                    </div>
+                    <div>
+                      <label className="admin-label">Horaires *</label>
+                      <input
+                        type="text"
+                        value={newPermanence.schedule}
+                        onChange={(e) =>
+                          setNewPermanence({
+                            ...newPermanence,
+                            schedule: e.target.value,
+                          })
+                        }
+                        placeholder="Lundi 9h-17h"
+                        className="admin-input w-full"
+                      />
+                    </div>
+                    <div>
+                      <label className="admin-label">Type</label>
+                      <select
+                        value={newPermanence.type}
+                        onChange={(e) =>
+                          setNewPermanence({
+                            ...newPermanence,
+                            type: e.target.value,
+                          })
+                        }
+                        className="admin-input w-full"
+                      >
+                        <option value="Standard">Standard</option>
+                        <option value="Délégué">Délégué</option>
+                        <option value="Secrétaire">Secrétaire</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end mt-6">
+                    <button
+                      onClick={handleAddPermanence}
+                      disabled={
+                        !newPermanence.name.trim() ||
+                        !newPermanence.schedule.trim()
+                      }
+                      className="admin-btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Ajouter la permanence
+                    </button>
+                  </div>
+                </div>
+
+                {/* Permanences List */}
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4">
+                    Permanences existantes ({permanences.length})
+                  </h3>
+
+                  {permanences.map((permanence) => (
+                    <div key={permanence.id} className="admin-list-item">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="admin-label">Nom</label>
+                            <input
+                              type="text"
+                              value={permanence.name}
+                              readOnly
+                              className="admin-input w-full bg-gray-50"
+                            />
+                          </div>
+                          <div>
+                            <label className="admin-label">Horaires</label>
+                            <input
+                              type="text"
+                              value={permanence.schedule}
+                              readOnly
+                              className="admin-input w-full bg-gray-50"
+                            />
+                          </div>
+                          <div>
+                            <label className="admin-label">Type</label>
+                            <input
+                              type="text"
+                              value={permanence.type}
+                              readOnly
+                              className="admin-input w-full bg-gray-50"
+                            />
+                          </div>
+                        </div>
+                        <div className="ml-4">
+                          <button
+                            onClick={() =>
+                              handleDeletePermanence(permanence.id)
+                            }
+                            className="admin-btn-danger"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Video Tab */}
             {activeTab === "video" && (
               <div className="admin-section-header">
                 <div className="admin-section-title">
@@ -629,7 +1019,8 @@ const Admin = () => {
                       Médias
                     </h2>
                     <p className="text-slate-600">
-                      Gestion des vidéos et contenus multimédias
+                      Gestion des vidéos et contenus multimédias (En
+                      développement)
                     </p>
                   </div>
                 </div>
