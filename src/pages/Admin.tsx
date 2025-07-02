@@ -325,14 +325,21 @@ const Admin = () => {
     }
   };
 
-  const handleRemoveMeeting = (id: string) => {
+  const handleRemoveMeeting = async (id: string) => {
     if (confirm("Êtes-vous sûr de vouloir supprimer cette réunion ?")) {
-      const updatedData = {
-        ...data,
-        meetings: data.meetings.filter((m) => m.id !== id),
-      };
-      setData(updatedData);
-      saveDashboardData(updatedData);
+      try {
+        const success = await deleteMeeting(id);
+        if (success) {
+          // Recharger toutes les réunions
+          const allMeetings = await getAllMeetings();
+          setData({ ...data, meetings: allMeetings });
+        } else {
+          alert("Erreur lors de la suppression");
+        }
+      } catch (error) {
+        console.error("Error deleting meeting:", error);
+        alert("Erreur lors de la suppression");
+      }
     }
   };
 
