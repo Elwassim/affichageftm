@@ -1468,12 +1468,61 @@ const Admin = () => {
                       <strong>Données users:</strong>
                       <pre>{JSON.stringify(users, null, 2)}</pre>
                     </div>
-                    <button
-                      onClick={refresh}
-                      className="mt-2 px-3 py-1 bg-yellow-600 text-white rounded text-sm"
-                    >
-                      🔄 Forcer refresh
-                    </button>
+                    <div className="flex gap-2 mt-2">
+                      <button
+                        onClick={refresh}
+                        className="px-3 py-1 bg-yellow-600 text-white rounded text-sm"
+                      >
+                        🔄 Forcer refresh
+                      </button>
+                      <button
+                        onClick={async () => {
+                          console.log("🚀 Création d'utilisateurs de test...");
+                          const testUsers = [
+                            {
+                              username: "admin.test",
+                              password: "test123",
+                              email: "admin@test.com",
+                              role: "admin",
+                              is_admin: true,
+                            },
+                            {
+                              username: "user.test",
+                              password: "test123",
+                              email: "user@test.com",
+                              role: "user",
+                              is_admin: false,
+                            },
+                            {
+                              username: "mod.test",
+                              password: "test123",
+                              email: "mod@test.com",
+                              role: "moderator",
+                              is_admin: false,
+                            },
+                          ];
+
+                          for (const user of testUsers) {
+                            try {
+                              await createUser(user);
+                              console.log(
+                                `✅ Utilisateur ${user.username} créé`,
+                              );
+                            } catch (error) {
+                              console.error(
+                                `❌ Erreur création ${user.username}:`,
+                                error,
+                              );
+                            }
+                          }
+
+                          setTimeout(() => refresh(), 1000); // Refresh après création
+                        }}
+                        className="px-3 py-1 bg-blue-600 text-white rounded text-sm"
+                      >
+                        🧪 Créer users test
+                      </button>
+                    </div>
                   </div>
 
                   {users.length === 0 ? (
