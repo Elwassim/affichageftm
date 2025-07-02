@@ -280,17 +280,6 @@ const Admin = () => {
     }
   };
 
-  const updateMeeting = (id: string, field: keyof Meeting, value: string) => {
-    const updatedData = {
-      ...data,
-      meetings: data.meetings.map((meeting) =>
-        meeting.id === id ? { ...meeting, [field]: value } : meeting,
-      ),
-    };
-    setData(updatedData);
-    saveDashboardData(updatedData);
-  };
-
   const navigationItems = [
     { id: "meetings", label: "Réunions", icon: Calendar, color: "blue" },
     { id: "permanences", label: "Permanences", icon: Users, color: "green" },
