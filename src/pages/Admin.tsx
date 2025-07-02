@@ -60,26 +60,8 @@ const MEETING_CATEGORIES = [
 ];
 
 const Admin = () => {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState(getDashboardData());
   const [authUsers, setAuthUsers] = useState(getAuthUsers());
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const dashboardData = await getDashboardDataFromDB();
-        // Pour l'admin, charger TOUTES les réunions
-        const allMeetings = await getAllMeetings();
-        setData({ ...dashboardData, meetings: allMeetings });
-      } catch (error) {
-        console.error("Error loading dashboard data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadData();
-  }, []);
   const [newTribute, setNewTribute] = useState({
     name: "",
     photo: "",
@@ -89,7 +71,7 @@ const Admin = () => {
     title: "",
     time: "",
     room: "",
-    category: "Assembl��e Générale",
+    category: "Assemblée Générale",
     date: new Date().toISOString().split("T")[0], // Date d'aujourd'hui par défaut
   });
   const [sidebarOpen, setSidebarOpen] = useState(true);
