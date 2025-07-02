@@ -290,6 +290,51 @@ select.admin-input:disabled {
   opacity: 1;
 }
 
+/* Styles globaux pour garantir la visibilité du texte dans l'admin */
+.admin-main-content * {
+  color: inherit;
+}
+
+.admin-main-content input,
+.admin-main-content textarea,
+.admin-main-content select {
+  color: #1f2937 !important;
+}
+
+.admin-main-content input:read-only,
+.admin-main-content input:disabled,
+.admin-main-content select:disabled {
+  color: #1f2937 !important;
+  background-color: #f9fafb !important;
+}
+
+/* Forcer la visibilité des textes slate */
+.admin-main-content .text-slate-800,
+.admin-main-content .text-slate-700,
+.admin-main-content .text-slate-600,
+.admin-main-content .text-slate-500 {
+  color: #1f2937 !important;
+}
+
+/* Améliorer la visibilité des statuts */
+.admin-main-content .text-green-600,
+.admin-main-content .text-green-700 {
+  color: #059669 !important;
+  font-weight: 600;
+}
+
+.admin-main-content .text-red-600,
+.admin-main-content .text-red-700 {
+  color: #dc2626 !important;
+  font-weight: 600;
+}
+
+.admin-main-content .text-blue-600,
+.admin-main-content .text-blue-700 {
+  color: #2563eb !important;
+  font-weight: 600;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .admin-form-grid {
