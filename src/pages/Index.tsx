@@ -27,27 +27,27 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 h-[calc(100vh-100px)] w-full">
         <div className="w-full h-full">
-          {/* TV Full Screen Layout - Exact match from design */}
-          <div className="grid grid-cols-20 grid-rows-4 gap-3 h-full w-full">
-            {/* Top Row - Exact proportions from image */}
+          {/* TV Full Screen Layout */}
+          <div className="grid grid-cols-12 grid-rows-3 gap-4 h-full">
+            {/* Row 1 - Top widgets */}
             <div className="col-span-3 row-span-1">
               <DateTimeWidget />
             </div>
             <div className="col-span-3 row-span-1">
               <WeatherWidget />
             </div>
-            <div className="col-span-7 row-span-1">
+            <div className="col-span-3 row-span-1">
               <MeetingsWidget />
             </div>
-            <div className="col-span-7 row-span-1">
+            <div className="col-span-3 row-span-1">
               <PermanencesWidget />
             </div>
 
-            {/* Bottom Area - Video takes most space, Hommage on right */}
-            <div className="col-span-15 row-span-3">
+            {/* Row 2 & 3 - Large video takes most space */}
+            <div className="col-span-9 row-span-2">
               <VideoWidget />
             </div>
-            <div className="col-span-5 row-span-3">
+            <div className="col-span-3 row-span-2">
               <SocialWidget />
             </div>
           </div>
