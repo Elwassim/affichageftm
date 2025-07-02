@@ -1451,6 +1451,31 @@ const Admin = () => {
                     Utilisateurs existants ({users.length})
                   </h3>
 
+                  {/* DEBUG: Affichage temporaire pour diagnostic */}
+                  <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <h4 className="font-semibold text-yellow-800 mb-2">
+                      🔍 Debug Info:
+                    </h4>
+                    <p className="text-sm text-yellow-700">
+                      • Utilisateurs chargés: {users.length}
+                      <br />• Connexion DB:{" "}
+                      {dbConnected ? "✅ Connectée" : "❌ Déconnectée"}
+                      <br />• Loading: {loading ? "En cours..." : "Terminé"}
+                      <br />• Erreur: {error || "Aucune"}
+                      <br />
+                    </p>
+                    <div className="mt-2 p-2 bg-white rounded text-xs">
+                      <strong>Données users:</strong>
+                      <pre>{JSON.stringify(users, null, 2)}</pre>
+                    </div>
+                    <button
+                      onClick={refresh}
+                      className="mt-2 px-3 py-1 bg-yellow-600 text-white rounded text-sm"
+                    >
+                      🔄 Forcer refresh
+                    </button>
+                  </div>
+
                   {users.length === 0 ? (
                     <div className="text-center py-8 text-slate-500">
                       Aucun utilisateur trouvé. Ajoutez le premier utilisateur
