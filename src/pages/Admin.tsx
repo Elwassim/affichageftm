@@ -48,6 +48,17 @@ import {
 } from "lucide-react";
 import { logout, getCurrentUser } from "@/lib/auth";
 
+const MEETING_CATEGORIES = [
+  "Assemblée Générale",
+  "Commission",
+  "Délégués",
+  "Formation",
+  "Comité",
+  "Négociation",
+  "Sécurité",
+  "Autre",
+];
+
 const Admin = () => {
   const [data, setData] = useState(getDashboardData());
   const [authUsers, setAuthUsers] = useState(getAuthUsers());
@@ -55,6 +66,12 @@ const Admin = () => {
     name: "",
     photo: "",
     text: "",
+  });
+  const [newMeeting, setNewMeeting] = useState({
+    title: "",
+    time: "",
+    room: "",
+    category: "Assemblée Générale",
   });
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("meetings");
