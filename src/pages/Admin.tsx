@@ -828,7 +828,7 @@ const Admin = () => {
                                 id={`meeting-time-${meeting.id}`}
                                 value={meeting.time}
                                 onChange={(e) =>
-                                  updateMeeting(
+                                  updateMeetingField(
                                     meeting.id,
                                     "time",
                                     e.target.value,
