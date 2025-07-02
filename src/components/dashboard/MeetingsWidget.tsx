@@ -1,11 +1,27 @@
 import { Card } from "@/components/ui/card";
-import { getDashboardData } from "@/lib/storage";
 import { Clock, MapPin } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getMeetings, type Meeting } from "@/lib/database";
 
 export const MeetingsWidget = () => {
-  const { meetings } = getDashboardData();
+  const [meetings, setMeetings] = useState<Meeting[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const loadMeetings = async () => {
+      try {
+        const meetingsData = await getMeetings();
+        setMeetings(meetingsData);
+      } catch (error) {
+        console.error("Error loading meetings:", error);
+      }
+    };
+
+    loadMeetings();
+    const timer = setInterval(loadMeetings, 30000); // Refresh every 30 seconds
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Group meetings by category
   const groupedMeetings = meetings.reduce(
