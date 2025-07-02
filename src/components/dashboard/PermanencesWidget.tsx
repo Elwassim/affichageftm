@@ -1,11 +1,27 @@
 import { Card } from "@/components/ui/card";
-import { getDashboardData } from "@/lib/storage";
 import { Users, Clock } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getPermanences, type Permanence } from "@/lib/database";
 
 export const PermanencesWidget = () => {
-  const { permanences } = getDashboardData();
+  const [permanences, setPermanences] = useState<Permanence[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const loadPermanences = async () => {
+      try {
+        const permanencesData = await getPermanences();
+        setPermanences(permanencesData);
+      } catch (error) {
+        console.error("Error loading permanences:", error);
+      }
+    };
+
+    loadPermanences();
+    const timer = setInterval(loadPermanences, 30000); // Refresh every 30 seconds
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
