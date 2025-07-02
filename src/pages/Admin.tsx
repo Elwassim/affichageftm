@@ -30,25 +30,21 @@ import "../styles/admin-improvements.css";
 
 // Import database functions
 import {
-  getAllMeetings,
   addMeetingToDB,
   updateMeetingInDB,
   deleteMeetingFromDB,
-  getTributes,
   addTributeToDB,
   deleteTributeFromDB,
-  getPermanences,
   addPermanenceToDB,
   updatePermanence,
   deletePermanence,
-  getConfig,
   updateConfig,
-  getUsers,
   createUser,
   updateUser,
   deleteUser,
 } from "../lib/database";
 import type { Meeting, Tribute, Permanence, User } from "../lib/supabase";
+import { useAdminSync } from "../hooks/useDatabaseSync";
 
 const MEETING_CATEGORIES = [
   "Assemblée Générale",
@@ -64,15 +60,21 @@ const MEETING_CATEGORIES = [
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("meetings");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [loading, setLoading] = useState(true);
-  const [dbConnected, setDbConnected] = useState(false);
   const { toast } = useToast();
 
-  // États pour les données
-  const [meetings, setMeetings] = useState<Meeting[]>([]);
-  const [tributes, setTributes] = useState<Tribute[]>([]);
-  const [permanences, setPermanences] = useState<Permanence[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  // Utilisation du hook de synchronisation
+  const {
+    meetings,
+    tributes,
+    permanences,
+    users,
+    config,
+    loading,
+    error,
+    refresh,
+    isConnected: dbConnected,
+    lastSync,
+  } = useAdminSync();
 
   // États pour les formulaires
   const [newMeeting, setNewMeeting] = useState({
@@ -103,13 +105,18 @@ const Admin = () => {
     is_admin: false,
   });
 
-  const [config, setConfig] = useState({
+  const [localConfig, setLocalConfig] = useState({
     videoUrl: "",
     weatherCity: "Paris",
     alertText: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
+
+  // Synchroniser la config locale avec celle de la base
+  useEffect(() => {
+    setLocalConfig(config);
+  }, [config]);
 
   const navigate = useNavigate();
 
@@ -122,54 +129,16 @@ const Admin = () => {
     { id: "settings", label: "Paramètres", icon: Settings, color: "gray" },
   ];
 
-  // Chargement initial des données
+  // Afficher les erreurs de synchronisation
   useEffect(() => {
-    loadAllData();
-  }, []);
-
-  const loadAllData = async () => {
-    setLoading(true);
-    try {
-      const [
-        meetingsData,
-        tributesData,
-        permanencesData,
-        usersData,
-        videoUrl,
-        weatherCity,
-        alertText,
-      ] = await Promise.all([
-        getAllMeetings(),
-        getTributes(),
-        getPermanences(),
-        getUsers(),
-        getConfig("videoUrl"),
-        getConfig("weatherCity"),
-        getConfig("alertText"),
-      ]);
-
-      setMeetings(meetingsData);
-      setTributes(tributesData);
-      setPermanences(permanencesData);
-      setUsers(usersData);
-      setConfig({
-        videoUrl: videoUrl || "",
-        weatherCity: weatherCity || "Paris",
-        alertText: alertText || "",
-      });
-      setDbConnected(true);
-    } catch (error) {
-      console.error("Erreur chargement données:", error);
-      setDbConnected(false);
+    if (error) {
       toast({
-        title: "Erreur de connexion",
-        description: "Impossible de charger les données de la base.",
+        title: "Erreur de synchronisation",
+        description: error,
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
     }
-  };
+  }, [error, toast]);
 
   // MEETINGS FUNCTIONS
   const handleAddMeeting = async () => {
@@ -196,7 +165,7 @@ const Admin = () => {
       });
 
       if (meeting) {
-        setMeetings([...meetings, meeting]);
+        await refresh(); // Actualiser les données
         setNewMeeting({
           title: "",
           time: "",
@@ -359,7 +328,8 @@ const Admin = () => {
     try {
       const success = await updateConfig(key, value);
       if (success) {
-        setConfig({ ...config, [key]: value });
+        setLocalConfig({ ...localConfig, [key]: value });
+        await refresh(); // Actualiser les données
         toast({
           title: "Succès",
           description: "Configuration mise à jour avec succès.",
@@ -395,7 +365,7 @@ const Admin = () => {
       });
 
       if (user) {
-        setUsers([...users, user]);
+        await refresh();
         setNewUser({
           username: "",
           password: "",
@@ -421,7 +391,7 @@ const Admin = () => {
     try {
       const success = await deleteUser(id);
       if (success) {
-        setUsers(users.filter((u) => u.id !== id));
+        await refresh();
         toast({
           title: "Succès",
           description: "Utilisateur supprimé avec succès.",
