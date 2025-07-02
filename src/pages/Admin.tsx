@@ -687,10 +687,17 @@ const Admin = () => {
                 {/* Add new meeting */}
                 <Card className="shadow-lg border-0 bg-gradient-to-r from-blue-50 to-indigo-50">
                   <div className="p-6">
-                  <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
-                    <Plus className="w-5 h-5 text-blue-600" />
-                    Ajouter une réunion
-                  </h3>
+                    <div className="flex items-center gap-3 mb-6">
+                      <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+                        <Plus className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold text-slate-800">
+                          Ajouter une réunion
+                        </h3>
+                        <p className="text-sm text-slate-600">Nouvelle entrée au calendrier syndical</p>
+                      </div>
+                    </div>
                   <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
                     <div className="space-y-2">
                       <Label
