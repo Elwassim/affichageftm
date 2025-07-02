@@ -97,6 +97,10 @@ const Admin = () => {
     is_admin: false,
   });
 
+  // État pour l'édition inline des utilisateurs
+  const [editingUser, setEditingUser] = useState<string | null>(null);
+  const [editUserData, setEditUserData] = useState<Partial<User>>({});
+
   const [localConfig, setLocalConfig] = useState({
     videoUrl: "",
     weatherCity: "Paris",
