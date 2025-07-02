@@ -41,253 +41,127 @@ export interface DashboardData {
 }
 
 const DEFAULT_DATA: DashboardData = {
-  meetings: [
-    // JANVIER 2024
-    {
-      id: "1",
-      title: "Assemblée Générale Ordinaire",
-      time: "14:00",
-      room: "Salle des Congrès",
-      category: "Assemblée Générale",
-    },
-    {
-      id: "2",
-      title: "Commission Exécutive",
-      time: "09:00",
-      room: "Bureau Confédéral",
-      category: "Commission",
-    },
-    {
-      id: "3",
-      title: "Formation délégués nouveaux adhérents",
-      time: "14:00",
-      room: "Salle de Formation A",
-      category: "Formation",
-    },
+  meetings: (() => {
+    const today = new Date();
+    const monday = new Date(today);
+    const dayOfWeek = today.getDay();
+    const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    monday.setDate(today.getDate() + diff);
 
-    // FÉVRIER 2024
-    {
-      id: "4",
-      title: "Négociation Salariale Métallurgie",
-      time: "09:30",
-      room: "Salle de Négociation",
-      category: "Négociation",
-    },
-    {
-      id: "5",
-      title: "Comité d'Entreprise Renault",
-      time: "14:00",
-      room: "Siège Renault",
-      category: "Comité",
-    },
-    {
-      id: "6",
-      title: "Commission Santé-Sécurité",
-      time: "10:00",
-      room: "Salle Médicale",
-      category: "Commission",
-    },
+    const formatDate = (daysOffset: number) => {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + daysOffset);
+      return date.toISOString().split("T")[0];
+    };
 
-    // MARS 2024
-    {
-      id: "7",
-      title: "Journée Internationale des Femmes",
-      time: "08:00",
-      room: "Place de la République",
-      category: "Assemblée Générale",
-    },
-    {
-      id: "8",
-      title: "Formation Droit Syndical",
-      time: "14:00",
-      room: "Salle de Formation B",
-      category: "Formation",
-    },
-    {
-      id: "9",
-      title: "Délégués du Personnel PSA",
-      time: "16:00",
-      room: "Usine PSA",
-      category: "Délégués",
-    },
+    return [
+      // LUNDI
+      {
+        id: "1",
+        title: "Assemblée Générale Ordinaire",
+        time: "14:00",
+        room: "Salle des Congrès",
+        category: "Assemblée Générale",
+        date: formatDate(0), // Lundi
+      },
+      {
+        id: "2",
+        title: "Commission Exécutive",
+        time: "09:00",
+        room: "Bureau Confédéral",
+        category: "Commission",
+        date: formatDate(0), // Lundi
+      },
 
-    // AVRIL 2024
-    {
-      id: "10",
-      title: "Commission Retraites",
-      time: "14:30",
-      room: "Bureau Syndical",
-      category: "Commission",
-    },
-    {
-      id: "11",
-      title: "Assemblée Générale Extraordinaire",
-      time: "09:00",
-      room: "Salle des Congrès",
-      category: "Assemblée Générale",
-    },
-    {
-      id: "12",
-      title: "Formation Sécurité au Travail",
-      time: "08:30",
-      room: "Atelier Formation",
-      category: "Formation",
-    },
+      // MARDI
+      {
+        id: "3",
+        title: "Négociation Salariale Métallurgie",
+        time: "09:30",
+        room: "Salle de Négociation",
+        category: "Négociation",
+        date: formatDate(1), // Mardi
+      },
+      {
+        id: "4",
+        title: "Formation délégués nouveaux adhérents",
+        time: "14:00",
+        room: "Salle de Formation A",
+        category: "Formation",
+        date: formatDate(1), // Mardi
+      },
 
-    // MAI 2024
-    {
-      id: "13",
-      title: "1er Mai - Manifestation",
-      time: "10:00",
-      room: "Place Bastille",
-      category: "Assemblée Générale",
-    },
-    {
-      id: "14",
-      title: "Négociation Temps de Travail",
-      time: "14:00",
-      room: "Salle de Négociation",
-      category: "Négociation",
-    },
-    {
-      id: "15",
-      title: "Commission Formation Professionnelle",
-      time: "09:30",
-      room: "Centre de Formation",
-      category: "Commission",
-    },
+      // MERCREDI
+      {
+        id: "5",
+        title: "Comité d'Entreprise Renault",
+        time: "14:00",
+        room: "Siège Renault",
+        category: "Comité",
+        date: formatDate(2), // Mercredi
+      },
+      {
+        id: "6",
+        title: "Commission Santé-Sécurité",
+        time: "10:00",
+        room: "Salle Médicale",
+        category: "Commission",
+        date: formatDate(2), // Mercredi
+      },
 
-    // JUIN 2024
-    {
-      id: "16",
-      title: "Comité d'Entreprise Airbus",
-      time: "15:00",
-      room: "Site Airbus Toulouse",
-      category: "Comité",
-    },
-    {
-      id: "17",
-      title: "Assemblée Statutaire",
-      time: "14:00",
-      room: "Salle des Congrès",
-      category: "Assemblée Générale",
-    },
-    {
-      id: "18",
-      title: "Formation Négociation Collective",
-      time: "09:00",
-      room: "Salle de Formation A",
-      category: "Formation",
-    },
+      // JEUDI
+      {
+        id: "7",
+        title: "Formation Droit Syndical",
+        time: "14:00",
+        room: "Salle de Formation B",
+        category: "Formation",
+        date: formatDate(3), // Jeudi
+      },
+      {
+        id: "8",
+        title: "Délégués du Personnel PSA",
+        time: "16:00",
+        room: "Usine PSA",
+        category: "Délégués",
+        date: formatDate(3), // Jeudi
+      },
+      {
+        id: "9",
+        title: "Commission Retraites",
+        time: "08:30",
+        room: "Bureau Syndical",
+        category: "Commission",
+        date: formatDate(3), // Jeudi
+      },
 
-    // JUILLET 2024
-    {
-      id: "19",
-      title: "Commission Vacances",
-      time: "10:00",
-      room: "Bureau Syndical",
-      category: "Commission",
-    },
-    {
-      id: "20",
-      title: "Délégués Syndicaux ArcelorMittal",
-      time: "14:30",
-      room: "Siège ArcelorMittal",
-      category: "Délégués",
-    },
-
-    // SEPTEMBRE 2024
-    {
-      id: "21",
-      title: "Rentrée Sociale - Assemblée Générale",
-      time: "09:00",
-      room: "Salle des Congrès",
-      category: "Assemblée Générale",
-    },
-    {
-      id: "22",
-      title: "Commission Emploi",
-      time: "14:00",
-      room: "Bureau Confédéral",
-      category: "Commission",
-    },
-    {
-      id: "23",
-      title: "Formation Délégués CHSCT",
-      time: "08:30",
-      room: "Centre de Formation",
-      category: "Formation",
-    },
-
-    // OCTOBRE 2024
-    {
-      id: "24",
-      title: "Négociation Classification",
-      time: "09:30",
-      room: "Salle de Négociation",
-      category: "Négociation",
-    },
-    {
-      id: "25",
-      title: "Comité d'Entreprise Thales",
-      time: "15:00",
-      room: "Siège Thales",
-      category: "Comité",
-    },
-    {
-      id: "26",
-      title: "Commission Internationale",
-      time: "14:00",
-      room: "Bureau Syndical",
-      category: "Commission",
-    },
-
-    // NOVEMBRE 2024
-    {
-      id: "27",
-      title: "Assemblée Générale Budget 2025",
-      time: "14:00",
-      room: "Salle des Congrès",
-      category: "Assemblée Générale",
-    },
-    {
-      id: "28",
-      title: "Formation Prévention Risques",
-      time: "09:00",
-      room: "Salle de Formation B",
-      category: "Formation",
-    },
-    {
-      id: "29",
-      title: "Délégués du Personnel Safran",
-      time: "16:00",
-      room: "Site Safran",
-      category: "Délégués",
-    },
-
-    // DÉCEMBRE 2024
-    {
-      id: "30",
-      title: "Commission Bilan Annuel",
-      time: "10:00",
-      room: "Bureau Confédéral",
-      category: "Commission",
-    },
-    {
-      id: "31",
-      title: "Assemblée Générale de Clôture",
-      time: "14:00",
-      room: "Salle des Congrès",
-      category: "Assemblée Générale",
-    },
-    {
-      id: "32",
-      title: "Vœux et Perspectives 2025",
-      time: "18:00",
-      room: "Salle de Réception",
-      category: "Assemblée Générale",
-    },
-  ],
+      // VENDREDI
+      {
+        id: "10",
+        title: "Assemblée Générale Extraordinaire",
+        time: "09:00",
+        room: "Salle des Congrès",
+        category: "Assemblée Générale",
+        date: formatDate(4), // Vendredi
+      },
+      {
+        id: "11",
+        title: "Formation Sécurité au Travail",
+        time: "14:30",
+        room: "Atelier Formation",
+        category: "Formation",
+        date: formatDate(4), // Vendredi
+      },
+      {
+        id: "12",
+        title: "Négociation Temps de Travail",
+        time: "16:00",
+        room: "Salle de Négociation",
+        category: "Négociation",
+        date: formatDate(4), // Vendredi
+      },
+    ];
+  })(),
   permanences: [
     {
       id: "1",
