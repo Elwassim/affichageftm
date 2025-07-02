@@ -399,13 +399,15 @@ const Admin = () => {
     { id: "tributes", label: "Hommages", icon: Heart, color: "pink" },
   ];
 
-  if (!data) {
+  if (loading || !data) {
     return (
       <div className="min-h-screen bg-slate-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-slate-600">
-            Chargement du panel d'administration...
+            {loading
+              ? "Synchronisation avec la base de données..."
+              : "Chargement du panel d'administration..."}
           </p>
         </div>
       </div>
