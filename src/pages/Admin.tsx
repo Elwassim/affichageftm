@@ -606,13 +606,13 @@ const Admin = () => {
 
       {/* Main Content */}
       <div
-        className={`transition-all duration-300 ${
+        className={`min-h-screen transition-all duration-300 ${
           sidebarOpen ? "md:ml-64" : "ml-0"
         }`}
       >
         {/* Top Header */}
-        <header className="bg-white shadow-sm border-b border-slate-200">
-          <div className="flex items-center justify-between px-6 py-4">
+        <header className="bg-white shadow-lg border-b border-slate-200 sticky top-0 z-30">
+          <div className="flex items-center justify-between px-6 py-5">
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
@@ -664,7 +664,7 @@ const Admin = () => {
                     Réunions CGT FTM
                   </h2>
                   <p className="text-slate-600 mt-1">
-                    Planifiez et organisez les assembl��es syndicales par
+                    Planifiez et organisez les assembl���es syndicales par
                     catégorie
                   </p>
                 </div>
