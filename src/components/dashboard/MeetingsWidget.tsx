@@ -7,6 +7,18 @@ export const MeetingsWidget = () => {
   const { meetings } = getDashboardData();
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Group meetings by category
+  const groupedMeetings = meetings.reduce(
+    (acc, meeting) => {
+      if (!acc[meeting.category]) {
+        acc[meeting.category] = [];
+      }
+      acc[meeting.category].push(meeting);
+      return acc;
+    },
+    {} as Record<string, typeof meetings>,
+  );
+
   useEffect(() => {
     const scrollContainer = scrollRef.current;
     if (!scrollContainer || meetings.length <= 2) return;
