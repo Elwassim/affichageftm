@@ -35,9 +35,6 @@ import {
   deleteMeetingFromDB,
   addTributeToDB,
   deleteTributeFromDB,
-  addPermanenceToDB,
-  updatePermanence,
-  deletePermanence,
   updateConfig,
   createUser,
   updateUser,
@@ -90,12 +87,6 @@ const Admin = () => {
     name: "",
     photo: "",
     text: "",
-  });
-
-  const [newPermanence, setNewPermanence] = useState({
-    name: "",
-    schedule: "",
-    type: "Standard",
   });
 
   const [newUser, setNewUser] = useState({
@@ -235,7 +226,7 @@ const Admin = () => {
           date: new Date().toISOString().split("T")[0],
         });
         toast({
-          title: "Succès",
+          title: "Succ��s",
           description: "Réunion ajoutée avec succès.",
         });
       }
@@ -321,64 +312,6 @@ const Admin = () => {
       toast({
         title: "Erreur",
         description: "Impossible de supprimer l'hommage.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  // PERMANENCES FUNCTIONS
-  const handleAddPermanence = async () => {
-    if (!newPermanence.name.trim() || !newPermanence.schedule.trim()) {
-      toast({
-        title: "Erreur",
-        description: "Veuillez remplir tous les champs obligatoires.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    try {
-      const permanence = await addPermanenceToDB({
-        name: newPermanence.name,
-        schedule: newPermanence.schedule,
-        type: newPermanence.type,
-      });
-
-      if (permanence) {
-        await refresh();
-        setNewPermanence({
-          name: "",
-          schedule: "",
-          type: "Standard",
-        });
-        toast({
-          title: "Succès",
-          description: "Permanence ajoutée avec succès.",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible d'ajouter la permanence.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleDeletePermanence = async (id: string) => {
-    try {
-      const success = await deletePermanence(id);
-      if (success) {
-        await refresh();
-        toast({
-          title: "Succès",
-          description: "Permanence supprimée avec succès.",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Erreur",
-        description: "Impossible de supprimer la permanence.",
         variant: "destructive",
       });
     }
