@@ -1,9 +1,26 @@
 import { Card } from "@/components/ui/card";
-import { getDashboardData } from "@/lib/storage";
 import { Play } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getConfig } from "@/lib/database";
 
 export const VideoWidget = () => {
-  const { videoUrl } = getDashboardData();
+  const [videoUrl, setVideoUrl] = useState("");
+
+  useEffect(() => {
+    const loadVideoUrl = async () => {
+      try {
+        const url = await getConfig("videoUrl");
+        setVideoUrl(url || "");
+      } catch (error) {
+        console.error("Error loading video URL:", error);
+      }
+    };
+
+    loadVideoUrl();
+    const timer = setInterval(loadVideoUrl, 60000); // Refresh every minute
+
+    return () => clearInterval(timer);
+  }, []);
 
   // Convert YouTube URLs to embed format with enhanced autoplay parameters
   const getEmbedUrl = (url: string) => {
