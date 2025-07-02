@@ -3,6 +3,7 @@ export interface Meeting {
   title: string;
   time: string;
   room: string;
+  category: string;
 }
 
 export interface Permanence {
