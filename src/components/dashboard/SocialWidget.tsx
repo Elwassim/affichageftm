@@ -7,17 +7,7 @@ export const SocialWidget = () => {
   const { currentTribute, totalTributes, currentIndex } =
     useTributeRotation(30000);
 
-  useEffect(() => {
-    if (tributes.length <= 1) return;
-
-    const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % tributes.length);
-    }, 30000);
-
-    return () => clearInterval(timer);
-  }, [tributes.length]);
-
-  const currentTribute = tributes.length > 0 ? tributes[currentIndex] : null;
+  const tributes = totalTributes > 0 ? [currentTribute] : [];
 
   return (
     <Card className="p-3 bg-white professional-shadow border-0 h-full">
