@@ -658,11 +658,30 @@ const Admin = () => {
           <div className="max-w-7xl mx-auto space-y-8">
             {/* Meetings Tab */}
             {activeTab === "meetings" && (
-              <div className="space-y-6">
-                <div>
-                  <h2 className="text-2xl font-bold text-slate-800">
-                    Réunions CGT FTM
-                  </h2>
+              <div className="space-y-8">
+                {/* Section Header */}
+                <div className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
+                      <Calendar className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl font-bold text-slate-800">
+                        Réunions CGT FTM
+                      </h2>
+                      <p className="text-slate-600">
+                        Planifiez et organisez les assemblées syndicales par catégorie
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4 mt-4 text-sm text-slate-500">
+                    <span className="flex items-center gap-1">
+                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      Base de données connectée
+                    </span>
+                    <span>{data?.meetings?.length || 0} réunions au total</span>
+                  </div>
+                </div>
                   <p className="text-slate-600 mt-1">
                     Planifiez et organisez les assembl���es syndicales par
                     catégorie
