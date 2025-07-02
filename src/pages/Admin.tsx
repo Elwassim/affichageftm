@@ -673,7 +673,8 @@ const Admin = () => {
                       disabled={
                         !newMeeting.title.trim() ||
                         !newMeeting.time.trim() ||
-                        !newMeeting.room.trim()
+                        !newMeeting.room.trim() ||
+                        !newMeeting.date.trim()
                       }
                     >
                       <Plus className="w-4 h-4 mr-2" />
