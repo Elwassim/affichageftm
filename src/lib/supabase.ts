@@ -21,6 +21,7 @@ export interface Meeting {
   time: string;
   room: string;
   category: string;
+  date: string; // Format YYYY-MM-DD
   created_at?: string;
   updated_at?: string;
 }
