@@ -43,9 +43,9 @@ const Index = () => {
               <PermanencesWidget />
             </div>
 
-            {/* Row 2-3 - Three widgets: Small left, Large center VIDEO, Medium right HOMMAGE */}
+            {/* Row 2-3 - Three zones: SALLE DE REUNION (left), VIDEO (center), HOMMAGE (right) */}
             <div className="col-span-2 row-span-2">
-              <SocialWidget />
+              <MeetingsWidget />
             </div>
             <div className="col-span-7 row-span-2">
               <VideoWidget />
