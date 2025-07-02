@@ -1522,6 +1522,44 @@ const Admin = () => {
                       >
                         🧪 Créer users test
                       </button>
+                      <button
+                        onClick={async () => {
+                          console.log("🔍 Test direct Supabase...");
+                          try {
+                            // Import du client Supabase
+                            const { supabase } = await import(
+                              "../lib/supabase"
+                            );
+
+                            if (!supabase) {
+                              console.error(
+                                "❌ Supabase client non disponible",
+                              );
+                              return;
+                            }
+
+                            // Test requête directe
+                            console.log(
+                              "📋 Test requête directe sur table users...",
+                            );
+                            const result = await supabase
+                              .from("users")
+                              .select("*");
+                            console.log("📊 Résultat direct:", result);
+
+                            // Test count
+                            const countResult = await supabase
+                              .from("users")
+                              .select("*", { count: "exact", head: true });
+                            console.log("🔢 Count direct:", countResult);
+                          } catch (error) {
+                            console.error("💥 Erreur test direct:", error);
+                          }
+                        }}
+                        className="px-3 py-1 bg-purple-600 text-white rounded text-sm"
+                      >
+                        🔍 Test direct DB
+                      </button>
                     </div>
                   </div>
 
