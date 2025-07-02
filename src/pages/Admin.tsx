@@ -97,7 +97,7 @@ const Admin = () => {
     is_admin: false,
   });
 
-  // État pour l'édition inline des utilisateurs
+  // ��tat pour l'édition inline des utilisateurs
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [editUserData, setEditUserData] = useState<Partial<User>>({});
 
@@ -1394,7 +1394,9 @@ const Admin = () => {
                                   <label className="flex items-center space-x-2">
                                     <input
                                       type="checkbox"
-                                      checked={editUserData.is_active ?? user.is_active}
+                                      checked={
+                                        editUserData.is_active ?? user.is_active
+                                      }
                                       onChange={(e) =>
                                         setEditUserData({
                                           ...editUserData,
@@ -1410,7 +1412,9 @@ const Admin = () => {
                                   <label className="flex items-center space-x-2">
                                     <input
                                       type="checkbox"
-                                      checked={editUserData.is_admin ?? user.is_admin}
+                                      checked={
+                                        editUserData.is_admin ?? user.is_admin
+                                      }
                                       onChange={(e) =>
                                         setEditUserData({
                                           ...editUserData,
@@ -1469,9 +1473,12 @@ const Admin = () => {
                                 <button
                                   onClick={() => handleDeleteUser(user.id)}
                                   className="admin-btn-danger"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                                  title="Supprimer cet utilisateur"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </>
+                            )}
                           </div>
                         </div>
                         <div className="mt-3 flex items-center gap-2 text-xs text-slate-500">
