@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   getDashboardDataFromDB,
   getMeetings,
+  getAllMeetings,
   createMeeting,
   updateMeetingInDB,
   deleteMeetingFromDB,
