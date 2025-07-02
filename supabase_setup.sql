@@ -105,62 +105,46 @@ INSERT INTO users (username, password_hash, name, group_name) VALUES
 ON CONFLICT (username) DO NOTHING;
 
 -- ================================================
--- DONNÉES PAR DÉFAUT - RÉUNIONS 2024
+-- DONNÉES PAR DÉFAUT - RÉUNIONS SEMAINE COURANTE
 -- ================================================
-INSERT INTO meetings (title, time, room, category) VALUES
--- JANVIER 2024
-('Assemblée Générale Ordinaire', '14:00', 'Salle des Congrès', 'Assemblée Générale'),
-('Commission Exécutive', '09:00', 'Bureau Confédéral', 'Commission'),
-('Formation délégués nouveaux adhérents', '14:00', 'Salle de Formation A', 'Formation'),
+-- Calculer les dates de la semaine courante (Lundi à Dimanche)
+WITH current_week AS (
+  SELECT
+    DATE_TRUNC('week', CURRENT_DATE)::DATE + INTERVAL '0 days' AS monday,
+    DATE_TRUNC('week', CURRENT_DATE)::DATE + INTERVAL '1 day' AS tuesday,
+    DATE_TRUNC('week', CURRENT_DATE)::DATE + INTERVAL '2 days' AS wednesday,
+    DATE_TRUNC('week', CURRENT_DATE)::DATE + INTERVAL '3 days' AS thursday,
+    DATE_TRUNC('week', CURRENT_DATE)::DATE + INTERVAL '4 days' AS friday,
+    DATE_TRUNC('week', CURRENT_DATE)::DATE + INTERVAL '5 days' AS saturday,
+    DATE_TRUNC('week', CURRENT_DATE)::DATE + INTERVAL '6 days' AS sunday
+)
+INSERT INTO meetings (title, time, room, category, date)
+SELECT title, time, room, category, date FROM (
+  SELECT * FROM current_week,
+  (VALUES
+    -- LUNDI
+    ('Assemblée Générale Ordinaire', '14:00', 'Salle des Congrès', 'Assemblée Générale', (SELECT monday FROM current_week)),
+    ('Commission Exécutive', '09:00', 'Bureau Confédéral', 'Commission', (SELECT monday FROM current_week)),
 
--- FÉVRIER 2024
-('Négociation Salariale Métallurgie', '09:30', 'Salle de Négociation', 'Négociation'),
-('Comité d''Entreprise Renault', '14:00', 'Siège Renault', 'Comité'),
-('Commission Santé-Sécurité', '10:00', 'Salle Médicale', 'Commission'),
+    -- MARDI
+    ('Négociation Salariale Métallurgie', '09:30', 'Salle de Négociation', 'Négociation', (SELECT tuesday FROM current_week)),
+    ('Formation délégués nouveaux adhérents', '14:00', 'Salle de Formation A', 'Formation', (SELECT tuesday FROM current_week)),
 
--- MARS 2024
-('Journée Internationale des Femmes', '08:00', 'Place de la République', 'Assemblée Générale'),
-('Formation Droit Syndical', '14:00', 'Salle de Formation B', 'Formation'),
-('Délégués du Personnel PSA', '16:00', 'Usine PSA', 'Délégués'),
+    -- MERCREDI
+    ('Comité d''Entreprise Renault', '14:00', 'Siège Renault', 'Comité', (SELECT wednesday FROM current_week)),
+    ('Commission Santé-Sécurité', '10:00', 'Salle Médicale', 'Commission', (SELECT wednesday FROM current_week)),
 
--- AVRIL 2024
-('Commission Retraites', '14:30', 'Bureau Syndical', 'Commission'),
-('Assemblée Générale Extraordinaire', '09:00', 'Salle des Congrès', 'Assemblée Générale'),
-('Formation Sécurité au Travail', '08:30', 'Atelier Formation', 'Formation'),
+    -- JEUDI
+    ('Formation Droit Syndical', '14:00', 'Salle de Formation B', 'Formation', (SELECT thursday FROM current_week)),
+    ('Délégués du Personnel PSA', '16:00', 'Usine PSA', 'Délégués', (SELECT thursday FROM current_week)),
+    ('Commission Retraites', '08:30', 'Bureau Syndical', 'Commission', (SELECT thursday FROM current_week)),
 
--- MAI 2024
-('1er Mai - Manifestation', '10:00', 'Place Bastille', 'Assemblée Générale'),
-('Négociation Temps de Travail', '14:00', 'Salle de Négociation', 'Négociation'),
-('Commission Formation Professionnelle', '09:30', 'Centre de Formation', 'Commission'),
-
--- JUIN 2024
-('Comité d''Entreprise Airbus', '15:00', 'Site Airbus Toulouse', 'Comité'),
-('Assemblée Statutaire', '14:00', 'Salle des Congrès', 'Assemblée Générale'),
-('Formation Négociation Collective', '09:00', 'Salle de Formation A', 'Formation'),
-
--- JUILLET 2024
-('Commission Vacances', '10:00', 'Bureau Syndical', 'Commission'),
-('Délégués Syndicaux ArcelorMittal', '14:30', 'Siège ArcelorMittal', 'Délégués'),
-
--- SEPTEMBRE 2024
-('Rentrée Sociale - Assemblée Générale', '09:00', 'Salle des Congrès', 'Assemblée Générale'),
-('Commission Emploi', '14:00', 'Bureau Confédéral', 'Commission'),
-('Formation Délégués CHSCT', '08:30', 'Centre de Formation', 'Formation'),
-
--- OCTOBRE 2024
-('Négociation Classification', '09:30', 'Salle de Négociation', 'Négociation'),
-('Comité d''Entreprise Thales', '15:00', 'Siège Thales', 'Comité'),
-('Commission Internationale', '14:00', 'Bureau Syndical', 'Commission'),
-
--- NOVEMBRE 2024
-('Assemblée Générale Budget 2025', '14:00', 'Salle des Congrès', 'Assemblée Générale'),
-('Formation Prévention Risques', '09:00', 'Salle de Formation B', 'Formation'),
-('Délégués du Personnel Safran', '16:00', 'Site Safran', 'Délégués'),
-
--- DÉCEMBRE 2024
-('Commission Bilan Annuel', '10:00', 'Bureau Confédéral', 'Commission'),
-('Assemblée Générale de Clôture', '14:00', 'Salle des Congrès', 'Assemblée Générale'),
-('Vœux et Perspectives 2025', '18:00', 'Salle de Réception', 'Assemblée Générale');
+    -- VENDREDI
+    ('Assemblée Générale Extraordinaire', '09:00', 'Salle des Congrès', 'Assemblée Générale', (SELECT friday FROM current_week)),
+    ('Formation Sécurité au Travail', '14:30', 'Atelier Formation', 'Formation', (SELECT friday FROM current_week)),
+    ('Négociation Temps de Travail', '16:00', 'Salle de Négociation', 'Négociation', (SELECT friday FROM current_week))
+  ) AS meetings_data(title, time, room, category, date)
+) subquery;
 
 -- ================================================
 -- DONNÉES PAR DÉFAUT - PERMANENCES
