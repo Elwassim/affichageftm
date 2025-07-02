@@ -43,6 +43,10 @@ import {
   deletePermanence,
   getConfig,
   updateConfig,
+  getUsers,
+  createUser,
+  updateUser,
+  deleteUser,
 } from "../lib/database";
 import type { Meeting, Tribute, Permanence, User } from "../lib/supabase";
 
@@ -130,6 +134,7 @@ const Admin = () => {
         meetingsData,
         tributesData,
         permanencesData,
+        usersData,
         videoUrl,
         weatherCity,
         alertText,
@@ -137,6 +142,7 @@ const Admin = () => {
         getAllMeetings(),
         getTributes(),
         getPermanences(),
+        getUsers(),
         getConfig("videoUrl"),
         getConfig("weatherCity"),
         getConfig("alertText"),
@@ -145,6 +151,7 @@ const Admin = () => {
       setMeetings(meetingsData);
       setTributes(tributesData);
       setPermanences(permanencesData);
+      setUsers(usersData);
       setConfig({
         videoUrl: videoUrl || "",
         weatherCity: weatherCity || "Paris",
@@ -379,30 +386,28 @@ const Admin = () => {
     }
 
     try {
-      // Pour l'instant on simule l'ajout d'utilisateur
-      const mockUser: User = {
-        id: Date.now().toString(),
+      const user = await createUser({
         username: newUser.username,
+        password: newUser.password,
         email: newUser.email,
         role: newUser.role,
         is_admin: newUser.is_admin,
-        is_active: true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      };
+      });
 
-      setUsers([...users, mockUser]);
-      setNewUser({
-        username: "",
-        password: "",
-        email: "",
-        role: "user",
-        is_admin: false,
-      });
-      toast({
-        title: "Succès",
-        description: "Utilisateur ajouté avec succès.",
-      });
+      if (user) {
+        setUsers([...users, user]);
+        setNewUser({
+          username: "",
+          password: "",
+          email: "",
+          role: "user",
+          is_admin: false,
+        });
+        toast({
+          title: "Succès",
+          description: "Utilisateur ajouté avec succès.",
+        });
+      }
     } catch (error) {
       toast({
         title: "Erreur",
@@ -414,11 +419,14 @@ const Admin = () => {
 
   const handleDeleteUser = async (id: string) => {
     try {
-      setUsers(users.filter((u) => u.id !== id));
-      toast({
-        title: "Succès",
-        description: "Utilisateur supprimé avec succès.",
-      });
+      const success = await deleteUser(id);
+      if (success) {
+        setUsers(users.filter((u) => u.id !== id));
+        toast({
+          title: "Succès",
+          description: "Utilisateur supprimé avec succès.",
+        });
+      }
     } catch (error) {
       toast({
         title: "Erreur",

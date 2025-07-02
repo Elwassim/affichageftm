@@ -29,8 +29,8 @@ export interface Meeting {
 export interface Permanence {
   id: string;
   name: string;
-  time: string;
-  theme: string;
+  schedule: string;
+  type: string;
   created_at?: string;
   updated_at?: string;
 }
@@ -38,13 +38,13 @@ export interface Permanence {
 export interface User {
   id: string;
   username: string;
-  password_hash: string;
-  name: string;
+  password_hash?: string;
   email?: string;
-  group_name: "admin" | "editor" | "viewer";
+  role: string;
+  is_admin: boolean;
   is_active: boolean;
-  created_at?: string;
-  updated_at?: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface SocialPost {

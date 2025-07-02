@@ -411,6 +411,148 @@ export const authenticateUser = async (
   }
 };
 
+export const getUsers = async (): Promise<User[]> => {
+  if (!useSupabase) {
+    return getLocalData().users || [];
+  }
+
+  try {
+    const { data, error } = await supabase!
+      .from("users")
+      .select(
+        "id, username, email, role, is_admin, is_active, created_at, updated_at",
+      )
+      .order("created_at", { ascending: true });
+
+    if (error) {
+      console.error("Erreur récupération users:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Erreur Supabase users:", error);
+    return [];
+  }
+};
+
+export const createUser = async (user: {
+  username: string;
+  password: string;
+  email?: string;
+  role: string;
+  is_admin: boolean;
+}): Promise<User | null> => {
+  if (!useSupabase) {
+    const localData = getLocalData();
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const newUser: User = {
+      id: Date.now().toString(),
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      is_admin: user.is_admin,
+      is_active: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+    const users = localData.users || [];
+    saveLocalData({
+      ...localData,
+      users: [...users, newUser],
+    });
+    return newUser;
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    const { data, error } = await supabase!
+      .from("users")
+      .insert([
+        {
+          username: user.username,
+          password_hash: hashedPassword,
+          email: user.email,
+          role: user.role,
+          is_admin: user.is_admin,
+          is_active: true,
+        },
+      ])
+      .select(
+        "id, username, email, role, is_admin, is_active, created_at, updated_at",
+      )
+      .single();
+
+    if (error) {
+      console.error("Erreur création user:", error);
+      return null;
+    }
+
+    return data;
+  } catch (error) {
+    console.error("Erreur Supabase create user:", error);
+    return null;
+  }
+};
+
+export const updateUser = async (
+  id: string,
+  updates: Partial<User>,
+): Promise<boolean> => {
+  if (!useSupabase) {
+    const localData = getLocalData();
+    const users = localData.users || [];
+    const updatedUsers = users.map((u) =>
+      u.id === id
+        ? { ...u, ...updates, updated_at: new Date().toISOString() }
+        : u,
+    );
+    saveLocalData({ ...localData, users: updatedUsers });
+    return true;
+  }
+
+  try {
+    const { error } = await supabase!
+      .from("users")
+      .update({ ...updates, updated_at: new Date().toISOString() })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Erreur mise à jour user:", error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Erreur Supabase update user:", error);
+    return false;
+  }
+};
+
+export const deleteUser = async (id: string): Promise<boolean> => {
+  if (!useSupabase) {
+    const localData = getLocalData();
+    const users = localData.users || [];
+    const filteredUsers = users.filter((u) => u.id !== id);
+    saveLocalData({ ...localData, users: filteredUsers });
+    return true;
+  }
+
+  try {
+    const { error } = await supabase!.from("users").delete().eq("id", id);
+
+    if (error) {
+      console.error("Erreur suppression user:", error);
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Erreur Supabase delete user:", error);
+    return false;
+  }
+};
+
 // ===== FONCTION PRINCIPALE =====
 export const getDashboardDataFromDB = async (): Promise<DashboardData> => {
   if (!useSupabase) {
