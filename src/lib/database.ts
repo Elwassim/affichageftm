@@ -66,17 +66,51 @@ export const setConfig = async (key: string, value: any): Promise<boolean> => {
   }
 };
 
+// ===== HELPER FUNCTIONS =====
+const getCurrentWeekDates = () => {
+  const now = new Date();
+  const dayOfWeek = now.getDay();
+  const monday = new Date(now);
+
+  // Calculer le lundi de cette semaine
+  const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek; // Dimanche = 0, donc -6 pour aller au lundi précédent
+  monday.setDate(now.getDate() + diff);
+
+  // Calculer le dimanche de cette semaine
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+
+  const formatDate = (date: Date) => date.toISOString().split("T")[0];
+
+  return {
+    start: formatDate(monday),
+    end: formatDate(sunday),
+  };
+};
+
 // ===== RÉUNIONS =====
 export const getMeetings = async (): Promise<Meeting[]> => {
   if (!useSupabase) {
-    return getLocalData().meetings;
+    // Pour localStorage, filtrer les réunions par semaine actuelle
+    const allMeetings = getLocalData().meetings;
+    const { start, end } = getCurrentWeekDates();
+
+    return allMeetings.filter((meeting) => {
+      if (!meeting.date) return true; // Garder les réunions sans date pour compatibilité
+      return meeting.date >= start && meeting.date <= end;
+    });
   }
 
   try {
+    const { start, end } = getCurrentWeekDates();
+
     const { data, error } = await supabase!
       .from("meetings")
       .select("*")
-      .order("created_at", { ascending: true });
+      .gte("date", start)
+      .lte("date", end)
+      .order("date", { ascending: true })
+      .order("time", { ascending: true });
 
     if (error) {
       console.error("Erreur récupération meetings:", error);
