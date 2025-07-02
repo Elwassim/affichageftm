@@ -5,6 +5,7 @@ import { PermanencesWidget } from "@/components/dashboard/PermanencesWidget";
 import { VideoWidget } from "@/components/dashboard/VideoWidget";
 import { AlertBanner } from "@/components/dashboard/AlertBanner";
 import { SocialWidget } from "@/components/dashboard/SocialWidget";
+import { MeetingRoomWidget } from "@/components/dashboard/MeetingRoomWidget";
 import { CGTHeader } from "@/components/dashboard/CGTHeader";
 import { useRealTimeUpdates } from "@/hooks/useRealTimeUpdates";
 import { Wifi } from "lucide-react";
@@ -45,7 +46,7 @@ const Index = () => {
 
             {/* Row 2-3 - Three zones: SALLE DE REUNION (left), VIDEO (center), HOMMAGE (right) */}
             <div className="col-span-2 row-span-2">
-              <MeetingsWidget />
+              <MeetingRoomWidget />
             </div>
             <div className="col-span-7 row-span-2">
               <VideoWidget />
