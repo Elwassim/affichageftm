@@ -404,6 +404,42 @@ const Admin = () => {
     }
   };
 
+  const handleEditUser = (user: User) => {
+    setEditingUser(user.id);
+    setEditUserData({
+      role: user.role,
+      is_admin: user.is_admin,
+      is_active: user.is_active,
+      email: user.email,
+    });
+  };
+
+  const handleSaveUser = async (userId: string) => {
+    try {
+      const success = await updateUser(userId, editUserData);
+      if (success) {
+        setEditingUser(null);
+        setEditUserData({});
+        await refresh();
+        toast({
+          title: "Succès",
+          description: "Utilisateur mis à jour avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de mettre à jour l'utilisateur.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingUser(null);
+    setEditUserData({});
+  };
+
   const handleSave = () => {
     toast({
       title: "Sauvegarde automatique",
@@ -1411,7 +1447,7 @@ const Admin = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-slate-800">
-                        État du système
+                        État du syst��me
                       </h3>
                       <p className="text-sm text-slate-600">
                         Informations sur l'état de l'application
