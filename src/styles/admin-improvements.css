@@ -110,15 +110,23 @@
 .admin-input:read-only,
 .admin-input:disabled {
   background-color: #f9fafb !important;
-  color: #4b5563 !important;
+  color: #1f2937 !important;
   border-color: #d1d5db;
   cursor: not-allowed;
+  font-weight: 500 !important;
 }
 
 .admin-input:read-only:focus,
 .admin-input:disabled:focus {
   border-color: #d1d5db;
   box-shadow: none;
+}
+
+/* Classe spécifique pour les inputs readonly avec bg-gray-50 */
+.admin-input.bg-gray-50 {
+  background-color: #f9fafb !important;
+  color: #1f2937 !important;
+  font-weight: 500 !important;
 }
 
 /* Labels plus visibles */
