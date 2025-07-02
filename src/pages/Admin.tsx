@@ -568,7 +568,7 @@ const Admin = () => {
                     <Plus className="w-5 h-5 text-blue-600" />
                     Ajouter une réunion
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
                     <div className="space-y-2">
                       <Label
                         htmlFor="new-meeting-title"
@@ -620,6 +620,23 @@ const Admin = () => {
                           setNewMeeting({ ...newMeeting, room: e.target.value })
                         }
                         placeholder="Salle des délégués"
+                        className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="new-meeting-date"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Date *
+                      </Label>
+                      <Input
+                        id="new-meeting-date"
+                        type="date"
+                        value={newMeeting.date}
+                        onChange={(e) =>
+                          setNewMeeting({ ...newMeeting, date: e.target.value })
+                        }
                         className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
                       />
                     </div>
