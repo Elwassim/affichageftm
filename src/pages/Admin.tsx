@@ -138,15 +138,31 @@ const Admin = () => {
   });
   const navigate = useNavigate();
 
-  const handleSave = () => {
-    saveDashboardData(data);
-    // Show toast notification instead of alert
-    const toast = document.createElement("div");
-    toast.className =
-      "fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50";
-    toast.textContent = "✅ Données sauvegardées avec succès !";
-    document.body.appendChild(toast);
-    setTimeout(() => document.body.removeChild(toast), 3000);
+  const handleSave = async () => {
+    try {
+      // Sauvegarder les configurations principales
+      await Promise.all([
+        setConfig("videoUrl", data.videoUrl),
+        setConfig("alertText", data.alertText),
+        setConfig("weatherCity", data.weatherCity),
+      ]);
+
+      // Show toast notification
+      const toast = document.createElement("div");
+      toast.className =
+        "fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50";
+      toast.textContent = "✅ Données synchronisées avec la base !";
+      document.body.appendChild(toast);
+      setTimeout(() => document.body.removeChild(toast), 3000);
+    } catch (error) {
+      console.error("Error saving config:", error);
+      const toast = document.createElement("div");
+      toast.className =
+        "fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50";
+      toast.textContent = "❌ Erreur lors de la sauvegarde";
+      document.body.appendChild(toast);
+      setTimeout(() => document.body.removeChild(toast), 3000);
+    }
   };
 
   const handleBackToDashboard = () => {
