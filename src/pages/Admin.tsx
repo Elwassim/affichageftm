@@ -530,95 +530,248 @@ const Admin = () => {
             {/* Meetings Tab */}
             {activeTab === "meetings" && (
               <div className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-2xl font-bold text-slate-800">
-                      Réunions CGT FTM
-                    </h2>
-                    <p className="text-slate-600 mt-1">
-                      Planifiez et organisez les assemblées syndicales
-                    </p>
-                  </div>
-                  <Button
-                    onClick={addMeeting}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Nouvelle réunion
-                  </Button>
+                <div>
+                  <h2 className="text-2xl font-bold text-slate-800">
+                    Réunions CGT FTM
+                  </h2>
+                  <p className="text-slate-600 mt-1">
+                    Planifiez et organisez les assemblées syndicales par
+                    catégorie
+                  </p>
                 </div>
 
-                <div className="grid gap-4">
-                  {data.meetings.map((meeting) => (
-                    <Card
-                      key={meeting.id}
-                      className="p-6 hover:shadow-md transition-shadow"
+                {/* Add new meeting */}
+                <Card className="p-6 border-blue-200 bg-blue-50/50">
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
+                    <Plus className="w-5 h-5 text-blue-600" />
+                    Ajouter une réunion
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="new-meeting-title"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Titre de la réunion *
+                      </Label>
+                      <Input
+                        id="new-meeting-title"
+                        value={newMeeting.title}
+                        onChange={(e) =>
+                          setNewMeeting({
+                            ...newMeeting,
+                            title: e.target.value,
+                          })
+                        }
+                        placeholder="Assemblée générale CGT"
+                        className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="new-meeting-time"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Heure *
+                      </Label>
+                      <Input
+                        id="new-meeting-time"
+                        value={newMeeting.time}
+                        onChange={(e) =>
+                          setNewMeeting({ ...newMeeting, time: e.target.value })
+                        }
+                        placeholder="14:00"
+                        className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="new-meeting-room"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Salle *
+                      </Label>
+                      <Input
+                        id="new-meeting-room"
+                        value={newMeeting.room}
+                        onChange={(e) =>
+                          setNewMeeting({ ...newMeeting, room: e.target.value })
+                        }
+                        placeholder="Salle des délégués"
+                        className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label
+                        htmlFor="new-meeting-category"
+                        className="text-sm font-medium text-slate-700"
+                      >
+                        Catégorie *
+                      </Label>
+                      <select
+                        id="new-meeting-category"
+                        value={newMeeting.category}
+                        onChange={(e) =>
+                          setNewMeeting({
+                            ...newMeeting,
+                            category: e.target.value,
+                          })
+                        }
+                        className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                      >
+                        {MEETING_CATEGORIES.map((category) => (
+                          <option key={category} value={category}>
+                            {category}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                  <div className="flex justify-end">
+                    <Button
+                      onClick={handleAddMeeting}
+                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      disabled={
+                        !newMeeting.title.trim() ||
+                        !newMeeting.time.trim() ||
+                        !newMeeting.room.trim()
+                      }
                     >
-                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor={`meeting-title-${meeting.id}`}
-                            className="text-sm font-medium text-slate-700"
-                          >
-                            Titre de la réunion
-                          </Label>
-                          <Input
-                            id={`meeting-title-${meeting.id}`}
-                            value={meeting.title}
-                            onChange={(e) =>
-                              updateMeeting(meeting.id, "title", e.target.value)
-                            }
-                            placeholder="Assemblée générale CGT"
-                            className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor={`meeting-time-${meeting.id}`}
-                            className="text-sm font-medium text-slate-700"
-                          >
-                            Heure
-                          </Label>
-                          <Input
-                            id={`meeting-time-${meeting.id}`}
-                            value={meeting.time}
-                            onChange={(e) =>
-                              updateMeeting(meeting.id, "time", e.target.value)
-                            }
-                            placeholder="14:00"
-                            className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor={`meeting-room-${meeting.id}`}
-                            className="text-sm font-medium text-slate-700"
-                          >
-                            Salle
-                          </Label>
-                          <Input
-                            id={`meeting-room-${meeting.id}`}
-                            value={meeting.room}
-                            onChange={(e) =>
-                              updateMeeting(meeting.id, "room", e.target.value)
-                            }
-                            placeholder="Salle des délégués"
-                            className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
-                          />
-                        </div>
-                        <div className="flex items-end">
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => removeMeeting(meeting.id)}
-                            className="w-full"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
+                      <Plus className="w-4 h-4 mr-2" />
+                      Ajouter la réunion
+                    </Button>
+                  </div>
+                </Card>
+
+                {/* Meetings list */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-slate-800">
+                    Réunions existantes ({data.meetings.length})
+                  </h3>
+                  {data.meetings.length === 0 ? (
+                    <Card className="p-8 text-center">
+                      <Calendar className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                      <h3 className="text-lg font-medium text-gray-600 mb-2">
+                        Aucune réunion planifiée
+                      </h3>
+                      <p className="text-gray-500">
+                        Ajoutez votre première réunion pour commencer
+                      </p>
                     </Card>
-                  ))}
+                  ) : (
+                    <div className="grid gap-4">
+                      {data.meetings.map((meeting) => (
+                        <Card
+                          key={meeting.id}
+                          className="p-6 hover:shadow-md transition-shadow border-l-4 border-blue-500"
+                        >
+                          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                            <div className="space-y-2">
+                              <Label
+                                htmlFor={`meeting-title-${meeting.id}`}
+                                className="text-sm font-medium text-slate-700"
+                              >
+                                Titre
+                              </Label>
+                              <Input
+                                id={`meeting-title-${meeting.id}`}
+                                value={meeting.title}
+                                onChange={(e) =>
+                                  updateMeeting(
+                                    meeting.id,
+                                    "title",
+                                    e.target.value,
+                                  )
+                                }
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label
+                                htmlFor={`meeting-time-${meeting.id}`}
+                                className="text-sm font-medium text-slate-700"
+                              >
+                                Heure
+                              </Label>
+                              <Input
+                                id={`meeting-time-${meeting.id}`}
+                                value={meeting.time}
+                                onChange={(e) =>
+                                  updateMeeting(
+                                    meeting.id,
+                                    "time",
+                                    e.target.value,
+                                  )
+                                }
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label
+                                htmlFor={`meeting-room-${meeting.id}`}
+                                className="text-sm font-medium text-slate-700"
+                              >
+                                Salle
+                              </Label>
+                              <Input
+                                id={`meeting-room-${meeting.id}`}
+                                value={meeting.room}
+                                onChange={(e) =>
+                                  updateMeeting(
+                                    meeting.id,
+                                    "room",
+                                    e.target.value,
+                                  )
+                                }
+                                className="border-slate-200 focus:border-blue-500 focus:ring-blue-500"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label
+                                htmlFor={`meeting-category-${meeting.id}`}
+                                className="text-sm font-medium text-slate-700"
+                              >
+                                Catégorie
+                              </Label>
+                              <select
+                                id={`meeting-category-${meeting.id}`}
+                                value={meeting.category}
+                                onChange={(e) =>
+                                  updateMeeting(
+                                    meeting.id,
+                                    "category",
+                                    e.target.value,
+                                  )
+                                }
+                                className="w-full px-3 py-2 border border-slate-200 rounded-lg focus:border-blue-500 focus:ring-blue-500"
+                              >
+                                {MEETING_CATEGORIES.map((category) => (
+                                  <option key={category} value={category}>
+                                    {category}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="flex items-end">
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleRemoveMeeting(meeting.id)}
+                                className="w-full text-red-600 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </Button>
+                            </div>
+                          </div>
+                          <div className="mt-3 flex items-center gap-2">
+                            <span className="inline-block bg-blue-100 text-blue-700 px-2 py-1 rounded-full text-xs font-medium">
+                              {meeting.category}
+                            </span>
+                          </div>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
