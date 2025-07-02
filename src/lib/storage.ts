@@ -4,6 +4,7 @@ export interface Meeting {
   time: string;
   room: string;
   category: string;
+  date: string; // Format YYYY-MM-DD
 }
 
 export interface Permanence {
