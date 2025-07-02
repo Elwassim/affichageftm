@@ -99,6 +99,7 @@ const Admin = () => {
     time: "",
     room: "",
     category: "Assemblée Générale",
+    date: new Date().toISOString().split("T")[0], // Date d'aujourd'hui par défaut
   });
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activeTab, setActiveTab] = useState("meetings");
