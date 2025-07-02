@@ -241,6 +241,56 @@ const Admin = () => {
     }
   };
 
+  const handleAddMeeting = () => {
+    if (
+      newMeeting.title.trim() &&
+      newMeeting.time.trim() &&
+      newMeeting.room.trim()
+    ) {
+      const meeting = {
+        ...newMeeting,
+        id: Date.now().toString(),
+      };
+      const updatedData = {
+        ...data,
+        meetings: [...data.meetings, meeting],
+      };
+      setData(updatedData);
+      saveDashboardData(updatedData);
+      setNewMeeting({
+        title: "",
+        time: "",
+        room: "",
+        category: "Assemblée Générale",
+      });
+      alert("Réunion ajoutée avec succès !");
+    } else {
+      alert("Veuillez remplir tous les champs.");
+    }
+  };
+
+  const handleRemoveMeeting = (id: string) => {
+    if (confirm("Êtes-vous sûr de vouloir supprimer cette réunion ?")) {
+      const updatedData = {
+        ...data,
+        meetings: data.meetings.filter((m) => m.id !== id),
+      };
+      setData(updatedData);
+      saveDashboardData(updatedData);
+    }
+  };
+
+  const updateMeeting = (id: string, field: keyof Meeting, value: string) => {
+    const updatedData = {
+      ...data,
+      meetings: data.meetings.map((meeting) =>
+        meeting.id === id ? { ...meeting, [field]: value } : meeting,
+      ),
+    };
+    setData(updatedData);
+    saveDashboardData(updatedData);
+  };
+
   const navigationItems = [
     { id: "meetings", label: "Réunions", icon: Calendar, color: "blue" },
     { id: "permanences", label: "Permanences", icon: Users, color: "green" },
