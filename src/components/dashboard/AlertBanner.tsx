@@ -1,7 +1,24 @@
-import { getDashboardData } from "@/lib/storage";
+import { useEffect, useState } from "react";
+import { getConfig } from "@/lib/database";
 
 export const AlertBanner = () => {
-  const { alertText } = getDashboardData();
+  const [alertText, setAlertText] = useState("");
+
+  useEffect(() => {
+    const loadAlertText = async () => {
+      try {
+        const text = await getConfig("alertText");
+        setAlertText(text || "");
+      } catch (error) {
+        console.error("Error loading alert text:", error);
+      }
+    };
+
+    loadAlertText();
+    const timer = setInterval(loadAlertText, 30000); // Refresh every 30 seconds
+
+    return () => clearInterval(timer);
+  }, []);
 
   if (!alertText) return null;
 
