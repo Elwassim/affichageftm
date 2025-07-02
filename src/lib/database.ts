@@ -242,9 +242,11 @@ export const getPermanences = async (): Promise<Permanence[]> => {
 
   try {
     const { data, error } = await supabase!
-      .from("permanences")
+      .from("permanences_with_categories")
       .select("*")
-      .order("created_at", { ascending: true });
+      .order("year", { ascending: false })
+      .order("month", { ascending: true })
+      .order("name", { ascending: true });
 
     if (error) {
       console.error("Erreur récupération permanences:", error);
@@ -254,6 +256,61 @@ export const getPermanences = async (): Promise<Permanence[]> => {
     return data || [];
   } catch (error) {
     console.error("Erreur Supabase permanences:", error);
+    return [];
+  }
+};
+
+// Nouvelle fonction pour récupérer les permanences d'un mois spécifique
+export const getPermanencesForMonth = async (
+  month: string,
+  year: number = new Date().getFullYear(),
+): Promise<Permanence[]> => {
+  if (!useSupabase) {
+    const allPermanences = getLocalData().permanences;
+    return allPermanences.filter((p) => p.month === month && p.year === year);
+  }
+
+  try {
+    const { data, error } = await supabase!.rpc("get_permanences_for_month", {
+      target_month: month,
+      target_year: year,
+    });
+
+    if (error) {
+      console.error("Erreur récupération permanences du mois:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Erreur Supabase permanences mois:", error);
+    return [];
+  }
+};
+
+// Fonction pour récupérer les catégories de permanences
+export const getPermanenceCategories = async (type?: string) => {
+  if (!useSupabase) {
+    return []; // Fallback local à implémenter si nécessaire
+  }
+
+  try {
+    let query = supabase!.from("permanence_categories").select("*");
+
+    if (type) {
+      query = query.eq("type", type);
+    }
+
+    const { data, error } = await query.order("code", { ascending: true });
+
+    if (error) {
+      console.error("Erreur récupération catégories permanences:", error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error("Erreur Supabase catégories permanences:", error);
     return [];
   }
 };
