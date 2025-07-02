@@ -670,8 +670,7 @@ const Admin = () => {
                         Réunions CGT FTM
                       </h2>
                       <p className="text-slate-600">
-                        Planifiez et organisez les assemblées syndicales par
-                        catégorie
+                        Planifiez et organisez les assemblées syndicales par catégorie
                       </p>
                     </div>
                   </div>
@@ -684,8 +683,10 @@ const Admin = () => {
                   </div>
                 </div>
 
+
                 {/* Add new meeting */}
-                <Card className="p-6 border-blue-200 bg-blue-50/50">
+                <Card className="shadow-lg border-0 bg-gradient-to-r from-blue-50 to-indigo-50">
+                  <div className="p-6">
                   <h3 className="text-lg font-semibold text-slate-800 mb-4 flex items-center gap-2">
                     <Plus className="w-5 h-5 text-blue-600" />
                     Ajouter une réunion
