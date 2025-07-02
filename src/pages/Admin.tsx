@@ -274,21 +274,47 @@ const Admin = () => {
     }
   };
 
-  const handleAddTribute = () => {
+  const handleAddTribute = async () => {
     if (newTribute.name.trim() && newTribute.text.trim()) {
-      addTribute(newTribute);
-      setNewTribute({ name: "", photo: "", text: "" });
-      setData(getDashboardData());
-      alert("Hommage ajouté avec succès !");
+      try {
+        const tributeData = {
+          ...newTribute,
+          date_added: new Date().toISOString(),
+        };
+        const result = await createTribute(tributeData);
+        if (result) {
+          // Recharger tous les tributes
+          const allTributes = await getTributes();
+          setData({ ...data, tributes: allTributes });
+          setNewTribute({ name: "", photo: "", text: "" });
+          alert("Hommage ajouté avec succès !");
+        } else {
+          alert("Erreur lors de l'ajout de l'hommage");
+        }
+      } catch (error) {
+        console.error("Error adding tribute:", error);
+        alert("Erreur lors de l'ajout de l'hommage");
+      }
     } else {
       alert("Veuillez remplir au moins le nom et le texte de l'hommage.");
     }
   };
 
-  const handleRemoveTribute = (id: string) => {
+  const handleRemoveTribute = async (id: string) => {
     if (confirm("Êtes-vous sûr de vouloir supprimer cet hommage ?")) {
-      removeTribute(id);
-      setData(getDashboardData());
+      try {
+        const success = await deleteTribute(id);
+        if (success) {
+          // Recharger tous les tributes
+          const allTributes = await getTributes();
+          setData({ ...data, tributes: allTributes });
+        } else {
+          alert("Erreur lors de la suppression");
+        }
+      } catch (error) {
+        console.error("Error deleting tribute:", error);
+        alert("Erreur lors de la suppression");
+      }
     }
   };
 
