@@ -334,8 +334,12 @@ export const createPermanence = async (
       .insert([
         {
           name: permanence.name,
-          schedule: permanence.schedule,
           type: permanence.type,
+          category: permanence.category,
+          month: permanence.month,
+          year: permanence.year,
+          days: permanence.days,
+          description: permanence.description,
         },
       ])
       .select()
