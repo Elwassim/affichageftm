@@ -77,7 +77,9 @@ const Admin = () => {
     const loadData = async () => {
       try {
         const dashboardData = await getDashboardDataFromDB();
-        setData(dashboardData);
+        // Pour l'admin, charger TOUTES les réunions
+        const allMeetings = await getAllMeetings();
+        setData({ ...dashboardData, meetings: allMeetings });
       } catch (error) {
         console.error("Error loading dashboard data:", error);
       } finally {
