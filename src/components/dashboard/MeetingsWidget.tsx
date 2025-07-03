@@ -7,6 +7,50 @@ export const MeetingsWidget = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    try {
+      const date = new Date(dateString);
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(today.getDate() + 1);
+
+      // Check if it's today
+      if (date.toDateString() === today.toDateString()) {
+        return "Aujourd'hui";
+      }
+
+      // Check if it's tomorrow
+      if (date.toDateString() === tomorrow.toDateString()) {
+        return "Demain";
+      }
+
+      // Otherwise show day name and date
+      const dayNames = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
+      const dayName = dayNames[date.getDay()];
+      const day = date.getDate();
+      const monthNames = [
+        "Jan",
+        "Fév",
+        "Mar",
+        "Avr",
+        "Mai",
+        "Jun",
+        "Jul",
+        "Aoû",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Déc",
+      ];
+      const month = monthNames[date.getMonth()];
+
+      return `${dayName} ${day} ${month}`;
+    } catch (error) {
+      return dateString;
+    }
+  };
+
   useEffect(() => {
     const loadMeetings = async () => {
       try {
