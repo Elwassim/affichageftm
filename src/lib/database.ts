@@ -717,7 +717,6 @@ export const deleteUser = async (id: string): Promise<boolean> => {
 
   try {
     // Essayer d'abord avec RPC (contourne RLS)
-    console.log("🔧 Tentative suppression avec RPC...");
     const { data: rpcResult, error: rpcError } = await supabase!.rpc(
       "delete_user_by_id",
       {
@@ -726,23 +725,18 @@ export const deleteUser = async (id: string): Promise<boolean> => {
     );
 
     if (!rpcError && rpcResult === true) {
-      console.log("✅ Suppression RPC réussie");
       return true;
     }
-
-    console.log("⚠️ RPC échouée, tentative requête directe...");
 
     // Fallback: tentative avec requête directe
     const { error } = await supabase!.from("users").delete().eq("id", id);
 
     if (error) {
-      console.error("Erreur suppression user:", error);
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error("Erreur Supabase delete user:", error);
     return false;
   }
 };
