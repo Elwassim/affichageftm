@@ -586,10 +586,9 @@ const Admin = () => {
         });
       }
     } catch (error) {
-      console.error("❌ Erreur fix RLS:", error);
       toast({
         title: "Erreur correction",
-        description: "Vérifiez la console et exécutez le script SQL manuel",
+        description: "Exécutez le script SQL manuel",
         variant: "destructive",
       });
     }
@@ -1464,7 +1463,7 @@ const Admin = () => {
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-slate-800">
-                        Médias
+                        M��dias
                       </h2>
                       <p className="text-slate-600">
                         Gestion des vidéos et contenus multimédias
