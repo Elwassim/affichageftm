@@ -36,18 +36,13 @@ const getDayName = (dayIndex: number): string => {
   return days[dayIndex];
 };
 
-// Couleurs par catégorie
-const getCategoryColor = (category: string): string => {
-  const colors: Record<string, string> = {
-    P: "#3b82f6", // Bleu
-    PAR: "#ec4899", // Rose
-    MAL: "#ef4444", // Rouge
-    RTT: "#10b981", // Vert
-    REC: "#f59e0b", // Orange
-    CP: "#8b5cf6", // Violet
-    FER: "#6b7280", // Gris
+// Couleurs par type
+const getTypeColor = (type: "technique" | "politique"): string => {
+  const colors = {
+    technique: "#3b82f6", // Bleu
+    politique: "#ef4444", // Rouge
   };
-  return colors[category] || "#6b7280";
+  return colors[type];
 };
 
 // Fonction principale pour obtenir les permanences des 7 prochains jours
