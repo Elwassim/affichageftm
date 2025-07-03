@@ -417,19 +417,39 @@ export const getTributes = async (): Promise<Tribute[]> => {
   }
 
   try {
+    console.log("🔍 Tentative récupération tributes depuis Supabase...");
+
     const { data, error } = await supabase!
       .from("tributes")
       .select("*")
       .order("created_at", { ascending: true });
 
+    console.log("📊 Résultat tributes:", { data, error });
+
     if (error) {
-      console.error("Erreur récupération tributes:", error);
+      console.log("❌ Table tributes bloquée par RLS, tentative RPC...");
+
+      // Fallback RPC bypass RLS
+      try {
+        const rpcResult = await supabase!.rpc("get_all_tributes");
+        console.log("📊 Résultat RPC tributes:", rpcResult);
+
+        if (!rpcResult.error && rpcResult.data) {
+          console.log("✅ RPC tributes réussie!");
+          return rpcResult.data;
+        }
+      } catch (rpcError) {
+        console.log("⚠️ RPC tributes non disponible");
+      }
+
+      console.error("❌ Erreur récupération tributes:", error);
       return [];
     }
 
+    console.log("✅ Tributes récupérés:", data?.length || 0);
     return data || [];
   } catch (error) {
-    console.error("Erreur Supabase tributes:", error);
+    console.error("💥 Erreur catch Supabase tributes:", error);
     return [];
   }
 };
