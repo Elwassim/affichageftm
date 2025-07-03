@@ -474,6 +474,35 @@ const Admin = () => {
     }
   };
 
+  // TEST PERMANENCES CONNECTION
+  const handleTestPermanences = async () => {
+    try {
+      console.log("🧪 Test connexion permanences...");
+
+      // Import direct pour test
+      const { getPermanences, getPermanenceCategories } = await import(
+        "../lib/database"
+      );
+
+      const permanences = await getPermanences();
+      const categories = await getPermanenceCategories();
+
+      console.log("📊 Résultats test:", { permanences, categories });
+
+      toast({
+        title: "Test terminé",
+        description: `Permanences: ${permanences.length}, Catégories: ${categories.length}`,
+      });
+    } catch (error) {
+      console.error("❌ Erreur test:", error);
+      toast({
+        title: "Erreur test",
+        description: "Vérifiez la console pour les détails",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSave = () => {
     toast({
       title: "Sauvegarde automatique",
