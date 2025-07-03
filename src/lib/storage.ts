@@ -225,6 +225,38 @@ const DEFAULT_DATA: DashboardData = {
       dateAdded: new Date().toISOString(),
     },
   ],
+  users: [
+    {
+      id: "admin-1",
+      username: "admin.test",
+      email: "admin@cgt-ftm.fr",
+      role: "admin",
+      is_admin: true,
+      is_active: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "user-1",
+      username: "marie.delegue",
+      email: "marie@cgt-ftm.fr",
+      role: "moderator",
+      is_admin: false,
+      is_active: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+    {
+      id: "user-2",
+      username: "jean.permanent",
+      email: "jean@cgt-ftm.fr",
+      role: "user",
+      is_admin: false,
+      is_active: true,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    },
+  ],
 };
 
 export const getDashboardData = (): DashboardData => {
