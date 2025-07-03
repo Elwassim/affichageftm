@@ -86,7 +86,7 @@ export const executePermanencesMigration = async (): Promise<SyncResult> => {
 };
 
 // Insérer les catégories par défaut
-const insertDefaultCategories = async () => {
+const insertDefaultCategories = async (): Promise<boolean> => {
   const categories = [
     {
       type: "technique",
@@ -146,11 +146,14 @@ const insertDefaultCategories = async () => {
 
     if (error) {
       console.error("Erreur insertion catégories:", error);
+      return false;
     } else {
       console.log("✅ Catégories insérées");
+      return true;
     }
   } catch (error) {
     console.error("Erreur upsert catégories:", error);
+    return false;
   }
 };
 
