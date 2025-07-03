@@ -270,6 +270,11 @@ export const getDashboardData = (): DashboardData => {
       data.tributes = DEFAULT_DATA.tributes;
       localStorage.setItem("union-dashboard-data", JSON.stringify(data));
     }
+    // Migration: add users field if missing
+    if (!data.users) {
+      data.users = DEFAULT_DATA.users;
+      localStorage.setItem("union-dashboard-data", JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error("Error parsing stored data:", error);
