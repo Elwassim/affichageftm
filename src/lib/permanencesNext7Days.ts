@@ -82,22 +82,25 @@ export const getNext7DaysPermanences = async (): Promise<
       allPermanences.forEach((permanence) => {
         // Vérifier si la permanence correspond au mois/année
         if (permanence.year === year && permanence.month === month) {
-          // Vérifier si ce jour spécifique a une permanence
+          // Vérifier si ce jour spécifique a une vraie permanence (seulement "P")
           const dayStr = day.toString();
           if (permanence.days[dayStr]) {
             const status = permanence.days[dayStr];
 
-            dashboardPermanences.push({
-              id: `${permanence.id}-${dayStr}`,
-              name: permanence.name,
-              date: date.toISOString().split("T")[0], // YYYY-MM-DD
-              day: day,
-              status: status,
-              category: permanence.category,
-              type: permanence.type,
-              displayDate: `${getDayName(date.getDay())} ${day} ${month.slice(0, 3)}`,
-              color: getCategoryColor(status),
-            });
+            // Ne garder que les vraies permanences (P), pas les congés/absences
+            if (status === "P") {
+              dashboardPermanences.push({
+                id: `${permanence.id}-${dayStr}`,
+                name: permanence.name,
+                date: date.toISOString().split("T")[0], // YYYY-MM-DD
+                day: day,
+                status: status,
+                category: permanence.category,
+                type: permanence.type,
+                displayDate: `${getDayName(date.getDay())} ${day} ${month.slice(0, 3)}`,
+                color: getCategoryColor(status),
+              });
+            }
           }
         }
       });
