@@ -294,6 +294,20 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
               </select>
             </div>
 
+            <div>
+              <label className="admin-label">Heure par défaut</label>
+              <input
+                type="time"
+                value={defaultTime}
+                onChange={(e) => setDefaultTime(e.target.value)}
+                className="admin-input w-full"
+                placeholder="09:00"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Heure qui sera appliquée aux jours sélectionnés
+              </p>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="admin-label">Mois *</label>
