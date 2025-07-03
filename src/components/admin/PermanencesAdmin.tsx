@@ -70,12 +70,13 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
     loadData();
   }, []);
 
-  const getCategoriesForType = (type: string) => {
-    return categories.filter((cat) => cat.type === type);
+  // Helper functions for permanence types
+  const getTypeLabel = (type: "technique" | "politique") => {
+    return type === "technique" ? "Technique" : "Politique";
   };
 
-  const getCategoryInfo = (type: string, code: string) => {
-    return categories.find((cat) => cat.type === type && cat.code === code);
+  const getTypeColor = (type: "technique" | "politique") => {
+    return type === "technique" ? "#3b82f6" : "#ef4444";
   };
 
   const handleAddPermanence = async () => {
