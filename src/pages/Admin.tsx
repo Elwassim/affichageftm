@@ -1051,6 +1051,14 @@ const Admin = () => {
                     </div>
                   </div>
                   <div className="admin-section-stats">
+                    <button
+                      onClick={handleFixTributesRLS}
+                      className="admin-btn-secondary mr-4"
+                      title="Réparer les permissions des hommages"
+                    >
+                      <Shield className="w-4 h-4 mr-2" />
+                      Réparer Hommages
+                    </button>
                     <span className="admin-connection-status">
                       <div
                         className={`admin-connection-dot ${dbConnected ? "bg-green-500" : "bg-red-500"}`}
