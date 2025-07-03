@@ -421,11 +421,8 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
         ) : (
           <div className="space-y-4">
             {permanences.map((permanence) => {
-              const categoryInfo = getCategoryInfo(
-                permanence.type,
-                permanence.category,
-              );
               const daysCount = Object.keys(permanence.days || {}).length;
+              const typeColor = getTypeColor(permanence.type);
 
               return (
                 <div key={permanence.id} className="admin-list-item">
@@ -438,10 +435,10 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
                         <span
                           className="px-2 py-1 rounded text-xs font-medium text-white"
                           style={{
-                            backgroundColor: categoryInfo?.color || "#6b7280",
+                            backgroundColor: typeColor,
                           }}
                         >
-                          {permanence.category} - {categoryInfo?.label}
+                          {getTypeLabel(permanence.type)}
                         </span>
                         <span className="text-sm text-gray-500">
                           {permanence.type === "technique" ? "🔧" : "🏛️"}{" "}
