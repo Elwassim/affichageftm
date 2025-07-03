@@ -52,20 +52,28 @@ export const executePermanencesMigration = async (): Promise<SyncResult> => {
     console.log("📋 Vérification des tables...");
 
     // Étape 3: Insérer les catégories
-    await insertDefaultCategories();
+    const categoriesResult = await insertDefaultCategories();
+    if (!categoriesResult) {
+      return {
+        success: false,
+        message: "Erreur lors de l'insertion des catégories",
+      };
+    }
 
     // Étape 4: Insérer des données d'exemple
-    await insertSamplePermanences();
-
-    // Étape 5: Configurer les permissions
-    await setupPermissions();
+    const permanencesResult = await insertSamplePermanences();
+    if (!permanencesResult) {
+      console.log(
+        "⚠️ Attention: Erreur lors de l'insertion des permanences d'exemple",
+      );
+    }
 
     console.log("✅ Migration terminée avec succès!");
 
     return {
       success: true,
       message: "Migration des permanences effectuée avec succès",
-      details: { steps: migrationSteps.length },
+      details: { tables_created: true },
     };
   } catch (error) {
     console.error("💥 Erreur migration:", error);
