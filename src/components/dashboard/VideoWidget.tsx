@@ -86,7 +86,7 @@ export const VideoWidget = () => {
           <div className="w-6 h-6 bg-cgt-red rounded-lg flex items-center justify-center shadow-sm">
             <Play className="w-4 h-4 text-white" />
           </div>
-          Vid��o institutionnelle CGT FTM
+          Vidéo institutionnelle CGT FTM
         </h2>
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
@@ -95,6 +95,7 @@ export const VideoWidget = () => {
         <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200">
           {isDirectVideo(videoUrl) ? (
             <video
+              ref={videoRef}
               src={videoUrl}
               className="w-full h-full object-cover"
               autoPlay
