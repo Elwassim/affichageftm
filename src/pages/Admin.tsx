@@ -567,11 +567,9 @@ const Admin = () => {
 
       // Test RPC permanences
       const permanencesRPC = await supabase.rpc("get_all_permanences");
-      console.log("🧪 Test RPC permanences:", permanencesRPC);
 
       // Test RPC catégories
       const categoriesRPC = await supabase.rpc("get_all_permanence_categories");
-      console.log("🧪 Test RPC catégories:", categoriesRPC);
 
       if (!permanencesRPC.error && !categoriesRPC.error) {
         await refresh();
