@@ -346,3 +346,28 @@ export const removeTribute = (id: string): void => {
   data.tributes = data.tributes.filter((t) => t.id !== id);
   saveDashboardData(data);
 };
+
+// Users management
+export const updateUsers = (users: User[]): void => {
+  const data = getDashboardData();
+  data.users = users;
+  saveDashboardData(data);
+};
+
+export const addUser = (user: Omit<User, "id" | "created_at">): void => {
+  const data = getDashboardData();
+  const newUser: User = {
+    ...user,
+    id: Date.now().toString(),
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  };
+  data.users = [...(data.users || []), newUser];
+  saveDashboardData(data);
+};
+
+export const removeUser = (id: string): void => {
+  const data = getDashboardData();
+  data.users = (data.users || []).filter((u) => u.id !== id);
+  saveDashboardData(data);
+};
