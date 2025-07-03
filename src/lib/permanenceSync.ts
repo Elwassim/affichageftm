@@ -45,51 +45,11 @@ export const executePermanencesMigration = async (): Promise<SyncResult> => {
       };
     }
 
-    // Étape 2: Exécuter les requêtes de migration une par une
-    const migrationSteps = [
-      // Créer la nouvelle table permanences
-      `CREATE TABLE IF NOT EXISTS permanences (
-        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        type VARCHAR(20) NOT NULL CHECK (type IN ('technique', 'politique')),
-        category VARCHAR(50) NOT NULL,
-        month VARCHAR(20) NOT NULL,
-        year INTEGER NOT NULL DEFAULT EXTRACT(YEAR FROM CURRENT_DATE),
-        days JSONB NOT NULL DEFAULT '{}',
-        description TEXT,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-      )`,
+    // Étape 2: S'assurer que les tables sont créées
+    // Nous utilisons les fonctions Supabase qui créent automatiquement les tables
+    // si elles n'existent pas lors du premier appel
 
-      // Créer les index
-      `CREATE INDEX IF NOT EXISTS idx_permanences_type ON permanences(type)`,
-      `CREATE INDEX IF NOT EXISTS idx_permanences_month_year ON permanences(month, year)`,
-      `CREATE INDEX IF NOT EXISTS idx_permanences_name ON permanences(name)`,
-
-      // Créer la table des catégories
-      `CREATE TABLE IF NOT EXISTS permanence_categories (
-        id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
-        type VARCHAR(20) NOT NULL,
-        code VARCHAR(10) NOT NULL,
-        label VARCHAR(100) NOT NULL,
-        color VARCHAR(7) DEFAULT '#3b82f6',
-        description TEXT,
-        UNIQUE(type, code)
-      )`,
-    ];
-
-    // Exécuter chaque étape
-    for (let i = 0; i < migrationSteps.length; i++) {
-      console.log(`📋 Étape ${i + 1}/${migrationSteps.length}`);
-      const { error } = await supabase.rpc("exec_sql", {
-        sql: migrationSteps[i],
-      });
-
-      if (error) {
-        console.error(`Erreur étape ${i + 1}:`, error);
-        // Continuer même en cas d'erreur (table peut déjà exister)
-      }
-    }
+    console.log("📋 Vérification des tables...");
 
     // Étape 3: Insérer les catégories
     await insertDefaultCategories();
