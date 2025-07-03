@@ -53,13 +53,11 @@ export const setConfig = async (key: string, value: any): Promise<boolean> => {
       .upsert({ key, value }, { onConflict: "key" });
 
     if (error) {
-      console.error(`Erreur sauvegarde config ${key}:`, error);
       return false;
     }
 
     return true;
   } catch (error) {
-    console.error("Erreur Supabase config:", error);
     return false;
   }
 };
@@ -389,7 +387,7 @@ export const getTributes = async (): Promise<Tribute[]> => {
         console.log("📊 Résultat RPC tributes:", rpcResult);
 
         if (!rpcResult.error && rpcResult.data) {
-          console.log("��� RPC tributes réussie!");
+          console.log("✅ RPC tributes réussie!");
           return rpcResult.data;
         }
       } catch (rpcError) {
