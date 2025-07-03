@@ -62,12 +62,8 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
   const loadData = async () => {
     setLoading(true);
     try {
-      const [permanencesData, categoriesData] = await Promise.all([
-        getPermanences(),
-        getPermanenceCategories(),
-      ]);
+      const permanencesData = await getPermanences();
       setPermanences(permanencesData);
-      setCategories(categoriesData);
     } catch (error) {
       console.error("Erreur chargement permanences:", error);
       toast({
