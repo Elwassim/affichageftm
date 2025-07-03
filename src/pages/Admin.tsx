@@ -742,6 +742,14 @@ const Admin = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <button
+                onClick={handleVerifyAllSync}
+                className="admin-btn-secondary"
+                title="Vérifier toutes les connexions BDD"
+              >
+                <Shield className="w-4 h-4 mr-2" />
+                Vérifier Tout
+              </button>
               {lastSync && (
                 <span className="text-xs text-slate-500">
                   Dernière sync: {lastSync.toLocaleTimeString()}
