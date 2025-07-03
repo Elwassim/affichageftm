@@ -141,9 +141,11 @@ export const MeetingsWidget = () => {
       {meetings.length === 0 ? (
         <div className="text-center py-4">
           <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-            <Clock className="w-3 h-3 text-gray-400" />
+            <Calendar className="w-3 h-3 text-gray-400" />
           </div>
-          <p className="text-gray-500 text-xs">Aucune réunion</p>
+          <p className="text-gray-500 text-xs">
+            Aucune réunion ces 7 prochains jours
+          </p>
         </div>
       ) : (
         <div
