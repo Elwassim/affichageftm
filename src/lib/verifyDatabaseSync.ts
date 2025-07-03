@@ -3,7 +3,6 @@ import {
   getMeetings,
   getAllMeetings,
   getPermanences,
-  getPermanenceCategories,
   getTributes,
   getUsers,
   getConfig,
