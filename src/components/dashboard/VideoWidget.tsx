@@ -25,50 +25,73 @@ export const VideoWidget = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Handle manual video start
-  const handleVideoStart = async () => {
-    if (isDirectVideo(videoUrl) && videoRef.current) {
-      try {
-        videoRef.current.muted = true;
-        await videoRef.current.play();
-        setIsPlaying(true);
-        setShowPlayButton(false);
-      } catch (error) {
-        console.error("Error playing video:", error);
-      }
-    } else {
-      // For iframes (YouTube/Vimeo), hide the play button and let embed handle it
-      setShowPlayButton(false);
-      setIsPlaying(true);
-    }
-  };
-
-  // Auto-attempt to play video when component mounts
+  // Force video autoplay with multiple attempts
   useEffect(() => {
     if (!videoUrl) return;
 
-    // Delay to ensure DOM is ready
-    const timer = setTimeout(async () => {
+    const forcePlay = async () => {
       if (isDirectVideo(videoUrl) && videoRef.current) {
-        try {
-          videoRef.current.muted = true;
-          await videoRef.current.play();
-          setIsPlaying(true);
-          setShowPlayButton(false);
-        } catch (error) {
-          console.log("Autoplay blocked, showing play button");
-          setShowPlayButton(true);
-        }
-      } else {
-        // For embedded videos, try to hide play button after a moment
-        setTimeout(() => {
-          setShowPlayButton(false);
-          setIsPlaying(true);
-        }, 2000);
-      }
-    }, 1000);
+        const video = videoRef.current;
 
-    return () => clearTimeout(timer);
+        // Multiple aggressive attempts to start video
+        const playAttempts = async () => {
+          try {
+            video.muted = true;
+            video.volume = 0;
+            video.setAttribute("autoplay", "");
+            video.setAttribute("playsinline", "");
+            video.setAttribute("webkit-playsinline", "");
+
+            await video.play();
+            setIsPlaying(true);
+            console.log("✅ Video autoplay succeeded");
+          } catch (error) {
+            console.log("🔄 Autoplay attempt failed, retrying...");
+
+            // Retry after a short delay
+            setTimeout(async () => {
+              try {
+                video.muted = true;
+                video.currentTime = 0;
+                await video.play();
+                setIsPlaying(true);
+              } catch (retryError) {
+                console.log("🔄 Retry failed, trying again...");
+
+                // Final attempt with load() first
+                setTimeout(async () => {
+                  try {
+                    video.load();
+                    video.muted = true;
+                    await video.play();
+                    setIsPlaying(true);
+                  } catch (finalError) {
+                    console.log("❌ All autoplay attempts failed");
+                  }
+                }, 500);
+              }
+            }, 500);
+          }
+        };
+
+        // Start attempts immediately and with delays
+        playAttempts();
+        setTimeout(playAttempts, 100);
+        setTimeout(playAttempts, 500);
+        setTimeout(playAttempts, 1000);
+        setTimeout(playAttempts, 2000);
+      } else {
+        // For embedded videos, assume they will autoplay
+        setIsPlaying(true);
+      }
+    };
+
+    // Try immediately and with delays
+    forcePlay();
+    setTimeout(forcePlay, 100);
+    setTimeout(forcePlay, 1000);
+
+    return () => {};
   }, [videoUrl]);
 
   // Ensure video plays infinitely - restart if it stops
