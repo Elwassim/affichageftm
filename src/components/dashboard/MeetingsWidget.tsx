@@ -131,9 +131,9 @@ export const MeetingsWidget = () => {
       <div className="mb-3">
         <h2 className="text-lg font-black text-cgt-gray flex items-center gap-2">
           <div className="w-6 h-6 bg-cgt-red rounded flex items-center justify-center">
-            <Clock className="w-4 h-4 text-white" />
+            <Calendar className="w-4 h-4 text-white" />
           </div>
-          Réunions
+          Réunions - 7 jours
         </h2>
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
