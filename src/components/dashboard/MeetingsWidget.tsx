@@ -51,18 +51,31 @@ export const MeetingsWidget = () => {
     }
   };
 
+  // Filter meetings for next 7 days
+  const filterNext7DaysMeetings = (meetings: Meeting[]) => {
+    const today = new Date();
+    const next7Days = new Date(today);
+    next7Days.setDate(today.getDate() + 7);
+
+    return meetings.filter((meeting) => {
+      const meetingDate = new Date(meeting.date);
+      return meetingDate >= today && meetingDate <= next7Days;
+    });
+  };
+
   useEffect(() => {
     const loadMeetings = async () => {
       try {
         const meetingsData = await getMeetings();
-        setMeetings(meetingsData);
+        const filteredMeetings = filterNext7DaysMeetings(meetingsData);
+        setMeetings(filteredMeetings);
       } catch (error) {
         console.error("Error loading meetings:", error);
       }
     };
 
     loadMeetings();
-    const timer = setInterval(loadMeetings, 30000); // Refresh every 30 seconds
+    const timer = setInterval(loadMeetings, 60000); // Refresh every 60 seconds
 
     return () => clearInterval(timer);
   }, []);
