@@ -112,6 +112,7 @@ export const VideoWidget = () => {
             />
           ) : (
             <iframe
+              ref={iframeRef}
               src={getEmbedUrl(videoUrl)}
               className="w-full h-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
