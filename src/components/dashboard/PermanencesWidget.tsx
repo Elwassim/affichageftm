@@ -90,14 +90,10 @@ export const PermanencesWidget = () => {
           {permanences.map((permanence) => (
             <div
               key={permanence.id}
-              className="group p-2.5 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-3 hover:shadow-md transition-shadow"
-              style={{ borderLeftColor: permanence.color }}
+              className="group p-2.5 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-3 border-cgt-red hover:shadow-md transition-shadow"
             >
               <div className="flex items-start gap-2">
-                <div
-                  className="w-7 h-7 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0"
-                  style={{ backgroundColor: permanence.color }}
-                >
+                <div className="w-7 h-7 bg-gradient-to-br from-cgt-red to-cgt-red-dark text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">
                   {permanence.name
                     .split(" ")
                     .map((n) => n[0])
@@ -109,20 +105,14 @@ export const PermanencesWidget = () => {
                     {permanence.name}
                   </h3>
                   <div className="flex items-center gap-1 text-gray-600 text-xs mt-1">
-                    <Calendar
-                      className="w-3 h-3"
-                      style={{ color: permanence.color }}
-                    />
+                    <Calendar className="w-3 h-3 text-cgt-red" />
                     <span className="font-semibold">
                       {permanence.displayDate}
                     </span>
                   </div>
                   <div className="mt-1">
-                    <span
-                      className="inline-block px-2 py-0.5 rounded-md text-xs font-semibold text-white"
-                      style={{ backgroundColor: permanence.color }}
-                    >
-                      {getCategoryLabel(permanence.status)}
+                    <span className="inline-block bg-cgt-red/15 text-cgt-red px-2 py-0.5 rounded-md text-xs font-semibold">
+                      Permanence
                     </span>
                   </div>
                 </div>
