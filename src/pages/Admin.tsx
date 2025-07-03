@@ -392,16 +392,30 @@ const Admin = () => {
   };
 
   const handleDeleteUser = async (id: string) => {
+    console.log("🗑️ Tentative suppression utilisateur:", id);
     try {
+      console.log("📋 Utilisateurs avant suppression:", users.length);
       const success = await deleteUser(id);
+      console.log("✅ Résultat suppression:", success);
+
       if (success) {
+        console.log("🔄 Rafraîchissement des données...");
         await refresh();
+        console.log("📋 Utilisateurs après suppression:", users.length);
         toast({
           title: "Succès",
           description: "Utilisateur supprimé avec succès.",
         });
+      } else {
+        console.log("❌ Échec de suppression");
+        toast({
+          title: "Erreur",
+          description: "Échec de la suppression de l'utilisateur.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
+      console.error("💥 Erreur lors de la suppression:", error);
       toast({
         title: "Erreur",
         description: "Impossible de supprimer l'utilisateur.",
