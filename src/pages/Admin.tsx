@@ -1010,44 +1010,107 @@ const Admin = () => {
                         <div className="flex-1 grid grid-cols-1 md:grid-cols-4 gap-4">
                           <div>
                             <label className="admin-label">Titre</label>
-                            <input
-                              type="text"
-                              value={meeting.title}
-                              readOnly
-                              className="admin-input w-full bg-gray-50"
-                            />
+                            {editingMeeting === meeting.id ? (
+                              <input
+                                type="text"
+                                value={editMeetingData.title || ""}
+                                onChange={(e) =>
+                                  setEditMeetingData({
+                                    ...editMeetingData,
+                                    title: e.target.value,
+                                  })
+                                }
+                                className="admin-input w-full"
+                              />
+                            ) : (
+                              <input
+                                type="text"
+                                value={meeting.title}
+                                readOnly
+                                className="admin-input w-full bg-gray-50"
+                              />
+                            )}
                           </div>
                           <div>
                             <label className="admin-label">Heure</label>
-                            <input
-                              type="time"
-                              value={meeting.time}
-                              readOnly
-                              className="admin-input w-full bg-gray-50"
-                            />
+                            {editingMeeting === meeting.id ? (
+                              <input
+                                type="time"
+                                value={editMeetingData.time || ""}
+                                onChange={(e) =>
+                                  setEditMeetingData({
+                                    ...editMeetingData,
+                                    time: e.target.value,
+                                  })
+                                }
+                                className="admin-input w-full"
+                              />
+                            ) : (
+                              <input
+                                type="time"
+                                value={meeting.time}
+                                readOnly
+                                className="admin-input w-full bg-gray-50"
+                              />
+                            )}
                           </div>
                           <div>
                             <label className="admin-label">Salle</label>
-                            <input
-                              type="text"
-                              value={meeting.room}
-                              readOnly
-                              className="admin-input w-full bg-gray-50"
-                            />
+                            {editingMeeting === meeting.id ? (
+                              <input
+                                type="text"
+                                value={editMeetingData.room || ""}
+                                onChange={(e) =>
+                                  setEditMeetingData({
+                                    ...editMeetingData,
+                                    room: e.target.value,
+                                  })
+                                }
+                                className="admin-input w-full"
+                              />
+                            ) : (
+                              <input
+                                type="text"
+                                value={meeting.room}
+                                readOnly
+                                className="admin-input w-full bg-gray-50"
+                              />
+                            )}
                           </div>
                           <div>
                             <label className="admin-label">Catégorie</label>
-                            <select
-                              value={meeting.category}
-                              disabled
-                              className="admin-input w-full bg-gray-50"
-                            >
-                              {MEETING_CATEGORIES.map((category) => (
-                                <option key={category} value={category}>
-                                  {category}
-                                </option>
-                              ))}
-                            </select>
+                            {editingMeeting === meeting.id ? (
+                              <select
+                                value={
+                                  editMeetingData.category || meeting.category
+                                }
+                                onChange={(e) =>
+                                  setEditMeetingData({
+                                    ...editMeetingData,
+                                    category: e.target.value,
+                                  })
+                                }
+                                className="admin-input w-full"
+                              >
+                                {MEETING_CATEGORIES.map((category) => (
+                                  <option key={category} value={category}>
+                                    {category}
+                                  </option>
+                                ))}
+                              </select>
+                            ) : (
+                              <select
+                                value={meeting.category}
+                                disabled
+                                className="admin-input w-full bg-gray-50"
+                              >
+                                {MEETING_CATEGORIES.map((category) => (
+                                  <option key={category} value={category}>
+                                    {category}
+                                  </option>
+                                ))}
+                              </select>
+                            )}
                           </div>
                         </div>
                         <div className="ml-4">
