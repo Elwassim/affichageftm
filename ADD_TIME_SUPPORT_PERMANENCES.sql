@@ -5,11 +5,11 @@
 ALTER TABLE permanences ADD COLUMN days_new JSONB;
 
 -- 2. Migrer les données existantes vers le nouveau format
-UPDATE permanences 
+UPDATE permanences
 SET days_new = (
   SELECT jsonb_object_agg(
-    key, 
-    CASE 
+    key,
+    CASE
       WHEN value::boolean = true THEN '{"time": null}'::jsonb
       ELSE 'false'::jsonb
     END
@@ -19,8 +19,8 @@ SET days_new = (
 WHERE days IS NOT NULL;
 
 -- 3. Gérer les cas où days est null
-UPDATE permanences 
-SET days_new = '{}'::jsonb 
+UPDATE permanences
+SET days_new = '{}'::jsonb
 WHERE days IS NULL;
 
 -- 4. Supprimer l'ancienne colonne et renommer la nouvelle
@@ -28,13 +28,13 @@ ALTER TABLE permanences DROP COLUMN days;
 ALTER TABLE permanences RENAME COLUMN days_new TO days;
 
 -- 5. Vérifier la migration
-SELECT 
-  id, 
-  elus_name, 
+SELECT
+  id,
+  name,
   type,
   days,
-  created_at 
-FROM permanences 
+  created_at
+FROM permanences
 LIMIT 5;
 
 -- Commentaire explicatif de la nouvelle structure:
