@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Clock, MapPin } from "lucide-react";
+import { Clock, MapPin, Calendar } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { getMeetings, type Meeting } from "@/lib/database";
 
