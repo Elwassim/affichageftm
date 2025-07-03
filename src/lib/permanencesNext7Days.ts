@@ -79,6 +79,7 @@ export const getNext7DaysPermanences = async (): Promise<
           // Vérifier si ce jour spécifique a une permanence
           const dayStr = day.toString();
           if (permanence.days[dayStr]) {
+            const dayData = permanence.days[dayStr];
             dashboardPermanences.push({
               id: `${permanence.id}-${dayStr}`,
               name: permanence.name,
@@ -87,6 +88,7 @@ export const getNext7DaysPermanences = async (): Promise<
               type: permanence.type,
               displayDate: `${getDayName(date.getDay())} ${day} ${month.slice(0, 3)}`,
               color: getTypeColor(permanence.type),
+              time: dayData.time, // Inclure l'heure si disponible
             });
           }
         }
