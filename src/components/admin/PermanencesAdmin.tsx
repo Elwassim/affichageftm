@@ -276,12 +276,9 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
                 value={newPermanence.type}
                 onChange={(e) => {
                   const type = e.target.value as "technique" | "politique";
-                  const firstCategory =
-                    getCategoriesForType(type)[0]?.code || "P";
                   setNewPermanence({
                     ...newPermanence,
                     type,
-                    category: firstCategory,
                   });
                 }}
                 className="admin-input w-full"
