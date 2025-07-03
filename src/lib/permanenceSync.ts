@@ -60,7 +60,10 @@ export const executePermanencesMigration = async (): Promise<SyncResult> => {
       };
     }
 
-    // Étape 4: Insérer des données d'exemple
+    // Étape 4: Créer les fonctions RPC bypass RLS
+    await createRPCFunctions();
+
+    // Étape 5: Insérer des données d'exemple
     const permanencesResult = await insertSamplePermanences();
     if (!permanencesResult) {
       console.log(
