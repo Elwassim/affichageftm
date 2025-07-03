@@ -253,7 +253,7 @@ const Admin = () => {
     try {
       const success = await deleteMeetingFromDB(id);
       if (success) {
-        setMeetings(meetings.filter((m) => m.id !== id));
+        await refresh(); // Actualiser toutes les données
         toast({
           title: "Succès",
           description: "Réunion supprimée avec succès.",
