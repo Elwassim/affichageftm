@@ -214,33 +214,6 @@ const insertSamplePermanences = async (): Promise<boolean> => {
   }
 };
 
-// Configurer les permissions RLS
-const setupPermissions = async () => {
-  try {
-    // Activer RLS si ce n'est pas fait
-    await supabase!.rpc("exec_sql", {
-      sql: "ALTER TABLE permanences ENABLE ROW LEVEL SECURITY",
-    });
-
-    await supabase!.rpc("exec_sql", {
-      sql: "ALTER TABLE permanence_categories ENABLE ROW LEVEL SECURITY",
-    });
-
-    // Créer les politiques de lecture publique
-    await supabase!.rpc("exec_sql", {
-      sql: `CREATE POLICY IF NOT EXISTS "Allow public read permanences" ON permanences FOR SELECT USING (true)`,
-    });
-
-    await supabase!.rpc("exec_sql", {
-      sql: `CREATE POLICY IF NOT EXISTS "Allow public read categories" ON permanence_categories FOR SELECT USING (true)`,
-    });
-
-    console.log("✅ Permissions configurées");
-  } catch (error) {
-    console.error("Erreur permissions:", error);
-  }
-};
-
 // Fonction principale de synchronisation
 export const syncPermanencesWithDB = async (): Promise<SyncResult> => {
   console.log("🔄 Début de la synchronisation des permanences...");
