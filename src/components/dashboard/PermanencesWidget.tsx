@@ -3,7 +3,7 @@ import { Users, Calendar, MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   getNext7DaysPermanences,
-  getCategoryLabel,
+  getTypeLabel,
   type DashboardPermanence,
 } from "@/lib/permanencesNext7Days";
 
