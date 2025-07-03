@@ -66,9 +66,9 @@ export const PermanencesWidget = () => {
       <div className="mb-3">
         <h2 className="text-lg font-black text-cgt-gray flex items-center gap-2">
           <div className="w-6 h-6 bg-cgt-red rounded flex items-center justify-center">
-            <Users className="w-4 h-4 text-white" />
+            <Calendar className="w-4 h-4 text-white" />
           </div>
-          Permanences
+          Permanences - 7 jours
         </h2>
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
@@ -76,9 +76,11 @@ export const PermanencesWidget = () => {
       {permanences.length === 0 ? (
         <div className="text-center py-4">
           <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-            <Users className="w-3 h-3 text-gray-400" />
+            <Calendar className="w-3 h-3 text-gray-400" />
           </div>
-          <p className="text-gray-500 text-xs">Aucune permanence</p>
+          <p className="text-gray-500 text-xs">
+            Aucune permanence ces 7 prochains jours
+          </p>
         </div>
       ) : (
         <div
