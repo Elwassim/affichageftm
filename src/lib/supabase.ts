@@ -29,11 +29,10 @@ export interface Meeting {
 export interface Permanence {
   id: string;
   name: string;
-  type: "technique" | "politique"; // Type principal
-  category: string; // Sous-catégorie (P, PAR, MAL, RTT, etc.)
+  type: "technique" | "politique"; // Type de permanence
   month: string; // Mois (juin, juillet, août, etc.)
   year: number; // Année
-  days: Record<string, string>; // Jours du mois avec statuts (1-31)
+  days: Record<string, boolean>; // Jours du mois avec permanences (1-31)
   description?: string; // Description optionnelle
   created_at?: string;
   updated_at?: string;
