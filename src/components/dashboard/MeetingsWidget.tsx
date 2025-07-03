@@ -178,24 +178,10 @@ export const MeetingsWidget = () => {
                         <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
                           {meeting.title}
                         </h3>
-                        <div className="flex items-center gap-2 text-gray-600 text-xs mt-0.5 flex-wrap">
-                          <span className="flex items-center gap-1">
-                            <Calendar className="w-3 h-3 text-cgt-red" />
-                            <span className="font-semibold text-cgt-red">
-                              {formatDate(meeting.date)}
-                            </span>
-                          </span>
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-3 h-3 text-cgt-red" />
-                            <span className="font-semibold">
-                              {meeting.time}
-                            </span>
-                          </span>
-                          <span className="flex items-center gap-1 truncate">
-                            <MapPin className="w-3 h-3 text-cgt-red" />
-                            <span className="font-semibold">
-                              {meeting.room}
-                            </span>
+                        <div className="flex items-center gap-1 text-gray-600 text-xs mt-1">
+                          <Calendar className="w-3 h-3 text-cgt-red" />
+                          <span className="font-semibold text-cgt-red">
+                            {formatDate(meeting.date)}
                           </span>
                         </div>
                       </div>
