@@ -84,7 +84,7 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
       toast({
         title: "Erreur",
         description:
-          "Veuillez remplir le nom et sélectionner au moins un jour.",
+          "Veuillez remplir le nom et s��lectionner au moins un jour.",
         variant: "destructive",
       });
       return;
@@ -363,19 +363,26 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
 
             {/* Legend */}
             <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-              <h5 className="font-medium mb-2">Légende des catégories</h5>
+              <h5 className="font-medium mb-2">Types de permanences</h5>
               <div className="grid grid-cols-2 gap-2">
-                {getCategoriesForType(newPermanence.type).map((cat) => (
-                  <div key={cat.code} className="flex items-center space-x-2">
-                    <div
-                      className="w-4 h-4 rounded"
-                      style={{ backgroundColor: cat.color }}
-                    ></div>
-                    <span className="text-sm">
-                      <strong>{cat.code}</strong> - {cat.label}
-                    </span>
-                  </div>
-                ))}
+                <div className="flex items-center space-x-2">
+                  <div
+                    className="w-4 h-4 rounded"
+                    style={{ backgroundColor: "#3b82f6" }}
+                  ></div>
+                  <span className="text-sm">
+                    <strong>Technique</strong> - Permanences techniques
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <div
+                    className="w-4 h-4 rounded"
+                    style={{ backgroundColor: "#ef4444" }}
+                  ></div>
+                  <span className="text-sm">
+                    <strong>Politique</strong> - Permanences politiques
+                  </span>
+                </div>
               </div>
             </div>
           </div>
