@@ -103,7 +103,7 @@ BEGIN
 
   -- Réunion d'exemple
   IF NOT EXISTS (SELECT 1 FROM meetings) THEN
-    INSERT INTO meetings (title, time, room, category, date) VALUES
+    INSERT INTO meetings (title, "time", room, category, date) VALUES
     ('Réunion Test', '14:00', 'Salle A', 'Autre', CURRENT_DATE);
   END IF;
 END $$;
