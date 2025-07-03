@@ -9,6 +9,7 @@ export interface DashboardPermanence {
   type: "technique" | "politique";
   displayDate: string; // Format d'affichage (ex: "Lun 15 Jan")
   color: string; // Couleur selon le type
+  time?: string; // Heure optionnelle (ex: "14:00")
 }
 
 // Fonction pour obtenir le nom du mois en français
