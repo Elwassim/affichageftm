@@ -94,7 +94,6 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
       const permanence = await createPermanence({
         name: newPermanence.name,
         type: newPermanence.type,
-        category: newPermanence.category,
         month: newPermanence.month,
         year: newPermanence.year,
         days: selectedDays,
