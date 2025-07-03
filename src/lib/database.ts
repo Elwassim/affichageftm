@@ -323,50 +323,7 @@ export const getPermanencesForMonth = async (
   }
 };
 
-// Fonction pour récupérer les catégories de permanences
-export const getPermanenceCategories = async (type?: string) => {
-  if (!useSupabase) {
-    return []; // Fallback local à implémenter si nécessaire
-  }
-
-  try {
-    console.log("🔍 Tentative récupération catégories permanences...");
-
-    let query = supabase!.from("permanence_categories").select("*");
-
-    if (type) {
-      query = query.eq("type", type);
-    }
-
-    const { data, error } = await query.order("code", { ascending: true });
-
-    if (error) {
-      console.log("❌ Table catégories bloquée par RLS, tentative RPC...");
-
-      // Fallback RPC bypass RLS
-      try {
-        const rpcResult = await supabase!.rpc("get_all_permanence_categories");
-        console.log("📊 Résultat RPC catégories:", rpcResult);
-
-        if (!rpcResult.error && rpcResult.data) {
-          console.log("✅ RPC catégories réussie!");
-          return rpcResult.data;
-        }
-      } catch (rpcError) {
-        console.log("⚠️ RPC catégories non disponible");
-      }
-
-      console.error("❌ Erreur récupération catégories permanences:", error);
-      return [];
-    }
-
-    console.log("✅ Catégories récupérées:", data?.length || 0);
-    return data || [];
-  } catch (error) {
-    console.error("💥 Erreur catch Supabase catégories permanences:", error);
-    return [];
-  }
-};
+// Note: getPermanenceCategories supprimée - plus de sous-catégories nécessaires
 
 export const createPermanence = async (
   permanence: Omit<Permanence, "id" | "created_at" | "updated_at">,
