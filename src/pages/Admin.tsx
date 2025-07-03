@@ -441,6 +441,39 @@ const Admin = () => {
     setEditUserData({});
   };
 
+  // PERMANENCES SYNC FUNCTION
+  const handleSyncPermanences = async () => {
+    try {
+      toast({
+        title: "Synchronisation en cours...",
+        description:
+          "Migration et synchronisation des permanences avec la base de données.",
+      });
+
+      const result = await syncPermanencesWithDB();
+
+      if (result.success) {
+        await refresh(); // Actualiser les données
+        toast({
+          title: "Succès",
+          description: result.message,
+        });
+      } else {
+        toast({
+          title: "Erreur de synchronisation",
+          description: result.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de synchroniser les permanences.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSave = () => {
     toast({
       title: "Sauvegarde automatique",
