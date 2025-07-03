@@ -6,11 +6,9 @@ export interface DashboardPermanence {
   name: string;
   date: string; // Format YYYY-MM-DD
   day: number; // Jour du mois (1-31)
-  status: string; // P, PAR, MAL, RTT, etc.
-  category: string;
   type: "technique" | "politique";
   displayDate: string; // Format d'affichage (ex: "Lun 15 Jan")
-  color: string; // Couleur de la catégorie
+  color: string; // Couleur selon le type
 }
 
 // Fonction pour obtenir le nom du mois en français
