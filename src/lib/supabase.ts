@@ -32,7 +32,7 @@ export interface Permanence {
   type: "technique" | "politique"; // Type de permanence
   month: string; // Mois (juin, juillet, août, etc.)
   year: number; // Année
-  days: Record<string, boolean>; // Jours du mois avec permanences (1-31)
+  days: Record<string, { time?: string }>; // Jours du mois avec heures optionnelles (1-31)
   description?: string; // Description optionnelle
   created_at?: string;
   updated_at?: string;
