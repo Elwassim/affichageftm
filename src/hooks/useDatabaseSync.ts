@@ -49,11 +49,9 @@ export const useDatabaseSync = (
   const [isConnected, setIsConnected] = useState(false);
 
   const refresh = useCallback(async () => {
-    console.log("🔄 Début synchronisation base de données...");
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      console.log("📥 Chargement des données...");
       const [
         meetings,
         tributes,
@@ -72,14 +70,6 @@ export const useDatabaseSync = (
         getConfig("alertText"),
       ]);
 
-      console.log("✅ Données chargées:", {
-        meetings: meetings.length,
-        tributes: tributes.length,
-        permanences: permanences.length,
-        users: users.length,
-        config: { videoUrl: !!videoUrl, weatherCity, alertText: !!alertText },
-      });
-
       setState({
         meetings,
         tributes,
@@ -96,9 +86,7 @@ export const useDatabaseSync = (
       });
 
       setIsConnected(true);
-      console.log("🔄 Synchronisation terminée avec succès");
     } catch (error) {
-      console.error("❌ Erreur synchronisation base de données:", error);
       setState((prev) => ({
         ...prev,
         loading: false,
