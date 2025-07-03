@@ -241,21 +241,41 @@ export const getPermanences = async (): Promise<Permanence[]> => {
   }
 
   try {
-    const { data, error } = await supabase!
+    console.log("🔍 Tentative récupération permanences depuis Supabase...");
+
+    // Méthode 1: Essayer avec la vue (si elle existe)
+    let result = await supabase!
       .from("permanences_with_categories")
       .select("*")
       .order("year", { ascending: false })
       .order("month", { ascending: true })
       .order("name", { ascending: true });
 
-    if (error) {
-      console.error("Erreur récupération permanences:", error);
-      return [];
+    console.log("📊 Résultat vue permanences_with_categories:", result);
+
+    if (result.error) {
+      console.log("❌ Vue indisponible, tentative table directe...");
+
+      // Méthode 2: Fallback vers la table directe
+      result = await supabase!
+        .from("permanences")
+        .select("*")
+        .order("year", { ascending: false })
+        .order("month", { ascending: true })
+        .order("name", { ascending: true });
+
+      console.log("📊 Résultat table permanences:", result);
+
+      if (result.error) {
+        console.error("❌ Erreur table permanences:", result.error);
+        return [];
+      }
     }
 
-    return data || [];
+    console.log("✅ Permanences récupérées:", result.data?.length || 0);
+    return result.data || [];
   } catch (error) {
-    console.error("Erreur Supabase permanences:", error);
+    console.error("💥 Erreur catch Supabase permanences:", error);
     return [];
   }
 };
