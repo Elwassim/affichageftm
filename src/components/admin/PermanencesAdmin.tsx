@@ -3,7 +3,6 @@ import { Calendar, Users, Plus, Trash2, Edit, Save, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import {
   getPermanences,
-  getPermanenceCategories,
   createPermanence,
   updatePermanence,
   deletePermanence,
