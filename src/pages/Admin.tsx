@@ -1058,6 +1058,14 @@ const Admin = () => {
                   </div>
                   <div className="admin-section-stats">
                     <button
+                      onClick={handleTestPermanences}
+                      className="admin-btn-secondary mr-2"
+                      title="Tester la connexion aux permanences"
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      Test
+                    </button>
+                    <button
                       onClick={handleSyncPermanences}
                       className="admin-btn-primary mr-4"
                       title="Synchroniser avec la base de données"
