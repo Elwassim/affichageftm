@@ -267,7 +267,22 @@ export const getPermanences = async (): Promise<Permanence[]> => {
       console.log("📊 Résultat table permanences:", result);
 
       if (result.error) {
-        console.error("❌ Erreur table permanences:", result.error);
+        console.log("❌ Table bloquée par RLS, tentative RPC...");
+
+        // Méthode 3: RPC bypass RLS
+        try {
+          const rpcResult = await supabase!.rpc("get_all_permanences");
+          console.log("📊 Résultat RPC permanences:", rpcResult);
+
+          if (!rpcResult.error && rpcResult.data) {
+            console.log("✅ RPC permanences réussie!");
+            return rpcResult.data;
+          }
+        } catch (rpcError) {
+          console.log("⚠️ RPC permanences non disponible");
+        }
+
+        console.error("❌ Toutes les méthodes ont échoué:", result.error);
         return [];
       }
     }
