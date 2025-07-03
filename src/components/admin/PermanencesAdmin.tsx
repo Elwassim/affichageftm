@@ -148,13 +148,13 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
     }
   };
 
-  const toggleDay = (day: string, category: string) => {
+  const toggleDay = (day: string) => {
     setSelectedDays((prev) => {
       const newDays = { ...prev };
-      if (newDays[day] === category) {
+      if (newDays[day]) {
         delete newDays[day];
       } else {
-        newDays[day] = category;
+        newDays[day] = true;
       }
       return newDays;
     });
