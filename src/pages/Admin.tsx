@@ -1113,13 +1113,40 @@ const Admin = () => {
                             )}
                           </div>
                         </div>
-                        <div className="ml-4">
-                          <button
-                            onClick={() => handleDeleteMeeting(meeting.id)}
-                            className="admin-btn-danger"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
+                        <div className="ml-4 flex space-x-2">
+                          {editingMeeting === meeting.id ? (
+                            <>
+                              <button
+                                onClick={() => handleSaveMeeting(meeting.id)}
+                                className="admin-btn-primary text-sm px-3 py-1"
+                              >
+                                <Save className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={handleCancelMeetingEdit}
+                                className="admin-btn-secondary text-sm px-3 py-1"
+                              >
+                                <X className="w-4 h-4" />
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => handleEditMeeting(meeting)}
+                                className="admin-btn-secondary text-sm px-3 py-1"
+                                title="Modifier cette réunion"
+                              >
+                                <Settings className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDeleteMeeting(meeting.id)}
+                                className="admin-btn-danger"
+                                title="Supprimer cette réunion"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </>
+                          )}
                         </div>
                       </div>
                       <div className="mt-3 flex items-center gap-2">
