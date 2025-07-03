@@ -94,6 +94,39 @@ export const VideoWidget = () => {
     return () => {};
   }, [videoUrl]);
 
+  // Listen for any user interaction to unlock autoplay
+  useEffect(() => {
+    if (!isDirectVideo(videoUrl) || isPlaying) return;
+
+    const handleUserInteraction = async () => {
+      if (videoRef.current && !isPlaying) {
+        try {
+          videoRef.current.muted = true;
+          await videoRef.current.play();
+          setIsPlaying(true);
+          console.log("✅ Video started after user interaction");
+        } catch (error) {
+          console.log("❌ Failed to start video after interaction");
+        }
+      }
+    };
+
+    // Listen for various user interactions
+    const events = ["click", "touchstart", "keydown", "mousemove", "scroll"];
+    events.forEach((event) => {
+      document.addEventListener(event, handleUserInteraction, {
+        once: true,
+        passive: true,
+      });
+    });
+
+    return () => {
+      events.forEach((event) => {
+        document.removeEventListener(event, handleUserInteraction);
+      });
+    };
+  }, [videoUrl, isPlaying]);
+
   // Ensure video plays infinitely - restart if it stops
   useEffect(() => {
     if (!videoUrl || !isDirectVideo(videoUrl) || !isPlaying) return;
