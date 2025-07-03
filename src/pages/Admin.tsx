@@ -523,18 +523,15 @@ const Admin = () => {
       console.log("🧪 Test connexion permanences...");
 
       // Import direct pour test
-      const { getPermanences, getPermanenceCategories } = await import(
-        "../lib/database"
-      );
+      const { getPermanences } = await import("../lib/database");
 
       const permanences = await getPermanences();
-      const categories = await getPermanenceCategories();
 
-      console.log("📊 Résultats test:", { permanences, categories });
+      console.log("📊 Résultats test:", { permanences });
 
       toast({
         title: "Test terminé",
-        description: `Permanences: ${permanences.length}, Catégories: ${categories.length}`,
+        description: `Permanences: ${permanences.length}`,
       });
     } catch (error) {
       console.error("❌ Erreur test:", error);
