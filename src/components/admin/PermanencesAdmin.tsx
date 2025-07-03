@@ -180,15 +180,12 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
           {days.map((day) => {
             const dayStr = day.toString();
             const isSelected = selectedDays[dayStr];
-            const categoryInfo = getCategoryInfo(
-              newPermanence.type,
-              isSelected || newPermanence.category,
-            );
+            const typeColor = getTypeColor(newPermanence.type);
 
             return (
               <button
                 key={day}
-                onClick={() => toggleDay(dayStr, newPermanence.category)}
+                onClick={() => toggleDay(dayStr)}
                 className={`
                   p-2 text-sm rounded transition-all
                   ${
@@ -197,12 +194,10 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
                       : "bg-gray-50 hover:bg-gray-100 text-gray-700"
                   }
                 `}
-                style={
-                  isSelected ? { backgroundColor: categoryInfo?.color } : {}
-                }
+                style={isSelected ? { backgroundColor: typeColor } : {}}
               >
                 {day}
-                {isSelected && <div className="text-xs mt-1">{isSelected}</div>}
+                {isSelected && <div className="text-xs mt-1">✓</div>}
               </button>
             );
           })}
