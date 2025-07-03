@@ -44,6 +44,7 @@ import type { Meeting, Tribute, Permanence, User } from "../lib/supabase";
 import { useAdminSync } from "../hooks/useDatabaseSync";
 import { PermanencesAdmin } from "../components/admin/PermanencesAdmin";
 import { syncPermanencesWithDB } from "../lib/permanenceSync";
+import { verifyCompleteDatabaseSync } from "../lib/verifyDatabaseSync";
 
 const MEETING_CATEGORIES = [
   "Assemblée Générale",
@@ -328,7 +329,7 @@ const Admin = () => {
       const success = await updateConfig(key, value);
       if (success) {
         setLocalConfig({ ...localConfig, [key]: value });
-        await refresh(); // Actualiser les données
+        await refresh(); // Actualiser les donn��es
         toast({
           title: "Succès",
           description: "Configuration mise à jour avec succès.",
