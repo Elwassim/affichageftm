@@ -9,15 +9,6 @@ import {
 } from "@/lib/database";
 import type { Permanence } from "@/lib/supabase";
 
-interface PermanenceCategory {
-  id: string;
-  type: string;
-  code: string;
-  label: string;
-  color: string;
-  description: string;
-}
-
 interface PermanencesAdminProps {
   onRefresh?: () => void;
 }
