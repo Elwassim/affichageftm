@@ -341,6 +341,21 @@ export const getPermanenceCategories = async (type?: string) => {
     const { data, error } = await query.order("code", { ascending: true });
 
     if (error) {
+      console.log("❌ Table catégories bloquée par RLS, tentative RPC...");
+
+      // Fallback RPC bypass RLS
+      try {
+        const rpcResult = await supabase!.rpc("get_all_permanence_categories");
+        console.log("📊 Résultat RPC catégories:", rpcResult);
+
+        if (!rpcResult.error && rpcResult.data) {
+          console.log("✅ RPC catégories réussie!");
+          return rpcResult.data;
+        }
+      } catch (rpcError) {
+        console.log("⚠️ RPC catégories non disponible");
+      }
+
       console.error("❌ Erreur récupération catégories permanences:", error);
       return [];
     }
