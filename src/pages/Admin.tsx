@@ -329,7 +329,7 @@ const Admin = () => {
       const success = await updateConfig(key, value);
       if (success) {
         setLocalConfig({ ...localConfig, [key]: value });
-        await refresh(); // Actualiser les donn��es
+        await refresh(); // Actualiser les données
         toast({
           title: "Succès",
           description: "Configuration mise à jour avec succès.",
@@ -553,6 +553,56 @@ const Admin = () => {
       toast({
         title: "Erreur correction",
         description: "Vérifiez la console et exécutez le script SQL manuel",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // VERIFICATION COMPLETE BDD
+  const handleVerifyAllSync = async () => {
+    try {
+      toast({
+        title: "Vérification en cours...",
+        description: "Test de toutes les connexions base de données...",
+      });
+
+      const results = await verifyCompleteDatabaseSync();
+
+      // Compter les résultats
+      const totalTests = results.length - 1; // Exclure le résumé
+      const successCount = results.filter((r) => r.status === "✅ OK").length;
+      const errorCount = results.filter((r) => r.status === "❌ ERREUR").length;
+      const warningCount = results.filter(
+        (r) => r.status === "⚠️ ATTENTION",
+      ).length;
+
+      // Afficher les résultats détaillés dans la console
+      console.table(
+        results.map((r) => ({
+          Composant: r.component,
+          Statut: r.status,
+          Détails: r.details,
+          Nombre: r.count || "-",
+        })),
+      );
+
+      if (errorCount === 0) {
+        toast({
+          title: "✅ Synchronisation Parfaite!",
+          description: `${successCount}/${totalTests} tests réussis. ${warningCount} avertissements mineurs.`,
+        });
+      } else {
+        toast({
+          title: "⚠️ Problèmes Détectés",
+          description: `${errorCount} erreurs sur ${totalTests} tests. Voir console pour détails.`,
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("❌ Erreur vérification complète:", error);
+      toast({
+        title: "Erreur Vérification",
+        description: "Impossible de vérifier la synchronisation complète",
         variant: "destructive",
       });
     }
