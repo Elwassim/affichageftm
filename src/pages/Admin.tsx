@@ -49,7 +49,7 @@ import { verifyCompleteDatabaseSync } from "../lib/verifyDatabaseSync";
 const MEETING_CATEGORIES = [
   "Assemblée Générale",
   "Commission",
-  "Délégués",
+  "Délégu��s",
   "Formation",
   "Comité",
   "Négociation",
@@ -603,6 +603,56 @@ const Admin = () => {
       toast({
         title: "Erreur Vérification",
         description: "Impossible de vérifier la synchronisation complète",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // FIX RLS TRIBUTES
+  const handleFixTributesRLS = async () => {
+    try {
+      console.log("🔧 Tentative de correction RLS tributes...");
+
+      toast({
+        title: "Correction hommages...",
+        description:
+          "Tentative de correction des permissions d'accès pour les hommages.",
+      });
+
+      // Test si les RPC fonctionnent maintenant
+      const { supabase } = await import("../lib/supabase");
+
+      if (!supabase) {
+        toast({
+          title: "Erreur",
+          description: "Supabase non configuré",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Test RPC tributes
+      const tributesRPC = await supabase.rpc("get_all_tributes");
+      console.log("🧪 Test RPC tributes:", tributesRPC);
+
+      if (!tributesRPC.error) {
+        await refresh();
+        toast({
+          title: "Succès",
+          description: `RPC hommages fonctionnel! ${tributesRPC.data?.length || 0} hommages trouvés`,
+        });
+      } else {
+        toast({
+          title: "RLS toujours bloqué",
+          description: "Exécutez FIX_TRIBUTES_RLS.sql dans Supabase SQL Editor",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("❌ Erreur fix RLS tributes:", error);
+      toast({
+        title: "Erreur correction",
+        description: "Vérifiez la console et exécutez le script SQL manuel",
         variant: "destructive",
       });
     }
