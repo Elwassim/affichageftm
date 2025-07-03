@@ -488,7 +488,6 @@ export const authenticateUser = async (
 
 export const getUsers = async (): Promise<User[]> => {
   if (!useSupabase) {
-    console.log("Using localStorage for users");
     const localData = getLocalData();
 
     // Si aucun utilisateur dans localStorage, créer des utilisateurs par défaut
