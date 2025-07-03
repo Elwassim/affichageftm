@@ -10,18 +10,30 @@ export const MeetingsWidget = () => {
   // Format date for display
   const formatDate = (dateString: string) => {
     try {
-      const date = new Date(dateString);
+      console.log("Formatting date:", dateString);
+
+      // Parse date correctly (assuming YYYY-MM-DD format)
+      const date = new Date(dateString + "T00:00:00");
       const today = new Date();
       const tomorrow = new Date(today);
+
+      // Normalize dates to midnight for proper comparison
+      today.setHours(0, 0, 0, 0);
       tomorrow.setDate(today.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      date.setHours(0, 0, 0, 0);
+
+      console.log("Parsed date:", date.toDateString());
+      console.log("Today:", today.toDateString());
+      console.log("Tomorrow:", tomorrow.toDateString());
 
       // Check if it's today
-      if (date.toDateString() === today.toDateString()) {
+      if (date.getTime() === today.getTime()) {
         return "Aujourd'hui";
       }
 
       // Check if it's tomorrow
-      if (date.toDateString() === tomorrow.toDateString()) {
+      if (date.getTime() === tomorrow.getTime()) {
         return "Demain";
       }
 
@@ -47,6 +59,7 @@ export const MeetingsWidget = () => {
 
       return `${dayName} ${day} ${month}`;
     } catch (error) {
+      console.error("Date formatting error:", error);
       return dateString;
     }
   };
