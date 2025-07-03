@@ -1,10 +1,12 @@
 import { Card } from "@/components/ui/card";
 import { Play } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { getConfig } from "@/lib/database";
 
 export const VideoWidget = () => {
   const [videoUrl, setVideoUrl] = useState("");
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     const loadVideoUrl = async () => {
@@ -21,6 +23,38 @@ export const VideoWidget = () => {
 
     return () => clearInterval(timer);
   }, []);
+
+  // Ensure video plays infinitely - restart if it stops
+  useEffect(() => {
+    if (!videoUrl || !isDirectVideo(videoUrl)) return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    const ensurePlay = () => {
+      if (video.paused) {
+        video.play().catch(console.error);
+      }
+    };
+
+    const handleVideoEnd = () => {
+      video.currentTime = 0;
+      video.play().catch(console.error);
+    };
+
+    // Check every 5 seconds if video is playing
+    const checkInterval = setInterval(ensurePlay, 5000);
+
+    video.addEventListener("ended", handleVideoEnd);
+
+    // Initial play attempt
+    video.play().catch(console.error);
+
+    return () => {
+      clearInterval(checkInterval);
+      video.removeEventListener("ended", handleVideoEnd);
+    };
+  }, [videoUrl]);
 
   // Convert URLs to embed format with infinite loop parameters
   const getEmbedUrl = (url: string) => {
@@ -52,7 +86,7 @@ export const VideoWidget = () => {
           <div className="w-6 h-6 bg-cgt-red rounded-lg flex items-center justify-center shadow-sm">
             <Play className="w-4 h-4 text-white" />
           </div>
-          Vidéo institutionnelle CGT FTM
+          Vid��o institutionnelle CGT FTM
         </h2>
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
