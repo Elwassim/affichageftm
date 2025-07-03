@@ -98,12 +98,8 @@ export const getNext7DaysPermanences = async (): Promise<
     // Trier par date
     dashboardPermanences.sort((a, b) => a.date.localeCompare(b.date));
 
-    console.log(
-      `📅 Permanences 7 prochains jours: ${dashboardPermanences.length} trouvées`,
-    );
     return dashboardPermanences;
   } catch (error) {
-    console.error("❌ Erreur récupération permanences 7 jours:", error);
     return [];
   }
 };
