@@ -103,6 +103,10 @@ const Admin = () => {
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [editUserData, setEditUserData] = useState<Partial<User>>({});
 
+  // État pour l'édition inline des réunions
+  const [editingMeeting, setEditingMeeting] = useState<string | null>(null);
+  const [editMeetingData, setEditMeetingData] = useState<Partial<Meeting>>({});
+
   const [localConfig, setLocalConfig] = useState({
     videoUrl: "",
     weatherCity: "Paris",
