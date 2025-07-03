@@ -1,24 +1,28 @@
 import { Card } from "@/components/ui/card";
-import { Users, Clock } from "lucide-react";
+import { Users, Calendar, MapPin } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { getPermanences, type Permanence } from "@/lib/database";
+import {
+  getNext7DaysPermanences,
+  getCategoryLabel,
+  type DashboardPermanence,
+} from "@/lib/permanencesNext7Days";
 
 export const PermanencesWidget = () => {
-  const [permanences, setPermanences] = useState<Permanence[]>([]);
+  const [permanences, setPermanences] = useState<DashboardPermanence[]>([]);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadPermanences = async () => {
       try {
-        const permanencesData = await getPermanences();
+        const permanencesData = await getNext7DaysPermanences();
         setPermanences(permanencesData);
       } catch (error) {
-        console.error("Error loading permanences:", error);
+        console.error("Error loading next 7 days permanences:", error);
       }
     };
 
     loadPermanences();
-    const timer = setInterval(loadPermanences, 30000); // Refresh every 30 seconds
+    const timer = setInterval(loadPermanences, 60000); // Refresh every 60 seconds
 
     return () => clearInterval(timer);
   }, []);
