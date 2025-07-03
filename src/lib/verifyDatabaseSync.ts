@@ -79,20 +79,12 @@ export const verifyCompleteDatabaseSync = async (): Promise<
   try {
     console.log("📋 Test permanences...");
     const permanences = await getPermanences();
-    const categories = await getPermanenceCategories();
 
     results.push({
       component: "Permanences",
       status: permanences.length >= 0 ? "✅ OK" : "❌ ERREUR",
       count: permanences.length,
-      details: `${permanences.length} permanences trouvées`,
-    });
-
-    results.push({
-      component: "Catégories Permanences",
-      status: categories.length >= 0 ? "✅ OK" : "❌ ERREUR",
-      count: categories.length,
-      details: `${categories.length} catégories trouvées (P, PAR, MAL, etc.)`,
+      details: `${permanences.length} permanences trouvées (technique/politique)`,
     });
   } catch (error) {
     results.push({
