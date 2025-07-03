@@ -700,6 +700,56 @@ const Admin = () => {
     }
   };
 
+  // TEST EDIT FUNCTIONALITY
+  const handleTestEdit = async () => {
+    try {
+      console.log("🧪 Test des fonctions d'édition...");
+
+      toast({
+        title: "Test d'édition...",
+        description: "Test des capacités de modification",
+      });
+
+      // Test modification d'un utilisateur
+      if (users.length > 0) {
+        const firstUser = users[0];
+        console.log("👤 Test modification utilisateur:", firstUser.id);
+
+        const { updateUser } = await import("../lib/database");
+        const success = await updateUser(firstUser.id, {
+          updated_at: new Date().toISOString(),
+        });
+
+        console.log("📊 Résultat modification user:", success);
+      }
+
+      // Test modification d'une réunion
+      if (meetings.length > 0) {
+        const firstMeeting = meetings[0];
+        console.log("📅 Test modification réunion:", firstMeeting.id);
+
+        const { updateMeetingInDB } = await import("../lib/database");
+        const success = await updateMeetingInDB(firstMeeting.id, {
+          updated_at: new Date().toISOString(),
+        });
+
+        console.log("📊 Résultat modification meeting:", success);
+      }
+
+      toast({
+        title: "Test terminé",
+        description: "Vérifiez la console pour les résultats détaillés",
+      });
+    } catch (error) {
+      console.error("❌ Erreur test édition:", error);
+      toast({
+        title: "Erreur test",
+        description: "Problème avec les fonctions d'édition",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSave = () => {
     toast({
       title: "Sauvegarde automatique",
