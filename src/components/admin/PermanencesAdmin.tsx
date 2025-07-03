@@ -446,12 +446,12 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
                       <div className="flex flex-wrap gap-1">
                         {Object.entries(permanence.days || {})
                           .slice(0, 10)
-                          .map(([day, code]) => (
+                          .map(([day, isActive]) => (
                             <span
-                              key={day}
+                              key={`${permanence.id}-day-${day}`}
                               className="inline-block px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs"
                             >
-                              {day}: {code}
+                              {day}
                             </span>
                           ))}
                         {Object.keys(permanence.days || {}).length > 10 && (
