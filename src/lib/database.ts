@@ -31,13 +31,11 @@ export const getConfig = async (key: string): Promise<any> => {
       .single();
 
     if (error) {
-      console.error(`Erreur récupération config ${key}:`, error);
       return null;
     }
 
     return data?.value;
   } catch (error) {
-    console.error("Erreur Supabase config:", error);
     return null;
   }
 };
@@ -391,7 +389,7 @@ export const getTributes = async (): Promise<Tribute[]> => {
         console.log("📊 Résultat RPC tributes:", rpcResult);
 
         if (!rpcResult.error && rpcResult.data) {
-          console.log("✅ RPC tributes réussie!");
+          console.log("��� RPC tributes réussie!");
           return rpcResult.data;
         }
       } catch (rpcError) {
