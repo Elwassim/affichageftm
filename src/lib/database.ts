@@ -388,7 +388,6 @@ export const createPermanence = async (
         {
           name: permanence.name,
           type: permanence.type,
-          category: permanence.category,
           month: permanence.month,
           year: permanence.year,
           days: permanence.days,
