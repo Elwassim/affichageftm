@@ -59,11 +59,11 @@ $$;
 -- Réunions
 CREATE OR REPLACE FUNCTION get_all_meetings()
 RETURNS TABLE (
-  id UUID, title VARCHAR, time VARCHAR, room VARCHAR, category VARCHAR,
+  id UUID, title VARCHAR, "time" VARCHAR, room VARCHAR, category VARCHAR,
   date DATE, created_at TIMESTAMP WITH TIME ZONE, updated_at TIMESTAMP WITH TIME ZONE
 )
 SECURITY DEFINER LANGUAGE SQL AS $$
-  SELECT * FROM meetings ORDER BY date DESC, time;
+  SELECT * FROM meetings ORDER BY date DESC, "time";
 $$;
 
 -- 3. INSÉRER DES DONNÉES DE TEST SI VIDES
