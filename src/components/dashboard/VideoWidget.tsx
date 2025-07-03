@@ -26,15 +26,61 @@ export const VideoWidget = () => {
     return () => clearInterval(timer);
   }, []);
 
+  // Handle manual video start
+  const handleVideoStart = async () => {
+    if (isDirectVideo(videoUrl) && videoRef.current) {
+      try {
+        videoRef.current.muted = true;
+        await videoRef.current.play();
+        setIsPlaying(true);
+        setShowPlayButton(false);
+      } catch (error) {
+        console.error("Error playing video:", error);
+      }
+    } else {
+      // For iframes (YouTube/Vimeo), hide the play button and let embed handle it
+      setShowPlayButton(false);
+      setIsPlaying(true);
+    }
+  };
+
+  // Auto-attempt to play video when component mounts
+  useEffect(() => {
+    if (!videoUrl) return;
+
+    // Delay to ensure DOM is ready
+    const timer = setTimeout(async () => {
+      if (isDirectVideo(videoUrl) && videoRef.current) {
+        try {
+          videoRef.current.muted = true;
+          await videoRef.current.play();
+          setIsPlaying(true);
+          setShowPlayButton(false);
+        } catch (error) {
+          console.log("Autoplay blocked, showing play button");
+          setShowPlayButton(true);
+        }
+      } else {
+        // For embedded videos, try to hide play button after a moment
+        setTimeout(() => {
+          setShowPlayButton(false);
+          setIsPlaying(true);
+        }, 2000);
+      }
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, [videoUrl]);
+
   // Ensure video plays infinitely - restart if it stops
   useEffect(() => {
-    if (!videoUrl || !isDirectVideo(videoUrl)) return;
+    if (!videoUrl || !isDirectVideo(videoUrl) || !isPlaying) return;
 
     const video = videoRef.current;
     if (!video) return;
 
     const ensurePlay = () => {
-      if (video.paused) {
+      if (video.paused && isPlaying) {
         video.play().catch(console.error);
       }
     };
@@ -44,19 +90,30 @@ export const VideoWidget = () => {
       video.play().catch(console.error);
     };
 
-    // Check every 5 seconds if video is playing
-    const checkInterval = setInterval(ensurePlay, 5000);
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => {
+      // Auto-restart if paused unexpectedly
+      setTimeout(() => {
+        if (video.paused) {
+          video.play().catch(console.error);
+        }
+      }, 1000);
+    };
+
+    // Check every 3 seconds if video is playing
+    const checkInterval = setInterval(ensurePlay, 3000);
 
     video.addEventListener("ended", handleVideoEnd);
-
-    // Initial play attempt
-    video.play().catch(console.error);
+    video.addEventListener("play", handlePlay);
+    video.addEventListener("pause", handlePause);
 
     return () => {
       clearInterval(checkInterval);
       video.removeEventListener("ended", handleVideoEnd);
+      video.removeEventListener("play", handlePlay);
+      video.removeEventListener("pause", handlePause);
     };
-  }, [videoUrl]);
+  }, [videoUrl, isPlaying]);
 
   // Convert URLs to embed format with infinite loop parameters
   const getEmbedUrl = (url: string) => {
