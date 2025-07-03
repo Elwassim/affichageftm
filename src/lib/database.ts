@@ -315,6 +315,8 @@ export const getPermanenceCategories = async (type?: string) => {
   }
 
   try {
+    console.log("🔍 Tentative récupération catégories permanences...");
+
     let query = supabase!.from("permanence_categories").select("*");
 
     if (type) {
@@ -324,13 +326,14 @@ export const getPermanenceCategories = async (type?: string) => {
     const { data, error } = await query.order("code", { ascending: true });
 
     if (error) {
-      console.error("Erreur récupération catégories permanences:", error);
+      console.error("❌ Erreur récupération catégories permanences:", error);
       return [];
     }
 
+    console.log("✅ Catégories récupérées:", data?.length || 0);
     return data || [];
   } catch (error) {
-    console.error("Erreur Supabase catégories permanences:", error);
+    console.error("💥 Erreur catch Supabase catégories permanences:", error);
     return [];
   }
 };
