@@ -446,6 +446,44 @@ const Admin = () => {
     setEditUserData({});
   };
 
+  // MEETING EDIT FUNCTIONS
+  const handleEditMeeting = (meeting: Meeting) => {
+    setEditingMeeting(meeting.id);
+    setEditMeetingData({
+      title: meeting.title,
+      time: meeting.time,
+      room: meeting.room,
+      category: meeting.category,
+      date: meeting.date,
+    });
+  };
+
+  const handleSaveMeeting = async (meetingId: string) => {
+    try {
+      const success = await updateMeetingInDB(meetingId, editMeetingData);
+      if (success) {
+        setEditingMeeting(null);
+        setEditMeetingData({});
+        await refresh();
+        toast({
+          title: "Succès",
+          description: "Réunion mise à jour avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de mettre à jour la réunion.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCancelMeetingEdit = () => {
+    setEditingMeeting(null);
+    setEditMeetingData({});
+  };
+
   // PERMANENCES SYNC FUNCTION
   const handleSyncPermanences = async () => {
     try {
