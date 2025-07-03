@@ -26,7 +26,6 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
   onRefresh,
 }) => {
   const [permanences, setPermanences] = useState<Permanence[]>([]);
-  const [categories, setCategories] = useState<PermanenceCategory[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState<string | null>(null);
   const { toast } = useToast();
