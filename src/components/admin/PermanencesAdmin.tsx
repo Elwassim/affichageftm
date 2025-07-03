@@ -27,12 +27,15 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
     type: "technique" as "technique" | "politique",
     month: new Date().toLocaleDateString("fr-FR", { month: "long" }),
     year: new Date().getFullYear(),
-    days: {} as Record<string, boolean>,
+    days: {} as Record<string, { time?: string }>,
     description: "",
   });
 
   // Calendar days state for editing
-  const [selectedDays, setSelectedDays] = useState<Record<string, boolean>>({});
+  const [selectedDays, setSelectedDays] = useState<
+    Record<string, { time?: string }>
+  >({});
+  const [defaultTime, setDefaultTime] = useState<string>("09:00");
 
   const months = [
     "janvier",
