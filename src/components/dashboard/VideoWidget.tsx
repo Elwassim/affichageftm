@@ -173,7 +173,7 @@ export const VideoWidget = () => {
       </div>
 
       {videoUrl ? (
-        <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200 relative">
+        <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200">
           {isDirectVideo(videoUrl) ? (
             <video
               ref={videoRef}
@@ -183,8 +183,24 @@ export const VideoWidget = () => {
               muted
               loop
               playsInline
+              webkit-playsinline=""
               controls={false}
+              preload="auto"
               style={{ minHeight: "300px" }}
+              onLoadedData={() => {
+                // Force play when video data is loaded
+                if (videoRef.current) {
+                  videoRef.current.muted = true;
+                  videoRef.current.play().catch(console.error);
+                }
+              }}
+              onCanPlay={() => {
+                // Another attempt when video can play
+                if (videoRef.current) {
+                  videoRef.current.muted = true;
+                  videoRef.current.play().catch(console.error);
+                }
+              }}
               onEnded={(e) => {
                 // Force restart if loop fails
                 e.currentTarget.currentTime = 0;
@@ -199,26 +215,8 @@ export const VideoWidget = () => {
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
               title="Vidéo institutionnelle CGT FTM"
-              loading="lazy"
               style={{ minHeight: "300px" }}
             />
-          )}
-
-          {/* Play Button Overlay */}
-          {showPlayButton && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <button
-                onClick={handleVideoStart}
-                className="bg-cgt-red hover:bg-cgt-red-dark text-white rounded-full p-6 shadow-2xl transition-all duration-300 hover:scale-110 group"
-              >
-                <Play className="w-12 h-12 ml-1 group-hover:scale-110 transition-transform" />
-              </button>
-              <div className="absolute bottom-4 left-4 right-4 text-center">
-                <p className="text-white text-sm font-medium bg-black bg-opacity-50 rounded px-3 py-1">
-                  Cliquez pour démarrer la vidéo en boucle
-                </p>
-              </div>
-            </div>
           )}
         </div>
       ) : (
