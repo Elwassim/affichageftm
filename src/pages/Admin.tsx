@@ -1413,14 +1413,6 @@ const Admin = () => {
                   </div>
                   <div className="admin-section-stats">
                     <button
-                      onClick={handleTestPermanences}
-                      className="admin-btn-secondary mr-2"
-                      title="Tester la connexion aux permanences"
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Test
-                    </button>
-                    <button
                       onClick={handleFixRLS}
                       className="admin-btn-secondary mr-2"
                       title="Réparer les permissions RLS"
@@ -1463,7 +1455,7 @@ const Admin = () => {
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-slate-800">
-                        M��dias
+                        Médias
                       </h2>
                       <p className="text-slate-600">
                         Gestion des vidéos et contenus multimédias
