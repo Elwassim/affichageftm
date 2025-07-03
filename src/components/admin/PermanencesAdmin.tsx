@@ -168,7 +168,7 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
           Calendrier - {newPermanence.month} {newPermanence.year}
         </h4>
         <div className="grid grid-cols-7 gap-1 mb-4">
-          {["L", "M", "M", "J", "V", "S", "D"].map((day, index) => (
+          {["L", "Ma", "Me", "J", "V", "S", "D"].map((day, index) => (
             <div
               key={`day-header-${index}`}
               className="text-center font-medium text-sm p-2"
