@@ -288,26 +288,6 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
               </select>
             </div>
 
-            <div>
-              <label className="admin-label">Catégorie *</label>
-              <select
-                value={newPermanence.category}
-                onChange={(e) =>
-                  setNewPermanence({
-                    ...newPermanence,
-                    category: e.target.value,
-                  })
-                }
-                className="admin-input w-full"
-              >
-                {getCategoriesForType(newPermanence.type).map((cat) => (
-                  <option key={cat.code} value={cat.code}>
-                    {cat.code} - {cat.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label className="admin-label">Mois *</label>
