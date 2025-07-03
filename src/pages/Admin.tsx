@@ -503,6 +503,60 @@ const Admin = () => {
     }
   };
 
+  // FIX RLS PERMANENCES
+  const handleFixRLS = async () => {
+    try {
+      console.log("🔧 Tentative de correction RLS...");
+
+      toast({
+        title: "Correction RLS...",
+        description: "Tentative de correction des permissions d'accès.",
+      });
+
+      // Test si les RPC fonctionnent maintenant
+      const { supabase } = await import("../lib/supabase");
+
+      if (!supabase) {
+        toast({
+          title: "Erreur",
+          description: "Supabase non configuré",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Test RPC permanences
+      const permanencesRPC = await supabase.rpc("get_all_permanences");
+      console.log("🧪 Test RPC permanences:", permanencesRPC);
+
+      // Test RPC catégories
+      const categoriesRPC = await supabase.rpc("get_all_permanence_categories");
+      console.log("🧪 Test RPC catégories:", categoriesRPC);
+
+      if (!permanencesRPC.error && !categoriesRPC.error) {
+        await refresh();
+        toast({
+          title: "Succès",
+          description: `RPC fonctionnel! Permanences: ${permanencesRPC.data?.length || 0}, Catégories: ${categoriesRPC.data?.length || 0}`,
+        });
+      } else {
+        toast({
+          title: "RLS toujours bloqué",
+          description:
+            "Exécutez FIX_PERMANENCES_RLS.sql dans Supabase SQL Editor",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("❌ Erreur fix RLS:", error);
+      toast({
+        title: "Erreur correction",
+        description: "Vérifiez la console et exécutez le script SQL manuel",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleSave = () => {
     toast({
       title: "Sauvegarde automatique",
