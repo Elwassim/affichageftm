@@ -30,6 +30,18 @@ export interface Tribute {
   dateAdded: string;
 }
 
+export interface User {
+  id: string;
+  username: string;
+  password_hash?: string;
+  email?: string;
+  role: string;
+  is_admin: boolean;
+  is_active: boolean;
+  created_at: string;
+  updated_at?: string;
+}
+
 export interface DashboardData {
   meetings: Meeting[];
   permanences: Permanence[];
@@ -38,6 +50,7 @@ export interface DashboardData {
   socialPost: SocialPost;
   weatherCity: string;
   tributes: Tribute[];
+  users?: User[];
 }
 
 const DEFAULT_DATA: DashboardData = {
