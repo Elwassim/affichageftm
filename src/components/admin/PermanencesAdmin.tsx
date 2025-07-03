@@ -105,7 +105,6 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
         setNewPermanence({
           name: "",
           type: "technique",
-          category: "P",
           month: new Date().toLocaleDateString("fr-FR", { month: "long" }),
           year: new Date().getFullYear(),
           days: {},
