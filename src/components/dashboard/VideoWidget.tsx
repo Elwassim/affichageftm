@@ -59,15 +59,33 @@ export const VideoWidget = () => {
 
       {videoUrl ? (
         <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200">
-          <iframe
-            src={getEmbedUrl(videoUrl)}
-            className="w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-            title="Vidéo institutionnelle CGT FTM"
-            loading="lazy"
-            style={{ minHeight: "300px" }}
-          />
+          {isDirectVideo(videoUrl) ? (
+            <video
+              src={videoUrl}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls={false}
+              style={{ minHeight: "300px" }}
+              onEnded={(e) => {
+                // Force restart if loop fails
+                e.currentTarget.currentTime = 0;
+                e.currentTarget.play();
+              }}
+            />
+          ) : (
+            <iframe
+              src={getEmbedUrl(videoUrl)}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              title="Vidéo institutionnelle CGT FTM"
+              loading="lazy"
+              style={{ minHeight: "300px" }}
+            />
+          )}
         </div>
       ) : (
         <div className="w-full h-[calc(100%-5rem)] rounded-xl bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center border-2 border-dashed border-gray-300">
