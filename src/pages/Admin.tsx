@@ -879,14 +879,6 @@ const Admin = () => {
             </div>
             <div className="flex items-center space-x-4">
               <button
-                onClick={handleTestEdit}
-                className="admin-btn-secondary mr-2"
-                title="Tester les modifications"
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                Test Édition
-              </button>
-              <button
                 onClick={handleVerifyAllSync}
                 className="admin-btn-secondary"
                 title="Vérifier toutes les connexions BDD"
