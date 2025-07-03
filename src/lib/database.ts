@@ -31,7 +31,7 @@ export const getConfig = async (key: string): Promise<any> => {
       .single();
 
     if (error) {
-      console.error(`Erreur r��cupération config ${key}:`, error);
+      console.error(`Erreur récupération config ${key}:`, error);
       return null;
     }
 
@@ -727,11 +727,14 @@ export const updateUser = async (
 
 export const deleteUser = async (id: string): Promise<boolean> => {
   if (!useSupabase) {
-    const localData = getLocalData();
-    const users = localData.users || [];
-    const filteredUsers = users.filter((u) => u.id !== id);
-    saveLocalData({ ...localData, users: filteredUsers });
-    return true;
+    try {
+      const { removeUser } = await import("./storage");
+      removeUser(id);
+      return true;
+    } catch (error) {
+      console.error("Erreur suppression user localStorage:", error);
+      return false;
+    }
   }
 
   try {
