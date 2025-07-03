@@ -237,9 +237,7 @@ export const getPermanences = async (): Promise<Permanence[]> => {
   }
 
   try {
-    console.log("🔍 Tentative récupération permanences depuis Supabase...");
-
-    // Méthode 1: Essayer avec la vue (si elle existe)
+    // Essayer avec la vue (si elle existe)
     let result = await supabase!
       .from("permanences_with_categories")
       .select("*")
@@ -247,12 +245,8 @@ export const getPermanences = async (): Promise<Permanence[]> => {
       .order("month", { ascending: true })
       .order("name", { ascending: true });
 
-    console.log("📊 Résultat vue permanences_with_categories:", result);
-
     if (result.error) {
-      console.log("❌ Vue indisponible, tentative table directe...");
-
-      // Méthode 2: Fallback vers la table directe
+      // Fallback vers la table directe
       result = await supabase!
         .from("permanences")
         .select("*")
@@ -260,33 +254,22 @@ export const getPermanences = async (): Promise<Permanence[]> => {
         .order("month", { ascending: true })
         .order("name", { ascending: true });
 
-      console.log("📊 Résultat table permanences:", result);
-
       if (result.error) {
-        console.log("❌ Table bloquée par RLS, tentative RPC...");
-
-        // Méthode 3: RPC bypass RLS
+        // RPC bypass RLS
         try {
           const rpcResult = await supabase!.rpc("get_all_permanences");
-          console.log("📊 Résultat RPC permanences:", rpcResult);
-
           if (!rpcResult.error && rpcResult.data) {
-            console.log("✅ RPC permanences réussie!");
             return rpcResult.data;
           }
         } catch (rpcError) {
-          console.log("⚠️ RPC permanences non disponible");
+          // RPC non disponible
         }
-
-        console.error("❌ Toutes les méthodes ont échoué:", result.error);
         return [];
       }
     }
 
-    console.log("✅ Permanences récupérées:", result.data?.length || 0);
     return result.data || [];
   } catch (error) {
-    console.error("💥 Erreur catch Supabase permanences:", error);
     return [];
   }
 };
