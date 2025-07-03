@@ -105,16 +105,11 @@ export const getNext7DaysPermanences = async (): Promise<
   }
 };
 
-// Fonction pour obtenir le label d'une catégorie
-export const getCategoryLabel = (category: string): string => {
-  const labels: Record<string, string> = {
-    P: "Permanence",
-    PAR: "Congé Parental",
-    MAL: "Maladie",
-    RTT: "RTT",
-    REC: "Récupération",
-    CP: "Congé Payé",
-    FER: "Férié",
+// Fonction pour obtenir le label d'un type
+export const getTypeLabel = (type: "technique" | "politique"): string => {
+  const labels = {
+    technique: "Technique",
+    politique: "Politique",
   };
-  return labels[category] || category;
+  return labels[type];
 };
