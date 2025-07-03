@@ -67,11 +67,33 @@ export const MeetingsWidget = () => {
   // Filter meetings for next 7 days
   const filterNext7DaysMeetings = (meetings: Meeting[]) => {
     const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     const next7Days = new Date(today);
     next7Days.setDate(today.getDate() + 7);
+    next7Days.setHours(23, 59, 59, 999);
 
     return meetings.filter((meeting) => {
-      const meetingDate = new Date(meeting.date);
+      const meetingDate = new Date(meeting.date + "T00:00:00");
+      meetingDate.setHours(0, 0, 0, 0);
+
+      console.log(
+        "Filtering meeting:",
+        meeting.date,
+        "Date obj:",
+        meetingDate.toDateString(),
+      );
+      console.log(
+        "Today:",
+        today.toDateString(),
+        "Next7Days:",
+        next7Days.toDateString(),
+      );
+      console.log(
+        "In range?",
+        meetingDate >= today && meetingDate <= next7Days,
+      );
+
       return meetingDate >= today && meetingDate <= next7Days;
     });
   };
