@@ -158,7 +158,7 @@ const insertDefaultCategories = async (): Promise<boolean> => {
 };
 
 // Insérer des permanences d'exemple
-const insertSamplePermanences = async () => {
+const insertSamplePermanences = async (): Promise<boolean> => {
   const samplePermanences = [
     {
       name: "BINET, MAGALI",
@@ -199,15 +199,18 @@ const insertSamplePermanences = async () => {
   try {
     const { error } = await supabase!
       .from("permanences")
-      .upsert(samplePermanences, { onConflict: "id" });
+      .upsert(samplePermanences, { ignoreDuplicates: true });
 
     if (error) {
       console.error("Erreur insertion permanences:", error);
+      return false;
     } else {
       console.log("✅ Permanences d'exemple insérées");
+      return true;
     }
   } catch (error) {
     console.error("Erreur upsert permanences:", error);
+    return false;
   }
 };
 
