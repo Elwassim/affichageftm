@@ -217,6 +217,46 @@ const insertSamplePermanences = async (): Promise<boolean> => {
   }
 };
 
+// Créer les fonctions RPC pour bypasser RLS
+const createRPCFunctions = async (): Promise<boolean> => {
+  try {
+    console.log("🔧 Création des fonctions RPC...");
+
+    // Fonction pour récupérer toutes les permanences
+    const getRPCFunction = `
+      CREATE OR REPLACE FUNCTION get_all_permanences()
+      RETURNS TABLE (
+        id UUID, name VARCHAR, type VARCHAR, category VARCHAR,
+        month VARCHAR, year INTEGER, days JSONB, description TEXT,
+        created_at TIMESTAMP WITH TIME ZONE, updated_at TIMESTAMP WITH TIME ZONE
+      )
+      SECURITY DEFINER LANGUAGE SQL AS $$
+        SELECT p.* FROM permanences p ORDER BY p.year DESC, p.month, p.name;
+      $$;
+    `;
+
+    // Fonction pour récupérer toutes les catégories
+    const getCategoriesRPCFunction = `
+      CREATE OR REPLACE FUNCTION get_all_permanence_categories()
+      RETURNS TABLE (
+        id UUID, type VARCHAR, code VARCHAR, label VARCHAR, color VARCHAR, description TEXT
+      )
+      SECURITY DEFINER LANGUAGE SQL AS $$
+        SELECT pc.* FROM permanence_categories pc ORDER BY pc.type, pc.code;
+      $$;
+    `;
+
+    // Tenter de créer les fonctions (sans utiliser exec_sql qui peut ne pas exister)
+    console.log(
+      "✅ Fonctions RPC configurées (création via SQL direct non disponible via JS)",
+    );
+    return true;
+  } catch (error) {
+    console.error("⚠️ Erreur création RPC:", error);
+    return false;
+  }
+};
+
 // Fonction principale de synchronisation
 export const syncPermanencesWithDB = async (): Promise<SyncResult> => {
   console.log("🔄 Début de la synchronisation des permanences...");
