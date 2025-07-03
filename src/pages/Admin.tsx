@@ -1120,6 +1120,14 @@ const Admin = () => {
                       Test
                     </button>
                     <button
+                      onClick={handleFixRLS}
+                      className="admin-btn-secondary mr-2"
+                      title="Réparer les permissions RLS"
+                    >
+                      <Shield className="w-4 h-4 mr-2" />
+                      Réparer RLS
+                    </button>
+                    <button
                       onClick={handleSyncPermanences}
                       className="admin-btn-primary mr-4"
                       title="Synchroniser avec la base de données"
