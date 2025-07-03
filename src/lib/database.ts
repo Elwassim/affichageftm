@@ -31,7 +31,7 @@ export const getConfig = async (key: string): Promise<any> => {
       .single();
 
     if (error) {
-      console.error(`Erreur récupération config ${key}:`, error);
+      console.error(`Erreur r��cupération config ${key}:`, error);
       return null;
     }
 
@@ -510,7 +510,49 @@ export const authenticateUser = async (
 export const getUsers = async (): Promise<User[]> => {
   if (!useSupabase) {
     console.log("Using localStorage for users");
-    return getLocalData().users || [];
+    const localData = getLocalData();
+
+    // Si aucun utilisateur dans localStorage, créer des utilisateurs par défaut
+    if (!localData.users || localData.users.length === 0) {
+      const defaultUsers: User[] = [
+        {
+          id: "admin-1",
+          username: "admin.test",
+          email: "admin@cgt-ftm.fr",
+          role: "admin",
+          is_admin: true,
+          is_active: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+        {
+          id: "user-1",
+          username: "marie.delegue",
+          email: "marie@cgt-ftm.fr",
+          role: "moderator",
+          is_admin: false,
+          is_active: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+        {
+          id: "user-2",
+          username: "jean.permanent",
+          email: "jean@cgt-ftm.fr",
+          role: "user",
+          is_admin: false,
+          is_active: true,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+      ];
+
+      // Sauvegarder les utilisateurs par défaut
+      saveLocalData({ ...localData, users: defaultUsers });
+      return defaultUsers;
+    }
+
+    return localData.users;
   }
 
   try {
@@ -541,46 +583,12 @@ export const getUsers = async (): Promise<User[]> => {
           return rpcResult.data;
         }
       } catch (rpcError) {
-        console.log("⚠️ RPC non disponible, méthode 3...");
+        console.log("⚠️ RPC non disponible, fallback localStorage...");
       }
 
-      // Méthode 3: Créer des users de test temporaires
-      console.log("📋 Méthode 3: Retour d'users de test...");
-      const testUsers: User[] = [
-        {
-          id: "test-1",
-          username: "admin.test",
-          email: "admin@cgt-ftm.fr",
-          role: "admin",
-          is_admin: true,
-          is_active: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-        {
-          id: "test-2",
-          username: "marie.delegue",
-          email: "marie@cgt-ftm.fr",
-          role: "moderator",
-          is_admin: false,
-          is_active: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-        {
-          id: "test-3",
-          username: "jean.permanent",
-          email: "jean@cgt-ftm.fr",
-          role: "user",
-          is_admin: false,
-          is_active: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-      ];
-
-      console.log("✅ Retour d'users de test:", testUsers.length);
-      return testUsers;
+      // Fallback vers localStorage
+      console.log("📋 Fallback: localStorage...");
+      return getUsers(); // Récursion vers localStorage
     }
 
     console.log(
@@ -592,8 +600,8 @@ export const getUsers = async (): Promise<User[]> => {
   } catch (error) {
     console.error("💥 Erreur catch Supabase users:", error);
 
-    // Fallback: retourner des users de test
-    console.log("🔄 Fallback: users de test");
+    // Fallback: retourner localStorage
+    console.log("🔄 Fallback: localStorage");
     return [
       {
         id: "fallback-1",
