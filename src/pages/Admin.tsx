@@ -527,24 +527,17 @@ const Admin = () => {
   // TEST PERMANENCES CONNECTION
   const handleTestPermanences = async () => {
     try {
-      console.log("🧪 Test connexion permanences...");
-
-      // Import direct pour test
       const { getPermanences } = await import("../lib/database");
-
       const permanences = await getPermanences();
-
-      console.log("📊 Résultats test:", { permanences });
 
       toast({
         title: "Test terminé",
         description: `Permanences: ${permanences.length}`,
       });
     } catch (error) {
-      console.error("❌ Erreur test:", error);
       toast({
         title: "Erreur test",
-        description: "Vérifiez la console pour les détails",
+        description: "Impossible de charger les permanences",
         variant: "destructive",
       });
     }
