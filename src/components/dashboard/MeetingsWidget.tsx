@@ -218,6 +218,14 @@ export const MeetingsWidget = () => {
                           <span className="font-semibold text-cgt-red">
                             {formatDate(meeting.date)}
                           </span>
+                          {meeting.time && (
+                            <>
+                              <Clock className="w-3 h-3 text-gray-500 ml-1" />
+                              <span className="text-gray-700 font-medium">
+                                {meeting.time}
+                              </span>
+                            </>
+                          )}
                         </div>
                       </div>
                     </div>
