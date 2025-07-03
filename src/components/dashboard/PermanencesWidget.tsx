@@ -17,7 +17,7 @@ export const PermanencesWidget = () => {
         const permanencesData = await getNext7DaysPermanences();
         setPermanences(permanencesData);
       } catch (error) {
-        console.error("Error loading next 7 days permanences:", error);
+        // Error loading permanences
       }
     };
 
