@@ -7,7 +7,7 @@ export const VideoWidget = () => {
   const [videoUrl, setVideoUrl] = useState(
     "https://www.youtube.com/embed/dQw4w9WgXcQ",
   );
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
