@@ -353,9 +353,13 @@ export const VideoWidget = () => {
                 }
               }}
               onPlay={() => {
-                // La vidéo a commencé à jouer - CACHER L'OVERLAY
+                // La vidéo a commencé à jouer - ACTIVER LE SON
                 setIsPlaying(true);
-                setIsMuted(videoRef.current?.muted ?? true);
+                if (videoRef.current) {
+                  videoRef.current.muted = false;
+                  videoRef.current.volume = 1.0;
+                  setIsMuted(false);
+                }
               }}
               onPlaying={() => {
                 // La vidéo est en cours de lecture - FORCER LA VISIBILITÉ
