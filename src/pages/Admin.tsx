@@ -237,6 +237,12 @@ const Admin = () => {
 
       if (meeting) {
         await refresh(); // Actualiser les données
+        // Dispatch event for dashboard sync
+        window.dispatchEvent(
+          new CustomEvent("cgt-config-updated", {
+            detail: { key: "meetings", value: "updated" },
+          }),
+        );
         setNewMeeting({
           title: "",
           time: "",
@@ -245,7 +251,7 @@ const Admin = () => {
           date: new Date().toISOString().split("T")[0],
         });
         toast({
-          title: "Succ��s",
+          title: "Succès",
           description: "Réunion ajoutée avec succès.",
         });
       }
@@ -263,6 +269,12 @@ const Admin = () => {
       const success = await deleteMeetingFromDB(id);
       if (success) {
         await refresh(); // Actualiser toutes les données
+        // Dispatch event for dashboard sync
+        window.dispatchEvent(
+          new CustomEvent("cgt-config-updated", {
+            detail: { key: "meetings", value: "deleted" },
+          }),
+        );
         toast({
           title: "Succès",
           description: "Réunion supprimée avec succès.",
