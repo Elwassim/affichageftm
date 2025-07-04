@@ -114,12 +114,27 @@ export const VideoWidget = () => {
     video.addEventListener("canplay", attemptPlay);
     video.addEventListener("canplaythrough", attemptPlay);
 
-    // Tentatives répétées toutes les 10 secondes si pas encore en lecture
-    const retryInterval = setInterval(() => {
-      if (!isPlaying && video.paused) {
-        forceAutoplay();
+    // Vérification périodique de l'état de lecture
+    const checkInterval = setInterval(() => {
+      if (video) {
+        // Si la vidéo joue mais l'état dit le contraire, corriger
+        if (!video.paused && !isPlaying) {
+          setIsPlaying(true);
+        }
+        // Si la vidéo ne joue pas, essayer de la relancer
+        if (video.paused && !isPlaying) {
+          forceAutoplay();
+        }
       }
-    }, 10000);
+    }, 5000);
+
+    return () => {
+      clearInterval(checkInterval);
+      video.removeEventListener("loadedmetadata", attemptPlay);
+      video.removeEventListener("loadeddata", attemptPlay);
+      video.removeEventListener("canplay", attemptPlay);
+      video.removeEventListener("canplaythrough", attemptPlay);
+    };
 
     return () => {
       clearInterval(retryInterval);
