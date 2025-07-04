@@ -83,7 +83,7 @@ export const PermanencesWidget = () => {
             <Users className="w-3 h-3 text-gray-400" />
           </div>
           <p className="text-gray-500 text-xs">
-            Aucune permanence prévue ces 7 prochains jours
+            Aucune permanence technique ces 7 prochains jours
           </p>
         </div>
       ) : (
