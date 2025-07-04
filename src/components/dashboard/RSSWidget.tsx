@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Globe } from "lucide-react";
+import "../../styles/rss-animation.css";
 
 interface RSSItem {
   title: string;
@@ -110,12 +111,7 @@ export const RSSWidget = () => {
       </div>
 
       <div className="flex-1 relative overflow-hidden h-full bg-cgt-red">
-        <div
-          className="absolute inset-0 flex items-center whitespace-nowrap text-white"
-          style={{
-            animation: "marqueeRSS 40s linear infinite",
-          }}
-        >
+        <div className="rss-marquee absolute inset-0 flex items-center whitespace-nowrap text-white">
           <div className="flex items-center gap-12 px-6">
             {newsItems.map((item, index) => (
               <div key={index} className="flex items-center gap-3 text-white">
@@ -128,17 +124,6 @@ export const RSSWidget = () => {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes marqueeRSS {
-          0% {
-            transform: translateX(100%);
-          }
-          100% {
-            transform: translateX(-100%);
-          }
-        }
-      `}</style>
     </div>
   );
 };
