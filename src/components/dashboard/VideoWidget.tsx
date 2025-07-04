@@ -90,14 +90,14 @@ export const VideoWidget = () => {
           setIsPlaying(true);
           setIsMuted(true);
 
-          // Essayer d'activer le son après 3 secondes pour TV
+          // Activer le son rapidement après démarrage
           setTimeout(() => {
             if (video && !video.paused) {
               video.muted = false;
-              video.volume = 0.8;
+              video.volume = 1.0; // Volume maximum
               setIsMuted(false);
             }
-          }, 3000);
+          }, 500); // Seulement 0.5 seconde de délai
         }
       } catch (error) {
         // Continuer les tentatives même en cas d'échec
