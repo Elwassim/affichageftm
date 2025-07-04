@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Users, Calendar, Clock } from "lucide-react";
+import { Users, Calendar } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import {
   getNext7DaysPermanences,
