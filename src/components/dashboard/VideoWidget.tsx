@@ -48,42 +48,87 @@ export const VideoWidget = () => {
     };
   }, []);
 
-  // Simple autoplay attempt
+  // Autoplay agressif pour environnement TV/kiosque
   useEffect(() => {
     if (!videoUrl || !videoRef.current) return;
 
     const video = videoRef.current;
 
-    // Configuration de base pour autoplay
+    // Configuration agressive pour TV/kiosque
     video.muted = true;
     video.autoplay = true;
     video.loop = true;
     video.playsInline = true;
+    video.setAttribute("webkit-playsinline", "true");
+    video.setAttribute("playsinline", "true");
+    video.setAttribute("muted", "true");
+    video.setAttribute("autoplay", "true");
+    video.controls = false;
+    video.volume = 0;
 
-    // Tentative de lecture automatique
-    const attemptAutoplay = async () => {
+    // Tentatives multiples et répétées
+    const forceAutoplay = async () => {
       try {
-        await video.play();
-        setIsPlaying(true);
-        setIsMuted(true);
+        // Réinitialiser la vidéo
+        video.load();
+        video.muted = true;
+        video.currentTime = 0;
+
+        // Essayer de jouer
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          await playPromise;
+          setIsPlaying(true);
+          setIsMuted(true);
+
+          // Essayer d'activer le son après 3 secondes pour TV
+          setTimeout(() => {
+            if (video && !video.paused) {
+              video.muted = false;
+              video.volume = 0.8;
+              setIsMuted(false);
+            }
+          }, 3000);
+        }
       } catch (error) {
-        // L'autoplay a été bloqué - le bouton play apparaîtra
+        // Continuer les tentatives même en cas d'échec
         setIsPlaying(false);
-        setIsMuted(true);
       }
     };
 
-    // Essayer dès que possible
-    if (video.readyState >= 3) {
-      attemptAutoplay();
-    } else {
-      video.addEventListener("canplay", attemptAutoplay, { once: true });
-    }
+    // Multiples tentatives avec délais
+    const attemptPlay = () => {
+      forceAutoplay();
+      setTimeout(forceAutoplay, 100);
+      setTimeout(forceAutoplay, 500);
+      setTimeout(forceAutoplay, 1000);
+      setTimeout(forceAutoplay, 2000);
+      setTimeout(forceAutoplay, 5000);
+    };
+
+    // Déclencher immédiatement et sur différents événements
+    attemptPlay();
+
+    video.addEventListener("loadedmetadata", attemptPlay);
+    video.addEventListener("loadeddata", attemptPlay);
+    video.addEventListener("canplay", attemptPlay);
+    video.addEventListener("canplaythrough", attemptPlay);
+
+    // Tentatives répétées toutes les 10 secondes si pas encore en lecture
+    const retryInterval = setInterval(() => {
+      if (!isPlaying && video.paused) {
+        forceAutoplay();
+      }
+    }, 10000);
 
     return () => {
-      video.removeEventListener("canplay", attemptAutoplay);
+      clearInterval(retryInterval);
+      video.removeEventListener("loadedmetadata", attemptPlay);
+      video.removeEventListener("loadeddata", attemptPlay);
+      video.removeEventListener("canplay", attemptPlay);
+      video.removeEventListener("canplaythrough", attemptPlay);
     };
-  }, [videoUrl]);
+  }, [videoUrl, isPlaying]);
 
   // Listen for any user interaction to unlock autoplay and sound
   useEffect(() => {
