@@ -53,6 +53,9 @@ export const useDatabaseSync = (
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
+      // Initialiser les configurations par défaut
+      await initializeDefaultConfig();
+
       const [
         meetings,
         tributes,
