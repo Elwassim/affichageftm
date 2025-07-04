@@ -279,7 +279,35 @@ export const VideoWidget = () => {
       </div>
 
       {videoUrl ? (
-        <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200">
+        <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200 relative">
+          {/* Bouton Play si l'autoplay échoue */}
+          {!isPlaying && (
+            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+              <button
+                onClick={() => {
+                  if (videoRef.current) {
+                    videoRef.current.muted = true;
+                    videoRef.current.play().then(() => {
+                      setIsPlaying(true);
+                      setIsMuted(true);
+                      // Activer le son après démarrage
+                      setTimeout(() => {
+                        if (videoRef.current) {
+                          videoRef.current.muted = false;
+                          videoRef.current.volume = 0.7;
+                          setIsMuted(false);
+                        }
+                      }, 1000);
+                    });
+                  }
+                }}
+                className="bg-cgt-red hover:bg-cgt-red-dark text-white rounded-full p-4 transition-colors"
+              >
+                <Play className="w-8 h-8" />
+              </button>
+            </div>
+          )}
+
           {isDirectVideo(videoUrl) ? (
             <video
               ref={videoRef}
