@@ -161,6 +161,34 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
     });
   };
 
+  // Fonctions de sélection rapide
+  const selectWeek = (weekNumber: number) => {
+    const startDay = (weekNumber - 1) * 7 + 1;
+    const endDay = Math.min(weekNumber * 7, 31);
+
+    setSelectedDays((prev) => {
+      const newDays = { ...prev };
+      for (let day = startDay; day <= endDay; day++) {
+        newDays[day.toString()] = { time: defaultTime };
+      }
+      return newDays;
+    });
+  };
+
+  const selectAllDays = () => {
+    setSelectedDays((prev) => {
+      const newDays = { ...prev };
+      for (let day = 1; day <= 31; day++) {
+        newDays[day.toString()] = { time: defaultTime };
+      }
+      return newDays;
+    });
+  };
+
+  const clearAllDays = () => {
+    setSelectedDays({});
+  };
+
   const renderCalendar = () => {
     const daysInMonth = 31; // Simplifié pour l'exemple
     const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
