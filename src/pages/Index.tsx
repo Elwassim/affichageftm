@@ -5,6 +5,7 @@ import { DiversWidget } from "@/components/dashboard/DiversWidget";
 import { VideoWidget } from "@/components/dashboard/VideoWidget";
 import { AlertBanner } from "@/components/dashboard/AlertBanner";
 import { SocialWidget } from "@/components/dashboard/SocialWidget";
+import { RSSWidget } from "@/components/dashboard/RSSWidget";
 import { CGTHeader } from "@/components/dashboard/CGTHeader";
 import { useRealTimeUpdates } from "@/hooks/useRealTimeUpdates";
 import { Wifi } from "lucide-react";
