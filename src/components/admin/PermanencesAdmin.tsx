@@ -154,7 +154,7 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
       if (newDays[day]) {
         delete newDays[day];
       } else {
-        newDays[day] = { time: defaultTime };
+        newDays[day] = {};
       }
       return newDays;
     });
