@@ -50,11 +50,11 @@ export const VideoWidget = () => {
     };
   }, []);
 
-  // Autoplay simplifié - forcer l'affichage de la vidéo
+  // STRATÉGIE AUTOPLAY ROBUSTE POUR TV/KIOSQUE
   useEffect(() => {
     if (!videoUrl) return;
 
-    // FORCER l'état playing après 1 seconde pour enlever l'overlay
+    // ÉTAPE 1: Forcer l'affichage après 1 seconde
     const forceDisplay = setTimeout(() => {
       setIsPlaying(true);
     }, 1000);
@@ -65,17 +65,12 @@ export const VideoWidget = () => {
 
     const video = videoRef.current;
 
-    // Configuration agressive pour TV/kiosque
-    video.muted = true;
+    // ÉTAPE 2: Configuration pour autoplay garanti
+    video.muted = true; // OBLIGATOIRE pour autoplay
     video.autoplay = true;
     video.loop = true;
     video.playsInline = true;
-    video.setAttribute("webkit-playsinline", "true");
-    video.setAttribute("playsinline", "true");
-    video.setAttribute("muted", "true");
-    video.setAttribute("autoplay", "true");
-    video.controls = false;
-    video.volume = 0;
+    video.volume = 1.0; // Volume prêt pour activation
 
     // Tentatives multiples et répétées
     const forceAutoplay = async () => {
