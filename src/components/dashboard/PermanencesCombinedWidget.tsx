@@ -174,7 +174,7 @@ export const PermanencesCombinedWidget = () => {
             <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
               <Users className="w-2.5 h-2.5 text-cgt-red" />
             </div>
-            PERMANENCE TECH DU JOUR
+            <p>PERMANENCE TECHNIQUE DU JOUR</p>
           </h2>
         </div>
 
