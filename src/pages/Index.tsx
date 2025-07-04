@@ -26,32 +26,27 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 h-[calc(100vh-100px)] w-full">
         <div className="w-full h-full">
-          {/* New Layout Schema */}
-          <div className="grid grid-cols-12 grid-rows-4 gap-4 h-full">
-            {/* Row 1 - 4 widgets: DATE/METEO, PERMANENCE TECHNIQUE, DIVERS, HOMMAGE */}
+          {/* Layout matching schema exactly */}
+          <div className="grid grid-cols-12 grid-rows-3 gap-4 h-full">
+            {/* Row 1 - DATE/MÉTÉO, PERMANENCES COMBINED, DIVERS, HOMMAGE */}
             <div className="col-span-3 row-span-1">
               <DateTimeWidget />
             </div>
             <div className="col-span-3 row-span-1">
-              <PermanencesWidget />
+              <PermanencesCombinedWidget />
             </div>
             <div className="col-span-3 row-span-1">
               <VideoWidget />
             </div>
-            <div className="col-span-3 row-span-1">
+            <div className="col-span-3 row-span-2">
               <SocialWidget />
             </div>
 
-            {/* Row 2 - PERMANENCE POLITIQUE (full width) */}
-            <div className="col-span-12 row-span-1">
-              <PermanencesPolitiquesWidget />
-            </div>
-
-            {/* Row 3-4 - REUNION, VIDEO (large), HOMMAGE continues */}
-            <div className="col-span-4 row-span-2">
+            {/* Row 2-3 - REUNION and VIDEO (large) */}
+            <div className="col-span-3 row-span-2">
               <MeetingsWidget />
             </div>
-            <div className="col-span-8 row-span-2">
+            <div className="col-span-6 row-span-2">
               <VideoWidget />
             </div>
           </div>
