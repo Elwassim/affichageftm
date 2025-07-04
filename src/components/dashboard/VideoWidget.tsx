@@ -326,16 +326,14 @@ export const VideoWidget = () => {
               src={videoUrl}
               className="w-full h-full object-cover"
               autoPlay
-              muted
+              muted={false}
               loop
               playsInline
               webkit-playsinline="true"
-              controls={false}
+              controls={true}
               preload="auto"
-              disablePictureInPicture
-              controlsList="nodownload nofullscreen noremoteplayback"
               style={{ minHeight: "300px" }}
-              data-setup='{"techOrder": ["html5"], "fluid": true}'
+              volume={1.0}
               onLoadStart={() => {
                 setIsPlaying(false);
               }}
