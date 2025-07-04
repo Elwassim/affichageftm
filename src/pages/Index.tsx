@@ -27,8 +27,11 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 h-[calc(100vh-100px)] w-full">
         <div className="w-full h-full">
-          {/* Layout exact selon schéma */}
-          <div className="grid grid-cols-4 grid-rows-2 gap-4 h-full">
+          {/* Layout exact selon schéma - rangée du bas plus grande */}
+          <div
+            className="grid grid-cols-4 gap-4 h-full"
+            style={{ gridTemplateRows: "1fr 2fr" }}
+          >
             {/* Col 1 Row 1: DATE/MÉTÉO */}
             <div className="col-start-1 col-end-2 row-start-1 row-end-2">
               <DateTimeWidget />
