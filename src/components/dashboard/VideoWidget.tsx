@@ -241,12 +241,27 @@ export const VideoWidget = () => {
   return (
     <Card className="p-3 bg-white professional-shadow border-0 h-full">
       <div className="mb-2">
-        <h2 className="text-lg font-black text-cgt-gray flex items-center gap-2">
-          <div className="w-6 h-6 bg-cgt-red rounded-lg flex items-center justify-center shadow-sm">
-            <Play className="w-4 h-4 text-white" />
-          </div>
-          Vidéo institutionnelle CGT FTM
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-black text-cgt-gray flex items-center gap-2">
+            <div className="w-6 h-6 bg-cgt-red rounded-lg flex items-center justify-center shadow-sm">
+              <Play className="w-4 h-4 text-white" />
+            </div>
+            Vidéo institutionnelle CGT FTM
+          </h2>
+          {videoUrl && (
+            <button
+              onClick={toggleMute}
+              className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+              title={isMuted ? "Activer le son" : "Couper le son"}
+            >
+              {isMuted ? (
+                <VolumeX className="w-4 h-4 text-gray-600" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-cgt-red" />
+              )}
+            </button>
+          )}
+        </div>
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
 
