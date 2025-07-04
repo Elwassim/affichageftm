@@ -149,9 +149,9 @@ export const PermanencesCombinedWidget = () => {
   );
 
   return (
-    <Card className="p-2 bg-white professional-shadow border-0 h-full flex flex-col">
-      {/* Section Permanences Techniques */}
-      <div className="flex-1 flex flex-col min-h-0">
+    <div className="h-full flex flex-col gap-2">
+      {/* Rectangle 1 - Permanences Techniques */}
+      <Card className="p-2 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
         <div className="mb-2">
           <h2 className="text-sm font-black text-white bg-cgt-red px-2 py-1 rounded flex items-center gap-1.5">
             <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
@@ -180,13 +180,10 @@ export const PermanencesCombinedWidget = () => {
             </div>
           )}
         </div>
-      </div>
+      </Card>
 
-      {/* Séparateur */}
-      <div className="h-px bg-gradient-to-r from-cgt-red to-transparent my-2"></div>
-
-      {/* Section Permanences Politiques */}
-      <div className="flex-1 flex flex-col min-h-0">
+      {/* Rectangle 2 - Permanences Politiques */}
+      <Card className="p-2 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
         <div className="mb-2">
           <h2 className="text-sm font-black text-white bg-cgt-red px-2 py-1 rounded flex items-center gap-1.5">
             <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
@@ -215,7 +212,7 @@ export const PermanencesCombinedWidget = () => {
             </div>
           )}
         </div>
-      </div>
-    </Card>
+      </Card>
+    </div>
   );
 };
