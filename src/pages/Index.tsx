@@ -1,5 +1,6 @@
 import { DateTimeWidget } from "@/components/dashboard/DateTimeWidget";
-import { PermanencesCombinedWidget } from "@/components/dashboard/PermanencesCombinedWidget";
+import { PermanencesWidget } from "@/components/dashboard/PermanencesWidget";
+import { PermanencesPolitiquesWidget } from "@/components/dashboard/PermanencesPolitiquesWidget";
 import { MeetingsWidget } from "@/components/dashboard/MeetingsWidget";
 import { VideoWidget } from "@/components/dashboard/VideoWidget";
 import { AlertBanner } from "@/components/dashboard/AlertBanner";
