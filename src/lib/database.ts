@@ -62,6 +62,23 @@ export const setConfig = async (key: string, value: any): Promise<boolean> => {
   }
 };
 
+// Initialiser les configurations par défaut
+export const initializeDefaultConfig = async (): Promise<void> => {
+  const defaults = {
+    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    alertText:
+      "🚨 APPEL CGT FTM - Rejoignez-nous pour défendre vos droits ! 🚨",
+    weatherCity: "Paris",
+  };
+
+  for (const [key, defaultValue] of Object.entries(defaults)) {
+    const existingValue = await getConfig(key);
+    if (!existingValue) {
+      await setConfig(key, defaultValue);
+    }
+  }
+};
+
 // ===== HELPER FUNCTIONS =====
 const getCurrentWeekDates = () => {
   const now = new Date();
