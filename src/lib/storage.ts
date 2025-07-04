@@ -180,26 +180,60 @@ const DEFAULT_DATA: DashboardData = {
       },
     ];
   })(),
-  permanences: [
-    {
-      id: "1",
-      name: "Marie Dubois",
-      time: "09:00 - 12:00",
-      theme: "Droit du travail & contentieux",
-    },
-    {
-      id: "2",
-      name: "Jean-Claude Martin",
-      time: "14:00 - 17:00",
-      theme: "Négociation collective",
-    },
-    {
-      id: "3",
-      name: "Sylvie Rousseau",
-      time: "10:00 - 16:00",
-      theme: "Protection sociale",
-    },
-  ],
+  permanences: (() => {
+    const currentMonth = new Date().toLocaleDateString("fr-FR", {
+      month: "long",
+    });
+    const currentYear = new Date().getFullYear();
+    const today = new Date().getDate();
+    const tomorrow = today + 1;
+    const dayAfter = today + 2;
+
+    return [
+      {
+        id: "1",
+        name: "Marie Dubois",
+        type: "technique" as const,
+        month: currentMonth,
+        year: currentYear,
+        days: {
+          [today.toString()]: { time: "09:00" },
+          [tomorrow.toString()]: { time: "09:00" },
+        },
+        description: "Droit du travail & contentieux",
+      },
+      {
+        id: "2",
+        name: "Jean-Claude Martin",
+        type: "politique" as const,
+        month: currentMonth,
+        year: currentYear,
+        days: {
+          [tomorrow.toString()]: { time: "14:00" },
+          [dayAfter.toString()]: { time: "14:00" },
+        },
+        description: "Négociation collective",
+      },
+      {
+        id: "3",
+        name: "Sylvie Rousseau",
+        type: "technique" as const,
+        month: currentMonth,
+        year: currentYear,
+        days: { [dayAfter.toString()]: { time: "10:00" } },
+        description: "Protection sociale",
+      },
+      {
+        id: "4",
+        name: "Pierre Dupont",
+        type: "politique" as const,
+        month: currentMonth,
+        year: currentYear,
+        days: { [today.toString()]: { time: "16:00" } },
+        description: "Représentation politique",
+      },
+    ];
+  })(),
   videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
   alertText:
     "🚨 APPEL CGT FTM - Négociation collective métallurgie - Jeudi 21 mars à 14h - Siège fédéral - Mobilisation pour nos salaires !",
