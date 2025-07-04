@@ -72,7 +72,7 @@ export const PermanencesWidget = () => {
           <div className="w-6 h-6 bg-cgt-red rounded flex items-center justify-center">
             <Users className="w-4 h-4 text-white" />
           </div>
-          Permanences - 7 jours
+          Permanences Techniques - 7 jours
         </h2>
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
