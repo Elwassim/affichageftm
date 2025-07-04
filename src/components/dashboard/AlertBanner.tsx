@@ -10,14 +10,32 @@ export const AlertBanner = () => {
         const text = await getConfig("alertText");
         setAlertText(text || "");
       } catch (error) {
-        console.error("Error loading alert text:", error);
+        // Error loading alert text
       }
     };
 
     loadAlertText();
     const timer = setInterval(loadAlertText, 30000); // Refresh every 30 seconds
 
-    return () => clearInterval(timer);
+    // Écouter les changements depuis l'admin
+    const handleConfigUpdate = (event: CustomEvent) => {
+      if (event.detail.key === "alertText") {
+        setAlertText(event.detail.value || "");
+      }
+    };
+
+    window.addEventListener(
+      "cgt-config-updated",
+      handleConfigUpdate as EventListener,
+    );
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener(
+        "cgt-config-updated",
+        handleConfigUpdate as EventListener,
+      );
+    };
   }, []);
 
   if (!alertText) return null;
