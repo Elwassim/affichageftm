@@ -284,46 +284,27 @@ export const VideoWidget = () => {
               preload="auto"
               style={{ minHeight: "300px" }}
               data-setup="{}"
-              onLoadedData={() => {
-                // Force autoplay dès que les données sont chargées
-                if (videoRef.current) {
-                  videoRef.current.muted = true;
-                  videoRef.current.autoplay = true;
+              onLoadStart={() => {
+                setIsPlaying(false);
+              }}
+              onCanPlay={() => {
+                // Tentative d'autoplay quand la vidéo est prête
+                if (videoRef.current && !isPlaying) {
                   videoRef.current
                     .play()
                     .then(() => {
                       setIsPlaying(true);
-                      setIsMuted(true);
-                      // Essayer d'activer le son après 1 seconde
-                      setTimeout(() => {
-                        if (videoRef.current && !videoRef.current.paused) {
-                          videoRef.current.muted = false;
-                          videoRef.current.volume = 0.7;
-                          setIsMuted(false);
-                        }
-                      }, 1000);
                     })
                     .catch(() => {
-                      // L'autoplay a échoué
                       setIsPlaying(false);
                     });
                 }
               }}
-              onCanPlay={() => {
-                // Autre tentative quand la vidéo peut être jouée
-                if (videoRef.current && !isPlaying) {
-                  videoRef.current.muted = true;
-                  videoRef.current
-                    .play()
-                    .then(() => {
-                      setIsPlaying(true);
-                      setIsMuted(true);
-                    })
-                    .catch(() => {
-                      // L'autoplay a échoué
-                      setIsPlaying(false);
-                    });
-                }
+              onPlay={() => {
+                setIsPlaying(true);
+              }}
+              onPause={() => {
+                setIsPlaying(false);
               }}
               onEnded={(e) => {
                 // Force restart if loop fails
