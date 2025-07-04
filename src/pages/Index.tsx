@@ -27,27 +27,35 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 h-[calc(100vh-100px)] w-full">
         <div className="w-full h-full">
-          {/* Schema layout exact */}
+          {/* Layout exact selon schéma */}
           <div className="grid grid-cols-4 grid-rows-2 gap-4 h-full">
-            {/* Row 1: DATE/MÉTÉO, PERMANENCES, DIVERS, HOMMAGE */}
-            <div className="col-span-1 row-span-1">
+            {/* Col 1 Row 1: DATE/MÉTÉO */}
+            <div className="col-start-1 col-end-2 row-start-1 row-end-2">
               <DateTimeWidget />
             </div>
-            <div className="col-span-1 row-span-1">
+
+            {/* Col 2 Row 1: PERMANENCES */}
+            <div className="col-start-2 col-end-3 row-start-1 row-end-2">
               <PermanencesCombinedWidget />
             </div>
-            <div className="col-span-1 row-span-1">
+
+            {/* Col 3 Row 1: DIVERS */}
+            <div className="col-start-3 col-end-4 row-start-1 row-end-2">
               <DiversWidget />
             </div>
-            <div className="col-span-1 row-span-2">
+
+            {/* Col 4 Row 1-2: HOMMAGE (2 rangées) */}
+            <div className="col-start-4 col-end-5 row-start-1 row-end-3">
               <SocialWidget />
             </div>
 
-            {/* Row 2: REUNION, VIDEO (large) */}
-            <div className="col-span-1 row-span-1">
+            {/* Col 1 Row 2: REUNION */}
+            <div className="col-start-1 col-end-2 row-start-2 row-end-3">
               <MeetingsWidget />
             </div>
-            <div className="col-span-2 row-span-1">
+
+            {/* Col 2-3 Row 2: VIDEO (2 colonnes) */}
+            <div className="col-start-2 col-end-4 row-start-2 row-end-3">
               <VideoWidget />
             </div>
           </div>
