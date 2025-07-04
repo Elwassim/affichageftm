@@ -199,14 +199,36 @@ export const VideoWidget = () => {
               ref={videoRef}
               src={videoUrl}
               className="w-full h-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-              controls
+              autoPlay={true}
+              muted={true}
+              loop={true}
+              playsInline={true}
+              controls={true}
               preload="auto"
+              defaultMuted={true}
               style={{ minHeight: "300px" }}
-              onPlay={() => setIsPlaying(true)}
+              onLoadedData={() => {
+                // Force play dès que les données sont chargées
+                if (videoRef.current) {
+                  videoRef.current.play().catch(() => {});
+                }
+              }}
+              onCanPlay={() => {
+                // Force play quand la vidéo peut être jouée
+                if (videoRef.current) {
+                  videoRef.current.play().catch(() => {});
+                }
+              }}
+              onPlay={() => {
+                setIsPlaying(true);
+                // Activer le son après 500ms
+                setTimeout(() => {
+                  if (videoRef.current) {
+                    videoRef.current.muted = false;
+                    setIsMuted(false);
+                  }
+                }, 500);
+              }}
               onPause={() => setIsPlaying(false)}
               onEnded={(e) => {
                 e.currentTarget.currentTime = 0;
