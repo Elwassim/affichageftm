@@ -321,6 +321,38 @@ const Admin = () => {
     }
   };
 
+  const handleEditMeeting = (meeting: Meeting) => {
+    setEditingMeeting(meeting.id);
+    setEditMeetingData({
+      title: meeting.title,
+      time: meeting.time,
+      room: meeting.room,
+      category: meeting.category,
+      date: meeting.date,
+    });
+  };
+
+  const handleSaveMeeting = async (id: string) => {
+    if (
+      !editMeetingData.title?.trim() ||
+      !editMeetingData.time?.trim() ||
+      !editMeetingData.room?.trim()
+    ) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez remplir tous les champs obligatoires.",
+        variant: "destructive",
+      });
+      return;
+    }
+    await handleUpdateMeeting(id, editMeetingData);
+  };
+
+  const handleCancelMeetingEdit = () => {
+    setEditingMeeting(null);
+    setEditMeetingData({});
+  };
+
   // TRIBUTES FUNCTIONS
   const handleAddTribute = async () => {
     if (!newTribute.name.trim() || !newTribute.text.trim()) {
