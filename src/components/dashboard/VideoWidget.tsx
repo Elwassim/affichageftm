@@ -258,19 +258,19 @@ export const VideoWidget = () => {
     }
   };
 
-  // Convert URLs to embed format optimisé pour TV/kiosque (autoplay forcé)
+  // Convert URLs to embed format avec SON activé pour TV/kiosque
   const getEmbedUrl = (url: string) => {
     if (url.includes("youtube.com/watch?v=")) {
       const videoId = url.split("v=")[1]?.split("&")[0];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&disablekb=1&fs=0&cc_load_policy=0&start=0`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&start=0`;
     }
     if (url.includes("youtu.be/")) {
       const videoId = url.split("youtu.be/")[1]?.split("?")[0];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&disablekb=1&fs=0&cc_load_policy=0&start=0`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&start=0`;
     }
     if (url.includes("vimeo.com/")) {
       const videoId = url.split("vimeo.com/")[1]?.split("?")[0];
-      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1&background=1&controls=0&byline=0&title=0&portrait=0&autopause=0&keyboard=0&quality=auto`;
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=0&loop=1&controls=1&byline=0&title=0&portrait=0&autopause=0&keyboard=0&quality=auto`;
     }
     // For direct video URLs, will be handled by HTML5 video element
     return url;
