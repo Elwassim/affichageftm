@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Play, Volume2, VolumeX } from "lucide-react";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getConfig } from "@/lib/database";
 
 export const VideoWidget = () => {
@@ -8,9 +8,8 @@ export const VideoWidget = () => {
     "https://www.youtube.com/embed/dQw4w9WgXcQ",
   );
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(true); // Démarrer en muet pour autoplay
-  const [hasUserInteracted, setHasUserInteracted] = useState(false);
-  const [showSoundPrompt, setShowSoundPrompt] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [showSoundActivator, setShowSoundActivator] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
