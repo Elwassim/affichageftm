@@ -21,14 +21,28 @@ export const PermanencesCombinedWidget = () => {
     const loadPermanences = async () => {
       try {
         const permanencesData = await getNext7DaysPermanences();
+        const today = new Date();
+        const todayStr = today.toISOString().split("T")[0]; // YYYY-MM-DD
 
-        // Filtrer par type
+        // Calculer le début et la fin de la semaine courante (lundi à dimanche)
+        const currentDay = today.getDay();
+        const mondayOffset = currentDay === 0 ? -6 : 1 - currentDay; // Dimanche = 0, donc -6 pour obtenir lundi
+        const monday = new Date(today);
+        monday.setDate(today.getDate() + mondayOffset);
+        const sunday = new Date(monday);
+        sunday.setDate(monday.getDate() + 6);
+
+        // Permanences techniques : seulement celle d'aujourd'hui
         const techniques = permanencesData.filter(
-          (p) => p.type === "technique",
+          (p) => p.type === "technique" && p.date === todayStr,
         );
-        const politiques = permanencesData.filter(
-          (p) => p.type === "politique",
-        );
+
+        // Permanences politiques : seulement celles de cette semaine
+        const politiques = permanencesData.filter((p) => {
+          if (p.type !== "politique") return false;
+          const permanenceDate = new Date(p.date);
+          return permanenceDate >= monday && permanenceDate <= sunday;
+        });
 
         setPermanencesTech(techniques);
         setPermanencesPolitiques(politiques);
