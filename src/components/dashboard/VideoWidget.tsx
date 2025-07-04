@@ -50,51 +50,65 @@ export const VideoWidget = () => {
     };
   }, []);
 
-  // AUTOPLAY INTELLIGENT: Démarre en muet puis propose d'activer le son
+  // AUTOPLAY ULTRA-AGRESSIF pour environnement TV/kiosque
   useEffect(() => {
     if (!videoUrl) return;
 
-    const enableAutoplay = () => {
+    const forceAutoplay = () => {
       if (videoRef.current) {
         const video = videoRef.current;
 
-        // Configuration pour autoplay garanti
-        video.muted = true;
+        // Configuration MAXIMALE pour autoplay
+        video.muted = true; // OBLIGATOIRE
         video.autoplay = true;
         video.loop = true;
         video.volume = 1.0;
+        video.defaultMuted = true;
+        video.setAttribute("autoplay", "");
+        video.setAttribute("muted", "");
+        video.setAttribute("playsinline", "");
 
-        // Démarrer la vidéo en muet
-        video
-          .play()
-          .then(() => {
+        // FORCER le démarrage immédiatement
+        const tryPlay = async () => {
+          try {
+            await video.play();
             setIsPlaying(true);
             setIsMuted(true);
 
-            // Proposer d'activer le son après 3 secondes
+            // Activer le son automatiquement après 1 seconde
             setTimeout(() => {
-              setShowSoundActivator(true);
+              video.muted = false;
+              setIsMuted(false);
+            }, 1000);
+          } catch (error) {
+            // Continuer d'essayer même en cas d'échec
+            setTimeout(tryPlay, 1000);
+          }
+        };
 
-              // Auto-activer le son après 5 secondes supplémentaires
-              setTimeout(() => {
-                activateSound();
-              }, 5000);
-            }, 3000);
-          })
-          .catch(() => {
-            // Si même l'autoplay muet échoue
-            setShowSoundActivator(true);
-          });
+        // Tentatives multiples et répétées
+        tryPlay();
+        setTimeout(tryPlay, 100);
+        setTimeout(tryPlay, 500);
+        setTimeout(tryPlay, 1000);
+
+        // Déclencheurs sur événements
+        video.addEventListener("loadeddata", tryPlay);
+        video.addEventListener("canplay", tryPlay);
+
+        return () => {
+          video.removeEventListener("loadeddata", tryPlay);
+          video.removeEventListener("canplay", tryPlay);
+        };
       } else {
-        // Pour les iframe (YouTube/Vimeo)
+        // Pour les iframe - considérer comme démarrées
         setIsPlaying(true);
-        setTimeout(() => {
-          setShowSoundActivator(true);
-        }, 3000);
+        setIsMuted(false);
       }
     };
 
-    enableAutoplay();
+    const cleanup = forceAutoplay();
+    return cleanup;
   }, [videoUrl]);
 
   // Fonction pour activer le son
