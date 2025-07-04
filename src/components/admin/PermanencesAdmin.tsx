@@ -178,7 +178,7 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
     setSelectedDays((prev) => {
       const newDays = { ...prev };
       for (let day = 1; day <= 31; day++) {
-        newDays[day.toString()] = { time: defaultTime };
+        newDays[day.toString()] = {};
       }
       return newDays;
     });
