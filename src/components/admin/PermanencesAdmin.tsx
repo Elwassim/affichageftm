@@ -35,7 +35,6 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
   const [selectedDays, setSelectedDays] = useState<
     Record<string, { time?: string }>
   >({});
-  const [defaultTime, setDefaultTime] = useState<string>("09:00");
 
   const months = [
     "janvier",
@@ -336,7 +335,7 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
                 placeholder="09:00"
               />
               <p className="text-xs text-gray-500 mt-1">
-                Heure qui sera appliquée aux jours sélectionnés
+                Heure qui sera appliqu��e aux jours sélectionnés
               </p>
             </div>
 
