@@ -4,7 +4,9 @@ import { useEffect, useState, useRef } from "react";
 import { getConfig } from "@/lib/database";
 
 export const VideoWidget = () => {
-  const [videoUrl, setVideoUrl] = useState("");
+  const [videoUrl, setVideoUrl] = useState(
+    "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  );
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -13,9 +15,9 @@ export const VideoWidget = () => {
     const loadVideoUrl = async () => {
       try {
         const url = await getConfig("videoUrl");
-        setVideoUrl(url || "");
+        setVideoUrl(url || "https://www.youtube.com/embed/dQw4w9WgXcQ");
       } catch (error) {
-        // Error loading video URL
+        // Garder l'URL par défaut en cas d'erreur
       }
     };
 
