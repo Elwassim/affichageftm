@@ -273,11 +273,11 @@ export const VideoWidget = () => {
               src={videoUrl}
               className="w-full h-full object-cover"
               autoPlay
-              muted
+              muted={isMuted}
               loop
               playsInline
               webkit-playsinline=""
-              controls={false}
+              controls={true}
               preload="auto"
               style={{ minHeight: "300px" }}
               onLoadedData={() => {
