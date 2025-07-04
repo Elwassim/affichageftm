@@ -1,5 +1,5 @@
 import { DateTimeWidget } from "@/components/dashboard/DateTimeWidget";
-import { WeatherWidget } from "@/components/dashboard/WeatherWidget";
+import { PermanencesPolitiquesWidget } from "@/components/dashboard/PermanencesPolitiquesWidget";
 import { MeetingsWidget } from "@/components/dashboard/MeetingsWidget";
 import { PermanencesWidget } from "@/components/dashboard/PermanencesWidget";
 import { VideoWidget } from "@/components/dashboard/VideoWidget";
