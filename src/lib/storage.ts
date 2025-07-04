@@ -10,8 +10,13 @@ export interface Meeting {
 export interface Permanence {
   id: string;
   name: string;
-  time: string;
-  theme: string;
+  type: "technique" | "politique"; // Type de permanence
+  month: string; // Mois (juin, juillet, août, etc.)
+  year: number; // Année
+  days: Record<string, { time?: string }>; // Jours du mois avec heures optionnelles (1-31)
+  description?: string; // Description optionnelle
+  created_at?: string;
+  updated_at?: string;
 }
 
 export interface SocialPost {
