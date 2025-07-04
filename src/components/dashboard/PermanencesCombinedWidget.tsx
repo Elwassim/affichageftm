@@ -130,12 +130,12 @@ export const PermanencesCombinedWidget = () => {
   const renderPermanenceItem = (permanence: DashboardPermanence) => (
     <div
       key={permanence.id}
-      className="group p-3 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-3 hover:shadow-md transition-shadow h-full"
+      className="group p-2.5 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-3 hover:shadow-md transition-shadow"
       style={{ borderLeftColor: permanence.color }}
     >
-      <div className="flex items-center gap-3 h-full">
+      <div className="flex items-start gap-2">
         <div
-          className="w-8 h-8 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0"
+          className="w-7 h-7 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0"
           style={{ backgroundColor: permanence.color }}
         >
           {permanence.name
@@ -145,16 +145,16 @@ export const PermanencesCombinedWidget = () => {
             .slice(0, 2)}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-cgt-gray text-sm leading-tight mb-1">
+          <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
             {permanence.name}
           </h3>
-          <div className="flex items-center gap-1 text-gray-600 text-xs">
+          <div className="flex items-center gap-1 text-gray-600 text-xs mt-1">
             <Calendar className="w-3 h-3" style={{ color: permanence.color }} />
             <span className="font-semibold">{permanence.displayDate}</span>
           </div>
           <div className="mt-1">
             <span
-              className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold text-white"
+              className="inline-block px-2 py-0.5 rounded-md text-xs font-semibold text-white"
               style={{ backgroundColor: permanence.color }}
             >
               {getTypeLabel(permanence.type)}
