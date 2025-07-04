@@ -293,6 +293,34 @@ const Admin = () => {
     }
   };
 
+  const handleUpdateMeeting = async (id: string, updates: Partial<Meeting>) => {
+    try {
+      const success = await updateMeetingInDB(id, updates);
+      if (success) {
+        // Force clear localStorage to ensure sync
+        localStorage.removeItem("union-dashboard-data");
+        await refresh();
+        // Dispatch event for dashboard sync
+        window.dispatchEvent(
+          new CustomEvent("cgt-config-updated", {
+            detail: { key: "meetings", value: "updated" },
+          }),
+        );
+        setEditingMeeting(null);
+        toast({
+          title: "Succès",
+          description: "Réunion mise à jour avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de mettre à jour la réunion.",
+        variant: "destructive",
+      });
+    }
+  };
+
   // TRIBUTES FUNCTIONS
   const handleAddTribute = async () => {
     if (!newTribute.name.trim() || !newTribute.text.trim()) {
