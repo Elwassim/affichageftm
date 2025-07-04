@@ -15,14 +15,32 @@ export const VideoWidget = () => {
         const url = await getConfig("videoUrl");
         setVideoUrl(url || "");
       } catch (error) {
-        console.error("Error loading video URL:", error);
+        // Error loading video URL
       }
     };
 
     loadVideoUrl();
-    const timer = setInterval(loadVideoUrl, 60000); // Refresh every minute
+    const timer = setInterval(loadVideoUrl, 30000); // Refresh every 30 seconds
 
-    return () => clearInterval(timer);
+    // Écouter les changements de configuration depuis l'admin
+    const handleConfigUpdate = (event: CustomEvent) => {
+      if (event.detail.key === "videoUrl") {
+        setVideoUrl(event.detail.value || "");
+      }
+    };
+
+    window.addEventListener(
+      "cgt-config-updated",
+      handleConfigUpdate as EventListener,
+    );
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener(
+        "cgt-config-updated",
+        handleConfigUpdate as EventListener,
+      );
+    };
   }, []);
 
   // Force video autoplay with multiple attempts
