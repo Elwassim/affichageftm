@@ -122,19 +122,27 @@ export const VideoWidget = () => {
     return () => {};
   }, [videoUrl]);
 
-  // Listen for any user interaction to unlock autoplay
+  // Listen for any user interaction to unlock autoplay and sound
   useEffect(() => {
-    if (!isDirectVideo(videoUrl) || isPlaying) return;
-
     const handleUserInteraction = async () => {
-      if (videoRef.current && !isPlaying) {
+      if (videoRef.current) {
         try {
-          videoRef.current.muted = true;
-          await videoRef.current.play();
-          setIsPlaying(true);
-          console.log("✅ Video started after user interaction");
+          // Si la vidéo ne joue pas encore, la lancer avec son
+          if (!isPlaying) {
+            videoRef.current.muted = false;
+            videoRef.current.volume = 0.7;
+            await videoRef.current.play();
+            setIsPlaying(true);
+            setIsMuted(false);
+          }
+          // Si elle joue mais en muet, activer le son
+          else if (videoRef.current.muted) {
+            videoRef.current.muted = false;
+            videoRef.current.volume = 0.7;
+            setIsMuted(false);
+          }
         } catch (error) {
-          console.log("❌ Failed to start video after interaction");
+          //
         }
       }
     };
