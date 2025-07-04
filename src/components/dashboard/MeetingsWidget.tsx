@@ -114,7 +114,9 @@ export const MeetingsWidget = () => {
 
     // Listen for configuration updates
     const handleConfigUpdate = () => {
-      loadMeetings();
+      // Force clear cache and reload
+      localStorage.removeItem("union-dashboard-data");
+      setTimeout(loadMeetings, 100);
     };
 
     window.addEventListener("cgt-config-updated", handleConfigUpdate);

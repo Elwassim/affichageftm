@@ -236,6 +236,8 @@ const Admin = () => {
       });
 
       if (meeting) {
+        // Force clear localStorage to ensure sync
+        localStorage.removeItem("union-dashboard-data");
         await refresh(); // Actualiser les données
         // Dispatch event for dashboard sync
         window.dispatchEvent(
@@ -268,6 +270,8 @@ const Admin = () => {
     try {
       const success = await deleteMeetingFromDB(id);
       if (success) {
+        // Force clear localStorage to ensure sync
+        localStorage.removeItem("union-dashboard-data");
         await refresh(); // Actualiser toutes les données
         // Dispatch event for dashboard sync
         window.dispatchEvent(
