@@ -241,7 +241,7 @@ const Admin = () => {
           title: "",
           time: "",
           room: "",
-          category: "Assemblée Générale",
+          category: "Assembl��e Générale",
           date: new Date().toISOString().split("T")[0],
         });
         toast({
@@ -343,9 +343,17 @@ const Admin = () => {
       if (success) {
         setLocalConfig({ ...localConfig, [key]: value });
         await refresh(); // Actualiser les données
+
+        // Déclencher un événement pour synchroniser les widgets
+        window.dispatchEvent(
+          new CustomEvent("cgt-config-updated", {
+            detail: { key, value },
+          }),
+        );
+
         toast({
           title: "Succès",
-          description: "Configuration mise à jour avec succès.",
+          description: "Configuration mise à jour et synchronisée.",
         });
       }
     } catch (error) {
