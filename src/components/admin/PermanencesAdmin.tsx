@@ -411,6 +411,55 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
 
           {/* Calendar */}
           <div>
+            {/* Boutons de sélection rapide */}
+            <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+              <h5 className="font-medium mb-3 text-blue-900">
+                Sélection rapide
+              </h5>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-2">
+                  <h6 className="text-sm font-medium text-blue-800">
+                    Par semaine
+                  </h6>
+                  <div className="grid grid-cols-2 gap-1">
+                    {[1, 2, 3, 4].map((week) => (
+                      <button
+                        key={week}
+                        type="button"
+                        onClick={() => selectWeek(week)}
+                        className="px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 text-blue-800 rounded transition-colors"
+                      >
+                        Sem. {week}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <h6 className="text-sm font-medium text-blue-800">Actions</h6>
+                  <div className="grid grid-cols-1 gap-1">
+                    <button
+                      type="button"
+                      onClick={selectAllDays}
+                      className="px-2 py-1 text-xs bg-green-100 hover:bg-green-200 text-green-800 rounded transition-colors"
+                    >
+                      Tout le mois
+                    </button>
+                    <button
+                      type="button"
+                      onClick={clearAllDays}
+                      className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 text-red-800 rounded transition-colors"
+                    >
+                      Effacer tout
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <p className="text-xs text-blue-600 mt-2">
+                Sélectionnez rapidement plusieurs jours pour les permanences
+                récurrentes
+              </p>
+            </div>
+
             {renderCalendar()}
 
             {/* Legend */}
