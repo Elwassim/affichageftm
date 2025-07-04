@@ -10,9 +10,9 @@ CREATE TABLE IF NOT EXISTS dashboard_config (
 
 -- 2. Ajouter les configurations par défaut
 INSERT INTO dashboard_config (key, value) VALUES
-('videoUrl', 'https://www.youtube.com/embed/dQw4w9WgXcQ'),
-('alertText', '🚨 APPEL CGT FTM - Rejoignez-nous pour défendre vos droits ! 🚨'),
-('weatherCity', 'Paris')
+('videoUrl', '"https://www.youtube.com/embed/dQw4w9WgXcQ"'),
+('alertText', '"🚨 APPEL CGT FTM - Rejoignez-nous pour défendre vos droits ! 🚨"'),
+('weatherCity', '"Paris"')
 ON CONFLICT (key) DO NOTHING;
 
 -- 3. Créer des politiques RLS simples
