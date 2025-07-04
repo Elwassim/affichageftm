@@ -108,25 +108,14 @@ export const PermanencesWidget = () => {
                   <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
                     {permanence.name}
                   </h3>
-                  <div className="flex items-center gap-2 text-gray-600 text-xs mt-1 flex-wrap">
-                    <span className="flex items-center gap-1">
-                      <Calendar
-                        className="w-3 h-3"
-                        style={{ color: permanence.color }}
-                      />
-                      <span className="font-semibold">
-                        {permanence.displayDate}
-                      </span>
+                  <div className="flex items-center gap-1 text-gray-600 text-xs mt-1">
+                    <Calendar
+                      className="w-3 h-3"
+                      style={{ color: permanence.color }}
+                    />
+                    <span className="font-semibold">
+                      {permanence.displayDate}
                     </span>
-                    {permanence.time && (
-                      <span className="flex items-center gap-1">
-                        <Clock
-                          className="w-3 h-3"
-                          style={{ color: permanence.color }}
-                        />
-                        <span className="font-semibold">{permanence.time}</span>
-                      </span>
-                    )}
                   </div>
                   <div className="mt-1">
                     <span
