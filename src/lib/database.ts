@@ -41,23 +41,30 @@ export const getConfig = async (key: string): Promise<any> => {
 };
 
 export const setConfig = async (key: string, value: any): Promise<boolean> => {
+  console.log("⚙️ setConfig appelé:", { key, value, useSupabase });
+
   if (!useSupabase) {
+    console.log("📁 Mode localStorage");
     const localData = getLocalData();
     saveLocalData({ ...localData, [key]: value });
     return true;
   }
 
   try {
+    console.log("🔗 Mode Supabase - tentative upsert sur dashboard_config");
     const { error } = await supabase!
       .from("dashboard_config")
       .upsert({ key, value }, { onConflict: "key" });
 
     if (error) {
+      console.error("❌ Erreur Supabase dashboard_config:", error);
       return false;
     }
 
+    console.log("✅ Sauvegarde Supabase réussie");
     return true;
   } catch (error) {
+    console.error("💥 Exception Supabase setConfig:", error);
     return false;
   }
 };
