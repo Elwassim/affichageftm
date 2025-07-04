@@ -8,7 +8,9 @@ export const VideoWidget = () => {
     "https://www.youtube.com/embed/dQw4w9WgXcQ",
   );
   const [isPlaying, setIsPlaying] = useState(true);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Démarrer en muet pour autoplay
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const [showSoundPrompt, setShowSoundPrompt] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
