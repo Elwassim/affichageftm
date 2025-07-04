@@ -241,7 +241,7 @@ const Admin = () => {
           title: "",
           time: "",
           room: "",
-          category: "Assembl��e Générale",
+          category: "Assemblée Générale",
           date: new Date().toISOString().split("T")[0],
         });
         toast({
@@ -339,7 +339,10 @@ const Admin = () => {
   // CONFIG FUNCTIONS
   const handleUpdateConfig = async (key: string, value: string) => {
     try {
+      console.log("🔧 Tentative sauvegarde:", { key, value });
       const success = await updateConfig(key, value);
+      console.log("📊 Résultat sauvegarde:", success);
+
       if (success) {
         setLocalConfig({ ...localConfig, [key]: value });
         await refresh(); // Actualiser les données
@@ -355,8 +358,16 @@ const Admin = () => {
           title: "Succès",
           description: "Configuration mise à jour et synchronisée.",
         });
+      } else {
+        console.error("❌ Échec de sauvegarde");
+        toast({
+          title: "Échec de sauvegarde",
+          description: "La configuration n'a pas pu être sauvegardée.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
+      console.error("💥 Erreur sauvegarde:", error);
       toast({
         title: "Erreur",
         description: "Impossible de mettre à jour la configuration.",
