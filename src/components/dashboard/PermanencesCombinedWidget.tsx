@@ -189,7 +189,7 @@ export const PermanencesCombinedWidget = () => {
               </p>
             </div>
           ) : (
-            <div className="flex-1 min-h-0 flex">
+            <div className="space-y-1.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
               {permanencesTech.map(renderPermanenceItem)}
             </div>
           )}
@@ -218,7 +218,7 @@ export const PermanencesCombinedWidget = () => {
               </p>
             </div>
           ) : (
-            <div className="flex-1 min-h-0 flex">
+            <div className="space-y-1.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
               {permanencesPolitiques.map(renderPermanenceItem)}
             </div>
           )}
