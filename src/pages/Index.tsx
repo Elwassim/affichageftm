@@ -26,7 +26,7 @@ const Index = () => {
       <CGTHeader />
 
       {/* Main Dashboard Grid - Full Screen TV Layout */}
-      <div className="p-3 h-[calc(100vh-100px)] w-full">
+      <div className="p-3 h-[calc(100vh-150px)] w-full">
         <div className="w-full h-full">
           {/* Layout exact selon schéma - rangée du bas plus grande */}
           <div
