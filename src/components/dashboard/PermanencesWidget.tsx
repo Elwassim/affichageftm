@@ -15,7 +15,11 @@ export const PermanencesWidget = () => {
     const loadPermanences = async () => {
       try {
         const permanencesData = await getNext7DaysPermanences();
-        setPermanences(permanencesData);
+        // Filtrer seulement les permanences techniques
+        const permanencesTechniques = permanencesData.filter(
+          (p) => p.type === "technique",
+        );
+        setPermanences(permanencesTechniques);
       } catch (error) {
         // Error loading permanences
       }
