@@ -244,30 +244,38 @@ export const VideoWidget = () => {
       {videoUrl ? (
         <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200 relative">
           {/* Bouton Play si l'autoplay échoue */}
-          {!isPlaying && (
-            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+          {!isPlaying && videoUrl && (
+            <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center z-10">
               <button
                 onClick={() => {
                   if (videoRef.current) {
                     videoRef.current.muted = true;
-                    videoRef.current.play().then(() => {
-                      setIsPlaying(true);
-                      setIsMuted(true);
-                      // Activer le son après démarrage
-                      setTimeout(() => {
-                        if (videoRef.current) {
-                          videoRef.current.muted = false;
-                          videoRef.current.volume = 0.7;
-                          setIsMuted(false);
-                        }
-                      }, 1000);
-                    });
+                    videoRef.current
+                      .play()
+                      .then(() => {
+                        setIsPlaying(true);
+                        setIsMuted(true);
+                        // Activer le son après 1 seconde
+                        setTimeout(() => {
+                          if (videoRef.current && !videoRef.current.paused) {
+                            videoRef.current.muted = false;
+                            videoRef.current.volume = 0.7;
+                            setIsMuted(false);
+                          }
+                        }, 1000);
+                      })
+                      .catch(() => {
+                        // Échec de lecture
+                      });
                   }
                 }}
-                className="bg-cgt-red hover:bg-cgt-red-dark text-white rounded-full p-4 transition-colors"
+                className="bg-cgt-red hover:bg-cgt-red-dark text-white rounded-full p-6 transition-all transform hover:scale-110 shadow-lg"
               >
-                <Play className="w-8 h-8" />
+                <Play className="w-12 h-12" />
               </button>
+              <p className="text-white text-center mt-4 text-sm opacity-90">
+                Cliquez pour lancer la vidéo
+              </p>
             </div>
           )}
 
