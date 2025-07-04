@@ -77,7 +77,7 @@ export const RSSWidget = () => {
   const currentNews = newsItems[currentIndex];
 
   return (
-    <div className="bg-cgt-red h-12 flex items-center w-full">
+    <div className="bg-cgt-red h-12 flex items-center w-full fixed bottom-0 left-0 z-50">
       <div className="bg-cgt-red text-white px-4 py-2 h-full flex items-center flex-shrink-0">
         <div className="flex items-center gap-2">
           <Globe className="w-4 h-4" />
