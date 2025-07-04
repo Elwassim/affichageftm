@@ -59,41 +59,46 @@ export const VideoWidget = () => {
         // Multiple aggressive attempts to start video
         const playAttempts = async () => {
           try {
-            video.muted = true;
-            video.volume = 0;
+            // Essayer d'abord avec le son
+            video.muted = false;
+            video.volume = 0.7;
             video.setAttribute("autoplay", "");
             video.setAttribute("playsinline", "");
             video.setAttribute("webkit-playsinline", "");
 
             await video.play();
             setIsPlaying(true);
-            console.log("✅ Video autoplay succeeded");
+            setIsMuted(false);
           } catch (error) {
-            console.log("🔄 Autoplay attempt failed, retrying...");
+            // Si ça échoue avec le son, essayer en muet puis activer le son
+            try {
+              video.muted = true;
+              video.volume = 0;
+              await video.play();
+              setIsPlaying(true);
 
-            // Retry after a short delay
-            setTimeout(async () => {
-              try {
-                video.muted = true;
-                video.currentTime = 0;
-                await video.play();
-                setIsPlaying(true);
-              } catch (retryError) {
-                console.log("🔄 Retry failed, trying again...");
-
-                // Final attempt with load() first
-                setTimeout(async () => {
-                  try {
-                    video.load();
-                    video.muted = true;
-                    await video.play();
-                    setIsPlaying(true);
-                  } catch (finalError) {
-                    console.log("❌ All autoplay attempts failed");
-                  }
-                }, 500);
-              }
-            }, 500);
+              // Activer le son après 2 secondes une fois que la vidéo joue
+              setTimeout(() => {
+                if (video && !video.paused) {
+                  video.muted = false;
+                  video.volume = 0.7;
+                  setIsMuted(false);
+                }
+              }, 2000);
+            } catch (retryError) {
+              // Dernier recours: rester en muet
+              setTimeout(async () => {
+                try {
+                  video.load();
+                  video.muted = true;
+                  await video.play();
+                  setIsPlaying(true);
+                  setIsMuted(true);
+                } catch (finalError) {
+                  //
+                }
+              }, 500);
+            }
           }
         };
 
