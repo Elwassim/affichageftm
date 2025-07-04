@@ -315,21 +315,32 @@ export const VideoWidget = () => {
               onLoadStart={() => {
                 setIsPlaying(false);
               }}
+              onLoadedData={() => {
+                // Dès que les données sont chargées
+                if (videoRef.current) {
+                  videoRef.current.play().catch(() => {});
+                }
+              }}
               onCanPlay={() => {
-                // Tentative d'autoplay quand la vidéo est prête
+                // Quand la vidéo peut être jouée
                 if (videoRef.current && !isPlaying) {
-                  videoRef.current
-                    .play()
-                    .then(() => {
-                      setIsPlaying(true);
-                    })
-                    .catch(() => {
-                      setIsPlaying(false);
-                    });
+                  videoRef.current.play().catch(() => {});
                 }
               }}
               onPlay={() => {
+                // La vidéo a commencé à jouer - CACHER L'OVERLAY
                 setIsPlaying(true);
+                setIsMuted(videoRef.current?.muted ?? true);
+              }}
+              onPlaying={() => {
+                // La vidéo est en cours de lecture - FORCER LA VISIBILITÉ
+                setIsPlaying(true);
+              }}
+              onTimeUpdate={() => {
+                // Si le temps progresse, la vidéo joue
+                if (videoRef.current && !videoRef.current.paused) {
+                  setIsPlaying(true);
+                }
               }}
               onPause={() => {
                 setIsPlaying(false);
