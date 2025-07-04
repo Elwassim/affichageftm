@@ -188,30 +188,27 @@ const DEFAULT_DATA: DashboardData = {
     const today = new Date().getDate();
     const tomorrow = today + 1;
     const dayAfter = today + 2;
+    const in4Days = today + 4;
+    const in7Days = today + 7;
 
     return [
+      // Une seule permanence technique par jour pour les 7 prochains jours
       {
         id: "1",
         name: "Marie Dubois",
         type: "technique" as const,
         month: currentMonth,
         year: currentYear,
-        days: {
-          [today.toString()]: { time: "09:00" },
-          [tomorrow.toString()]: { time: "09:00" },
-        },
+        days: { [today.toString()]: {} },
         description: "Droit du travail & contentieux",
       },
       {
         id: "2",
-        name: "Jean-Claude Martin",
-        type: "politique" as const,
+        name: "Jean-Pierre Martin",
+        type: "technique" as const,
         month: currentMonth,
         year: currentYear,
-        days: {
-          [tomorrow.toString()]: { time: "14:00" },
-          [dayAfter.toString()]: { time: "14:00" },
-        },
+        days: { [tomorrow.toString()]: {} },
         description: "Négociation collective",
       },
       {
@@ -220,16 +217,53 @@ const DEFAULT_DATA: DashboardData = {
         type: "technique" as const,
         month: currentMonth,
         year: currentYear,
-        days: { [dayAfter.toString()]: { time: "10:00" } },
+        days: { [dayAfter.toString()]: {} },
         description: "Protection sociale",
       },
       {
         id: "4",
+        name: "Philippe Durand",
+        type: "technique" as const,
+        month: currentMonth,
+        year: currentYear,
+        days: { [(today + 3).toString()]: {} },
+        description: "Santé au travail",
+      },
+      {
+        id: "5",
+        name: "Catherine Moreau",
+        type: "technique" as const,
+        month: currentMonth,
+        year: currentYear,
+        days: { [in4Days.toString()]: {} },
+        description: "Formation syndicale",
+      },
+      {
+        id: "6",
+        name: "Michel Bernard",
+        type: "technique" as const,
+        month: currentMonth,
+        year: currentYear,
+        days: { [(today + 5).toString()]: {} },
+        description: "Relations sociales",
+      },
+      {
+        id: "7",
+        name: "Anne Leroy",
+        type: "technique" as const,
+        month: currentMonth,
+        year: currentYear,
+        days: { [(today + 6).toString()]: {} },
+        description: "Dossiers individuels",
+      },
+      // Une seule permanence politique par semaine (lundi par exemple)
+      {
+        id: "8",
         name: "Pierre Dupont",
         type: "politique" as const,
         month: currentMonth,
         year: currentYear,
-        days: { [today.toString()]: { time: "16:00" } },
+        days: { [in7Days.toString()]: {} },
         description: "Représentation politique",
       },
     ];
