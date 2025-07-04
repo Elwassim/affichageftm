@@ -18,7 +18,15 @@ export const PermanencesPolitiquesWidget = () => {
         console.log("🔍 DEBUG: All permanences:", permanencesData);
         console.log(
           "🔍 DEBUG: Types found:",
-          permanencesData.map((p) => ({ name: p.name, type: p.type })),
+          permanencesData.map((p) => ({
+            name: p.name,
+            type: p.type,
+            typeOf: typeof p.type,
+          })),
+        );
+        console.log(
+          "🔍 DEBUG: Raw type values:",
+          permanencesData.map((p) => p.type),
         );
 
         // Filtrer seulement les permanences politiques
