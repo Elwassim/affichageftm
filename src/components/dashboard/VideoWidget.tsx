@@ -48,9 +48,18 @@ export const VideoWidget = () => {
     };
   }, []);
 
-  // Autoplay agressif pour environnement TV/kiosque
+  // Autoplay simplifié - forcer l'affichage de la vidéo
   useEffect(() => {
-    if (!videoUrl || !videoRef.current) return;
+    if (!videoUrl) return;
+
+    // FORCER l'état playing après 1 seconde pour enlever l'overlay
+    const forceDisplay = setTimeout(() => {
+      setIsPlaying(true);
+    }, 1000);
+
+    if (!videoRef.current) {
+      return () => clearTimeout(forceDisplay);
+    }
 
     const video = videoRef.current;
 
