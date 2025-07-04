@@ -257,7 +257,9 @@ export const deleteMeeting = async (id: string): Promise<boolean> => {
 // ===== PERMANENCES =====
 export const getPermanences = async (): Promise<Permanence[]> => {
   if (!useSupabase) {
-    return getLocalData().permanences;
+    const localData = getLocalData().permanences;
+    console.log("🔍 DEBUG: Local permanences data:", localData);
+    return localData;
   }
 
   try {
