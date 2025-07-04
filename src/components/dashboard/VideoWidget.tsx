@@ -72,33 +72,22 @@ export const VideoWidget = () => {
     video.playsInline = true;
     video.volume = 1.0; // Volume prêt pour activation
 
-    // Tentatives multiples et répétées
-    const forceAutoplay = async () => {
+    // ÉTAPE 3: Lancer la vidéo en mode muet (autoplay garanti)
+    const startVideo = async () => {
       try {
-        // Réinitialiser la vidéo
-        video.load();
-        video.muted = true;
-        video.currentTime = 0;
+        await video.play();
+        setIsPlaying(true);
+        setIsMuted(true);
 
-        // Essayer de jouer
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          await playPromise;
-          setIsPlaying(true);
-          setIsMuted(true);
-
-          // Activer le son rapidement après démarrage
-          setTimeout(() => {
-            if (video && !video.paused) {
-              video.muted = false;
-              video.volume = 1.0; // Volume maximum
-              setIsMuted(false);
-            }
-          }, 500); // Seulement 0.5 seconde de délai
-        }
+        // ÉTAPE 4: Montrer l'invite son après 2 secondes
+        setTimeout(() => {
+          if (video && !video.paused) {
+            setShowSoundPrompt(true);
+          }
+        }, 2000);
       } catch (error) {
-        // Continuer les tentatives même en cas d'échec
-        setIsPlaying(false);
+        console.log("Autoplay bloqué, activation manuelle requise");
+        setShowSoundPrompt(true);
       }
     };
 
