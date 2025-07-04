@@ -286,39 +286,13 @@ export const VideoWidget = () => {
 
       {videoUrl ? (
         <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200 relative">
-          {/* Bouton Play si l'autoplay échoue */}
+          {/* Mode TV: Indicateur de chargement - autoplay forcé */}
           {!isPlaying && videoUrl && (
-            <div className="absolute inset-0 bg-black bg-opacity-60 flex flex-col items-center justify-center z-10">
-              <button
-                onClick={() => {
-                  if (videoRef.current) {
-                    videoRef.current.muted = true;
-                    videoRef.current
-                      .play()
-                      .then(() => {
-                        setIsPlaying(true);
-                        setIsMuted(true);
-                        // Activer le son après 1 seconde
-                        setTimeout(() => {
-                          if (videoRef.current && !videoRef.current.paused) {
-                            videoRef.current.muted = false;
-                            videoRef.current.volume = 0.7;
-                            setIsMuted(false);
-                          }
-                        }, 1000);
-                      })
-                      .catch(() => {
-                        // Échec de lecture
-                      });
-                  }
-                }}
-                className="bg-cgt-red hover:bg-cgt-red-dark text-white rounded-full p-6 transition-all transform hover:scale-110 shadow-lg"
-              >
-                <Play className="w-12 h-12" />
-              </button>
-              <p className="text-white text-center mt-4 text-sm opacity-90">
-                Cliquez pour lancer la vidéo
-              </p>
+            <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center z-10">
+              <div className="text-white text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent mx-auto mb-2"></div>
+                <p className="text-sm opacity-90">Chargement de la vidéo...</p>
+              </div>
             </div>
           )}
 
