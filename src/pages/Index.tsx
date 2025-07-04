@@ -29,12 +29,12 @@ const Index = () => {
         <div className="w-full h-full">
           {/* TV Layout - Exact match to design schema */}
           <div className="grid grid-cols-12 grid-rows-3 gap-4 h-full">
-            {/* Row 1 - Four equal widgets: HEURE, METEO, REUNIONS, PERMANENCE */}
+            {/* Row 1 - Four equal widgets: HEURE, PERMANENCES POLITIQUES, REUNIONS, PERMANENCES TECHNIQUES */}
             <div className="col-span-3 row-span-1">
               <DateTimeWidget />
             </div>
             <div className="col-span-3 row-span-1">
-              <WeatherWidget />
+              <PermanencesPolitiquesWidget />
             </div>
             <div className="col-span-3 row-span-1">
               <MeetingsWidget />
