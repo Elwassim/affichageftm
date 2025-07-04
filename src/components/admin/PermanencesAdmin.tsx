@@ -228,11 +228,6 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
                 style={isSelected ? { backgroundColor: typeColor } : {}}
               >
                 {day}
-                {isSelected && (
-                  <div className="text-xs mt-1">
-                    {isSelected.time || "Pas d'heure"}
-                  </div>
-                )}
               </button>
             );
           })}
