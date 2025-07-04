@@ -182,7 +182,7 @@ export const PermanencesCombinedWidget = () => {
                 <Users className="w-2 h-2 text-gray-400" />
               </div>
               <p className="text-gray-500 text-xs">
-                Aucune permanence technique
+                Aucune permanence aujourd'hui
               </p>
             </div>
           ) : (
@@ -214,7 +214,7 @@ export const PermanencesCombinedWidget = () => {
                 <Users className="w-2 h-2 text-gray-400" />
               </div>
               <p className="text-gray-500 text-xs">
-                Aucune permanence politique
+                Aucune permanence cette semaine
               </p>
             </div>
           ) : (
