@@ -117,7 +117,7 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
         onRefresh?.();
         toast({
           title: "Succès",
-          description: "Permanence ajoutée avec succès.",
+          description: `Permanence ${getTypeLabel(newPermanence.type).toLowerCase()} ajoutée avec succès. ${Object.keys(selectedDays).length} jour(s) sélectionné(s).`,
         });
       }
     } catch (error) {
