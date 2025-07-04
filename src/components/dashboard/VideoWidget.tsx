@@ -193,6 +193,26 @@ export const VideoWidget = () => {
     };
   }, [videoUrl, isPlaying]);
 
+  // Fonction pour basculer le son
+  const toggleMute = () => {
+    if (isDirectVideo(videoUrl) && videoRef.current) {
+      const video = videoRef.current;
+      video.muted = !video.muted;
+      setIsMuted(video.muted);
+    } else if (iframeRef.current) {
+      // Pour les vidéos iframe, on ne peut pas contrôler directement le son
+      // Mais on peut recharger avec/sans mute dans l'URL
+      const newUrl = isMuted
+        ? getEmbedUrl(videoUrl).replace("mute=1", "mute=0")
+        : getEmbedUrl(videoUrl).replace("mute=0", "mute=1");
+
+      if (iframeRef.current.src !== newUrl) {
+        iframeRef.current.src = newUrl;
+      }
+      setIsMuted(!isMuted);
+    }
+  };
+
   // Convert URLs to embed format with enhanced autoplay parameters
   const getEmbedUrl = (url: string) => {
     if (url.includes("youtube.com/watch?v=")) {
