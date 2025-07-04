@@ -213,18 +213,28 @@ export const MeetingsWidget = () => {
                         <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
                           {meeting.title}
                         </h3>
-                        <div className="flex items-center gap-1 text-gray-600 text-xs mt-1">
-                          <Calendar className="w-3 h-3 text-cgt-red" />
-                          <span className="font-semibold text-cgt-red">
-                            {formatDate(meeting.date)}
-                          </span>
-                          {meeting.time && (
-                            <>
-                              <Clock className="w-3 h-3 text-gray-500 ml-1" />
+                        <div className="flex flex-col gap-1 text-gray-600 text-xs mt-1">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3 text-cgt-red" />
+                            <span className="font-semibold text-cgt-red">
+                              {formatDate(meeting.date)}
+                            </span>
+                            {meeting.time && (
+                              <>
+                                <Clock className="w-3 h-3 text-gray-500 ml-1" />
+                                <span className="text-gray-700 font-medium">
+                                  {meeting.time}
+                                </span>
+                              </>
+                            )}
+                          </div>
+                          {meeting.room && (
+                            <div className="flex items-center gap-1">
+                              <MapPin className="w-3 h-3 text-gray-500" />
                               <span className="text-gray-700 font-medium">
-                                {meeting.time}
+                                {meeting.room}
                               </span>
-                            </>
+                            </div>
                           )}
                         </div>
                       </div>
