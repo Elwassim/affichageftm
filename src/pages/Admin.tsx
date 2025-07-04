@@ -113,6 +113,15 @@ const Admin = () => {
     alertText: "",
   });
 
+  // Synchroniser la config locale avec la config de la base
+  useEffect(() => {
+    setLocalConfig({
+      videoUrl: config.videoUrl || "",
+      weatherCity: config.weatherCity || "Paris",
+      alertText: config.alertText || "",
+    });
+  }, [config]);
+
   const [showPassword, setShowPassword] = useState(false);
 
   // Synchroniser la config locale avec celle de la base
