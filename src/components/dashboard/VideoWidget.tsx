@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { Play } from "lucide-react";
+import { Play, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useState, useRef } from "react";
 import { getConfig } from "@/lib/database";
 
