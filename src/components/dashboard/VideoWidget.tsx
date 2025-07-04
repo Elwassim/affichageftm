@@ -294,17 +294,44 @@ export const VideoWidget = () => {
               style={{ minHeight: "300px" }}
               data-setup="{}"
               onLoadedData={() => {
-                // Force play when video data is loaded
+                // Force autoplay dès que les données sont chargées
                 if (videoRef.current) {
                   videoRef.current.muted = true;
-                  videoRef.current.play().catch(console.error);
+                  videoRef.current.autoplay = true;
+                  videoRef.current
+                    .play()
+                    .then(() => {
+                      setIsPlaying(true);
+                      setIsMuted(true);
+                      // Essayer d'activer le son après 1 seconde
+                      setTimeout(() => {
+                        if (videoRef.current && !videoRef.current.paused) {
+                          videoRef.current.muted = false;
+                          videoRef.current.volume = 0.7;
+                          setIsMuted(false);
+                        }
+                      }, 1000);
+                    })
+                    .catch(() => {
+                      // L'autoplay a échoué
+                      setIsPlaying(false);
+                    });
                 }
               }}
               onCanPlay={() => {
-                // Another attempt when video can play
-                if (videoRef.current) {
+                // Autre tentative quand la vidéo peut être jouée
+                if (videoRef.current && !isPlaying) {
                   videoRef.current.muted = true;
-                  videoRef.current.play().catch(console.error);
+                  videoRef.current
+                    .play()
+                    .then(() => {
+                      setIsPlaying(true);
+                      setIsMuted(true);
+                    })
+                    .catch(() => {
+                      // L'autoplay a échoué
+                      setIsPlaying(false);
+                    });
                 }
               }}
               onEnded={(e) => {
