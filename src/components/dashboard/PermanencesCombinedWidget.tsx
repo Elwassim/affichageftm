@@ -1,0 +1,221 @@
+import { Card } from "@/components/ui/card";
+import { Users, Calendar } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import {
+  getNext7DaysPermanences,
+  getTypeLabel,
+  type DashboardPermanence,
+} from "@/lib/permanencesNext7Days";
+
+export const PermanencesCombinedWidget = () => {
+  const [permanencesTech, setPermanencesTech] = useState<DashboardPermanence[]>(
+    [],
+  );
+  const [permanencesPolitiques, setPermanencesPolitiques] = useState<
+    DashboardPermanence[]
+  >([]);
+  const scrollRefTech = useRef<HTMLDivElement>(null);
+  const scrollRefPolitiques = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const loadPermanences = async () => {
+      try {
+        const permanencesData = await getNext7DaysPermanences();
+
+        // Filtrer par type
+        const techniques = permanencesData.filter(
+          (p) => p.type === "technique",
+        );
+        const politiques = permanencesData.filter(
+          (p) => p.type === "politique",
+        );
+
+        setPermanencesTech(techniques);
+        setPermanencesPolitiques(politiques);
+      } catch (error) {
+        // Error loading permanences
+      }
+    };
+
+    loadPermanences();
+    const timer = setInterval(loadPermanences, 60000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  // Auto-scroll pour les permanences techniques
+  useEffect(() => {
+    const scrollContainer = scrollRefTech.current;
+    if (!scrollContainer || permanencesTech.length <= 1) return;
+
+    let scrollPosition = 0;
+    const scrollSpeed = 0.3;
+    const pauseTime = 3000;
+    let isPaused = false;
+
+    const autoScroll = () => {
+      if (isPaused) return;
+
+      scrollPosition += scrollSpeed;
+      const maxScroll =
+        scrollContainer.scrollHeight - scrollContainer.clientHeight;
+
+      if (scrollPosition >= maxScroll) {
+        isPaused = true;
+        setTimeout(() => {
+          scrollPosition = 0;
+          scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+          setTimeout(() => {
+            isPaused = false;
+          }, 1000);
+        }, pauseTime);
+      } else {
+        scrollContainer.scrollTop = scrollPosition;
+      }
+    };
+
+    const interval = setInterval(autoScroll, 50);
+    return () => clearInterval(interval);
+  }, [permanencesTech.length]);
+
+  // Auto-scroll pour les permanences politiques
+  useEffect(() => {
+    const scrollContainer = scrollRefPolitiques.current;
+    if (!scrollContainer || permanencesPolitiques.length <= 1) return;
+
+    let scrollPosition = 0;
+    const scrollSpeed = 0.3;
+    const pauseTime = 3000;
+    let isPaused = false;
+
+    const autoScroll = () => {
+      if (isPaused) return;
+
+      scrollPosition += scrollSpeed;
+      const maxScroll =
+        scrollContainer.scrollHeight - scrollContainer.clientHeight;
+
+      if (scrollPosition >= maxScroll) {
+        isPaused = true;
+        setTimeout(() => {
+          scrollPosition = 0;
+          scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
+          setTimeout(() => {
+            isPaused = false;
+          }, 1000);
+        }, pauseTime);
+      } else {
+        scrollContainer.scrollTop = scrollPosition;
+      }
+    };
+
+    const interval = setInterval(autoScroll, 50);
+    return () => clearInterval(interval);
+  }, [permanencesPolitiques.length]);
+
+  const renderPermanenceItem = (permanence: DashboardPermanence) => (
+    <div
+      key={permanence.id}
+      className="group p-1.5 bg-gradient-to-r from-gray-50 to-white rounded-md border-l-2 hover:shadow-sm transition-shadow"
+      style={{ borderLeftColor: permanence.color }}
+    >
+      <div className="flex items-start gap-1.5">
+        <div
+          className="w-5 h-5 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0"
+          style={{ backgroundColor: permanence.color }}
+        >
+          {permanence.name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .slice(0, 2)}
+        </div>
+        <div className="flex-1 min-w-0">
+          <h3 className="font-bold text-cgt-gray text-xs truncate leading-tight">
+            {permanence.name}
+          </h3>
+          <div className="flex items-center gap-1 text-gray-600 text-xs mt-0.5">
+            <Calendar
+              className="w-2.5 h-2.5"
+              style={{ color: permanence.color }}
+            />
+            <span className="font-semibold text-xs">
+              {permanence.displayDate}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <Card className="p-2 bg-white professional-shadow border-0 h-full flex flex-col">
+      {/* Section Permanences Techniques */}
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="mb-2">
+          <h2 className="text-sm font-black text-white bg-cgt-red px-2 py-1 rounded flex items-center gap-1.5">
+            <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
+              <Users className="w-2.5 h-2.5 text-cgt-red" />
+            </div>
+            PERMANENCE TECH
+          </h2>
+        </div>
+
+        <div className="flex-1 min-h-0">
+          {permanencesTech.length === 0 ? (
+            <div className="text-center py-2">
+              <div className="w-4 h-4 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-1">
+                <Users className="w-2 h-2 text-gray-400" />
+              </div>
+              <p className="text-gray-500 text-xs">
+                Aucune permanence technique
+              </p>
+            </div>
+          ) : (
+            <div
+              ref={scrollRefTech}
+              className="space-y-1 overflow-y-auto flex-1 min-h-0 scrollbar-hide"
+            >
+              {permanencesTech.map(renderPermanenceItem)}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Séparateur */}
+      <div className="h-px bg-gradient-to-r from-cgt-red to-transparent my-2"></div>
+
+      {/* Section Permanences Politiques */}
+      <div className="flex-1 flex flex-col min-h-0">
+        <div className="mb-2">
+          <h2 className="text-sm font-black text-white bg-cgt-red px-2 py-1 rounded flex items-center gap-1.5">
+            <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
+              <Users className="w-2.5 h-2.5 text-cgt-red" />
+            </div>
+            PERMANENCE POLITIQUE
+          </h2>
+        </div>
+
+        <div className="flex-1 min-h-0">
+          {permanencesPolitiques.length === 0 ? (
+            <div className="text-center py-2">
+              <div className="w-4 h-4 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-1">
+                <Users className="w-2 h-2 text-gray-400" />
+              </div>
+              <p className="text-gray-500 text-xs">
+                Aucune permanence politique
+              </p>
+            </div>
+          ) : (
+            <div
+              ref={scrollRefPolitiques}
+              className="space-y-1 overflow-y-auto flex-1 min-h-0 scrollbar-hide"
+            >
+              {permanencesPolitiques.map(renderPermanenceItem)}
+            </div>
+          )}
+        </div>
+      </div>
+    </Card>
+  );
+};
