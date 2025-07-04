@@ -15,31 +15,13 @@ export const PermanencesPolitiquesWidget = () => {
     const loadPermanences = async () => {
       try {
         const permanencesData = await getNext7DaysPermanences();
-        console.log("🔍 DEBUG: All permanences:", permanencesData);
-        console.log(
-          "🔍 DEBUG: Types found:",
-          permanencesData.map((p) => ({
-            name: p.name,
-            type: p.type,
-            typeOf: typeof p.type,
-          })),
-        );
-        console.log(
-          "🔍 DEBUG: Raw type values:",
-          permanencesData.map((p) => p.type),
-        );
-
         // Filtrer seulement les permanences politiques
         const permanencesPolitiques = permanencesData.filter(
           (p) => p.type === "politique",
         );
-        console.log(
-          "🏛️ DEBUG: Political permanences found:",
-          permanencesPolitiques,
-        );
         setPermanences(permanencesPolitiques);
       } catch (error) {
-        console.error("🚨 DEBUG: Error loading permanences:", error);
+        // Error loading permanences
       }
     };
 
