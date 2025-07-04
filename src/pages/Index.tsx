@@ -26,27 +26,27 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 h-[calc(100vh-100px)] w-full">
         <div className="w-full h-full">
-          {/* Layout matching schema exactly */}
-          <div className="grid grid-cols-12 grid-rows-3 gap-4 h-full">
-            {/* Row 1 - DATE/MÉTÉO, PERMANENCES COMBINED, DIVERS, HOMMAGE */}
-            <div className="col-span-3 row-span-1">
+          {/* Layout exactly matching schema */}
+          <div className="grid grid-cols-4 grid-rows-2 gap-4 h-full">
+            {/* Row 1: DATE/MÉTÉO, PERMANENCES, DIVERS, HOMMAGE */}
+            <div className="col-span-1 row-span-1">
               <DateTimeWidget />
             </div>
-            <div className="col-span-3 row-span-1">
+            <div className="col-span-1 row-span-1">
               <PermanencesCombinedWidget />
             </div>
-            <div className="col-span-3 row-span-1">
-              <VideoWidget />
+            <div className="col-span-1 row-span-1">
+              <MeetingsWidget />
             </div>
-            <div className="col-span-3 row-span-2">
+            <div className="col-span-1 row-span-2">
               <SocialWidget />
             </div>
 
-            {/* Row 2-3 - REUNION and VIDEO (large) */}
-            <div className="col-span-3 row-span-2">
+            {/* Row 2: REUNION, VIDEO (large) */}
+            <div className="col-span-1 row-span-1">
               <MeetingsWidget />
             </div>
-            <div className="col-span-6 row-span-2">
+            <div className="col-span-2 row-span-1">
               <VideoWidget />
             </div>
           </div>
