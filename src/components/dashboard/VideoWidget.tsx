@@ -338,8 +338,11 @@ export const VideoWidget = () => {
                 setIsPlaying(false);
               }}
               onLoadedData={() => {
-                // Dès que les données sont chargées
+                // Dès que les données sont chargées, activer le son
                 if (videoRef.current) {
+                  videoRef.current.muted = false;
+                  videoRef.current.volume = 1.0;
+                  setIsMuted(false);
                   videoRef.current.play().catch(() => {});
                 }
               }}
