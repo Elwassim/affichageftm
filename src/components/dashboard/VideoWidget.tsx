@@ -13,18 +13,19 @@ export const VideoWidget = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
+  // Charger l'URL de la vidéo depuis la configuration
   useEffect(() => {
     const loadVideoUrl = async () => {
       try {
         const url = await getConfig("videoUrl");
         setVideoUrl(url || "https://www.youtube.com/embed/dQw4w9WgXcQ");
       } catch (error) {
-        // Garder l'URL par défaut en cas d'erreur
+        // Garder l'URL par défaut
       }
     };
 
     loadVideoUrl();
-    const timer = setInterval(loadVideoUrl, 30000); // Refresh every 30 seconds
+    const timer = setInterval(loadVideoUrl, 30000);
 
     // Écouter les changements de configuration depuis l'admin
     const handleConfigUpdate = (event: CustomEvent) => {
@@ -49,219 +50,93 @@ export const VideoWidget = () => {
     };
   }, []);
 
-  // STRATÉGIE AUTOPLAY ROBUSTE POUR TV/KIOSQUE
+  // AUTOPLAY INTELLIGENT: Démarre en muet puis propose d'activer le son
   useEffect(() => {
     if (!videoUrl) return;
 
-    // ÉTAPE 1: Forcer l'affichage après 1 seconde
-    const forceDisplay = setTimeout(() => {
-      setIsPlaying(true);
-    }, 1000);
-
-    if (!videoRef.current) {
-      return () => clearTimeout(forceDisplay);
-    }
-
-    const video = videoRef.current;
-
-    // ÉTAPE 2: Configuration pour autoplay garanti
-    video.muted = true; // OBLIGATOIRE pour autoplay
-    video.autoplay = true;
-    video.loop = true;
-    video.playsInline = true;
-    video.volume = 1.0; // Volume prêt pour activation
-
-    // ÉTAPE 3: Lancer la vidéo en mode muet (autoplay garanti)
-    const startVideo = async () => {
-      try {
-        await video.play();
-        setIsPlaying(true);
-        setIsMuted(true);
-
-        // ÉTAPE 4: Montrer l'invite son après 2 secondes
-        setTimeout(() => {
-          if (video && !video.paused) {
-            setShowSoundPrompt(true);
-          }
-        }, 2000);
-      } catch (error) {
-        console.log("Autoplay bloqué, activation manuelle requise");
-        setShowSoundPrompt(true);
-      }
-    };
-
-    // Multiples tentatives avec délais
-    const attemptPlay = () => {
-      forceAutoplay();
-      setTimeout(forceAutoplay, 100);
-      setTimeout(forceAutoplay, 500);
-      setTimeout(forceAutoplay, 1000);
-      setTimeout(forceAutoplay, 2000);
-      setTimeout(forceAutoplay, 5000);
-    };
-
-    // Déclencher immédiatement et sur différents événements
-    attemptPlay();
-
-    video.addEventListener("loadedmetadata", attemptPlay);
-    video.addEventListener("loadeddata", attemptPlay);
-    video.addEventListener("canplay", attemptPlay);
-    video.addEventListener("canplaythrough", attemptPlay);
-
-    // Vérification périodique de l'état de lecture
-    const checkInterval = setInterval(() => {
-      if (video) {
-        // Si la vidéo joue mais l'état dit le contraire, corriger
-        if (!video.paused && !isPlaying) {
-          setIsPlaying(true);
-        }
-        // Si la vidéo ne joue pas, essayer de la relancer
-        if (video.paused && !isPlaying) {
-          forceAutoplay();
-        }
-      }
-    }, 5000);
-
-    return () => {
-      clearInterval(checkInterval);
-      video.removeEventListener("loadedmetadata", attemptPlay);
-      video.removeEventListener("loadeddata", attemptPlay);
-      video.removeEventListener("canplay", attemptPlay);
-      video.removeEventListener("canplaythrough", attemptPlay);
-    };
-
-    return () => {
-      clearInterval(retryInterval);
-      video.removeEventListener("loadedmetadata", attemptPlay);
-      video.removeEventListener("loadeddata", attemptPlay);
-      video.removeEventListener("canplay", attemptPlay);
-      video.removeEventListener("canplaythrough", attemptPlay);
-    };
-  }, [videoUrl, isPlaying]);
-
-  // Listen for any user interaction to unlock autoplay and sound
-  useEffect(() => {
-    const handleUserInteraction = async () => {
+    const enableAutoplay = () => {
       if (videoRef.current) {
-        try {
-          // Si la vidéo ne joue pas encore, la lancer avec son
-          if (!isPlaying) {
-            videoRef.current.muted = false;
-            videoRef.current.volume = 0.7;
-            await videoRef.current.play();
+        const video = videoRef.current;
+
+        // Configuration pour autoplay garanti
+        video.muted = true;
+        video.autoplay = true;
+        video.loop = true;
+        video.volume = 1.0;
+
+        // Démarrer la vidéo en muet
+        video
+          .play()
+          .then(() => {
             setIsPlaying(true);
-            setIsMuted(false);
-          }
-          // Si elle joue mais en muet, activer le son
-          else if (videoRef.current.muted) {
-            videoRef.current.muted = false;
-            videoRef.current.volume = 0.7;
-            setIsMuted(false);
-          }
-        } catch (error) {
-          //
-        }
+            setIsMuted(true);
+
+            // Proposer d'activer le son après 3 secondes
+            setTimeout(() => {
+              setShowSoundActivator(true);
+
+              // Auto-activer le son après 5 secondes supplémentaires
+              setTimeout(() => {
+                activateSound();
+              }, 5000);
+            }, 3000);
+          })
+          .catch(() => {
+            // Si même l'autoplay muet échoue
+            setShowSoundActivator(true);
+          });
+      } else {
+        // Pour les iframe (YouTube/Vimeo)
+        setIsPlaying(true);
+        setTimeout(() => {
+          setShowSoundActivator(true);
+        }, 3000);
       }
     };
 
-    // Listen for various user interactions
-    const events = ["click", "touchstart", "keydown", "mousemove", "scroll"];
-    events.forEach((event) => {
-      document.addEventListener(event, handleUserInteraction, {
-        once: true,
-        passive: true,
-      });
-    });
+    enableAutoplay();
+  }, [videoUrl]);
 
-    return () => {
-      events.forEach((event) => {
-        document.removeEventListener(event, handleUserInteraction);
-      });
-    };
-  }, [videoUrl, isPlaying]);
+  // Fonction pour activer le son
+  const activateSound = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = false;
+      videoRef.current.volume = 1.0;
+    }
+    setIsMuted(false);
+    setShowSoundActivator(false);
+  };
 
-  // Ensure video plays infinitely - restart if it stops
-  useEffect(() => {
-    if (!videoUrl || !isDirectVideo(videoUrl) || !isPlaying) return;
-
-    const video = videoRef.current;
-    if (!video) return;
-
-    const ensurePlay = () => {
-      if (video.paused && isPlaying) {
-        video.play().catch(console.error);
-      }
-    };
-
-    const handleVideoEnd = () => {
-      video.currentTime = 0;
-      video.play().catch(console.error);
-    };
-
-    const handlePlay = () => setIsPlaying(true);
-    const handlePause = () => {
-      // Auto-restart if paused unexpectedly
-      setTimeout(() => {
-        if (video.paused) {
-          video.play().catch(console.error);
-        }
-      }, 1000);
-    };
-
-    // Check every 3 seconds if video is playing
-    const checkInterval = setInterval(ensurePlay, 3000);
-
-    video.addEventListener("ended", handleVideoEnd);
-    video.addEventListener("play", handlePlay);
-    video.addEventListener("pause", handlePause);
-
-    return () => {
-      clearInterval(checkInterval);
-      video.removeEventListener("ended", handleVideoEnd);
-      video.removeEventListener("play", handlePlay);
-      video.removeEventListener("pause", handlePause);
-    };
-  }, [videoUrl, isPlaying]);
-
-  // Fonction pour basculer le son
+  // Basculer le son
   const toggleMute = () => {
-    if (isDirectVideo(videoUrl) && videoRef.current) {
-      const video = videoRef.current;
-      video.muted = !video.muted;
-      setIsMuted(video.muted);
-    } else if (iframeRef.current) {
-      // Pour les vidéos iframe, on ne peut pas contrôler directement le son
-      // Mais on peut recharger avec/sans mute dans l'URL
-      const newUrl = isMuted
-        ? getEmbedUrl(videoUrl).replace("mute=1", "mute=0")
-        : getEmbedUrl(videoUrl).replace("mute=0", "mute=1");
-
-      if (iframeRef.current.src !== newUrl) {
-        iframeRef.current.src = newUrl;
+    if (videoRef.current) {
+      if (isMuted) {
+        activateSound();
+      } else {
+        videoRef.current.muted = true;
+        setIsMuted(true);
       }
-      setIsMuted(!isMuted);
     }
   };
 
-  // Convert URLs to embed format avec SON activé pour TV/kiosque
+  // URLs d'embed avec son activé
   const getEmbedUrl = (url: string) => {
     if (url.includes("youtube.com/watch?v=")) {
       const videoId = url.split("v=")[1]?.split("&")[0];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&start=0`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&rel=0&modestbranding=1&playsinline=1`;
     }
     if (url.includes("youtu.be/")) {
       const videoId = url.split("youtu.be/")[1]?.split("?")[0];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&playsinline=1&enablejsapi=1&start=0`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&rel=0&modestbranding=1&playsinline=1`;
     }
     if (url.includes("vimeo.com/")) {
       const videoId = url.split("vimeo.com/")[1]?.split("?")[0];
-      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=0&loop=1&controls=1&byline=0&title=0&portrait=0&autopause=0&keyboard=0&quality=auto`;
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=0&loop=1&controls=1&byline=0&title=0&portrait=0`;
     }
-    // For direct video URLs, will be handled by HTML5 video element
     return url;
   };
 
-  // Check if it's a direct video file
+  // Détecter si c'est une vidéo directe
   const isDirectVideo = (url: string) => {
     return url.match(/\.(mp4|webm|ogg|mov|avi)(\?.*)?$/i);
   };
@@ -276,32 +151,32 @@ export const VideoWidget = () => {
             </div>
             Vidéo institutionnelle CGT FTM
           </h2>
-          {videoUrl && (
-            <button
-              onClick={toggleMute}
-              className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
-              title={isMuted ? "Activer le son" : "Couper le son"}
-            >
-              {isMuted ? (
-                <VolumeX className="w-4 h-4 text-gray-600" />
-              ) : (
-                <Volume2 className="w-4 h-4 text-cgt-red" />
-              )}
-            </button>
-          )}
+          <button
+            onClick={toggleMute}
+            className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+            title={isMuted ? "Activer le son" : "Couper le son"}
+          >
+            {isMuted ? (
+              <VolumeX className="w-4 h-4 text-gray-600" />
+            ) : (
+              <Volume2 className="w-4 h-4 text-cgt-red" />
+            )}
+          </button>
         </div>
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
 
       {videoUrl ? (
         <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200 relative">
-          {/* Mode TV: Indicateur de chargement - autoplay forcé */}
-          {!isPlaying && videoUrl && (
-            <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center z-10">
-              <div className="text-white text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-2 border-white border-t-transparent mx-auto mb-2"></div>
-                <p className="text-sm opacity-90">Chargement de la vidéo...</p>
-              </div>
+          {/* Activateur de son intelligent */}
+          {showSoundActivator && (
+            <div className="absolute top-4 right-4 z-20">
+              <button
+                onClick={activateSound}
+                className="bg-cgt-red hover:bg-cgt-red-dark text-white px-4 py-2 rounded-lg shadow-lg transition-all animate-pulse"
+              >
+                🔊 Activer le son
+              </button>
             </div>
           )}
 
@@ -311,56 +186,15 @@ export const VideoWidget = () => {
               src={videoUrl}
               className="w-full h-full object-cover"
               autoPlay
-              muted={false}
+              muted
               loop
               playsInline
-              webkit-playsinline="true"
-              controls={true}
+              controls
               preload="auto"
               style={{ minHeight: "300px" }}
-              volume={1.0}
-              onLoadStart={() => {
-                setIsPlaying(false);
-              }}
-              onLoadedData={() => {
-                // Dès que les données sont chargées, activer le son
-                if (videoRef.current) {
-                  videoRef.current.muted = false;
-                  videoRef.current.volume = 1.0;
-                  setIsMuted(false);
-                  videoRef.current.play().catch(() => {});
-                }
-              }}
-              onCanPlay={() => {
-                // Quand la vidéo peut être jouée
-                if (videoRef.current && !isPlaying) {
-                  videoRef.current.play().catch(() => {});
-                }
-              }}
-              onPlay={() => {
-                // La vidéo a commencé à jouer - ACTIVER LE SON
-                setIsPlaying(true);
-                if (videoRef.current) {
-                  videoRef.current.muted = false;
-                  videoRef.current.volume = 1.0;
-                  setIsMuted(false);
-                }
-              }}
-              onPlaying={() => {
-                // La vidéo est en cours de lecture - FORCER LA VISIBILITÉ
-                setIsPlaying(true);
-              }}
-              onTimeUpdate={() => {
-                // Si le temps progresse, la vidéo joue
-                if (videoRef.current && !videoRef.current.paused) {
-                  setIsPlaying(true);
-                }
-              }}
-              onPause={() => {
-                setIsPlaying(false);
-              }}
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
               onEnded={(e) => {
-                // Force restart if loop fails
                 e.currentTarget.currentTime = 0;
                 e.currentTarget.play();
               }}
