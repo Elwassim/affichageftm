@@ -5,6 +5,7 @@ import {
   getPermanences,
   getUsers,
   getConfig,
+  initializeDefaultConfig,
 } from "../lib/database";
 import type { Meeting, Tribute, Permanence, User } from "../lib/supabase";
 
