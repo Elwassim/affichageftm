@@ -75,6 +75,9 @@ const Index = () => {
           </div>
         </div>
       </div>
+
+      {/* RSS France Info Widget - Full Width Bottom */}
+      <RSSWidget />
     </div>
   );
 };
