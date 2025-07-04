@@ -163,7 +163,7 @@ export const VideoWidget = () => {
             <div className="w-6 h-6 bg-cgt-red rounded-lg flex items-center justify-center shadow-sm">
               <Play className="w-4 h-4 text-white" />
             </div>
-            Vidéo institutionnelle CGT FTM
+            <p>Vidéo FTM CGT</p>
           </h2>
           <button
             onClick={toggleMute}
