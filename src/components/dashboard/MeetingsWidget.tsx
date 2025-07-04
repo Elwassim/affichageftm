@@ -1,7 +1,7 @@
 import { Card } from "@/components/ui/card";
 import { Clock, MapPin, Calendar } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { getMeetings, type Meeting } from "@/lib/database";
+import { getAllMeetings, type Meeting } from "@/lib/database";
 
 export const MeetingsWidget = () => {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
@@ -101,7 +101,7 @@ export const MeetingsWidget = () => {
   useEffect(() => {
     const loadMeetings = async () => {
       try {
-        const meetingsData = await getMeetings();
+        const meetingsData = await getAllMeetings();
         const filteredMeetings = filterNext7DaysMeetings(meetingsData);
         setMeetings(filteredMeetings);
       } catch (error) {
