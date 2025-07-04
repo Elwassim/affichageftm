@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Globe } from "lucide-react";
-import "../../styles/rss-animation.css";
 
 interface RSSItem {
   title: string;
@@ -78,52 +77,47 @@ export const RSSWidget = () => {
   const currentNews = newsItems[currentIndex];
 
   return (
-    <div className="bg-cgt-red h-12 flex items-center overflow-hidden relative">
-      {/* Background pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <svg viewBox="0 0 60 60" className="w-full h-full">
-          <defs>
-            <pattern
-              id="rss-grid"
-              width="60"
-              height="60"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M 60 0 L 0 0 0 60"
-                fill="none"
-                stroke="white"
-                strokeWidth="1"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#rss-grid)" />
-        </svg>
-      </div>
-
-      <div className="bg-cgt-red text-white px-6 py-2 h-full flex items-center relative z-10">
+    <div className="bg-cgt-red h-12 flex items-center w-full">
+      <div className="bg-cgt-red text-white px-4 py-2 h-full flex items-center flex-shrink-0">
         <div className="flex items-center gap-2">
           <Globe className="w-4 h-4" />
-          <span className="text-sm font-bold whitespace-nowrap tracking-wide">
+          <span className="text-sm font-bold whitespace-nowrap">
             FLUX RSS FRANCE INFO
           </span>
         </div>
       </div>
 
-      <div className="flex-1 relative overflow-hidden h-full bg-cgt-red">
-        <div className="rss-marquee absolute inset-0 flex items-center whitespace-nowrap text-white">
-          <div className="flex items-center gap-12 px-6">
+      <div className="flex-1 overflow-hidden h-full bg-cgt-red relative">
+        <div
+          className="absolute flex items-center h-full whitespace-nowrap text-white animate-marquee"
+          style={{
+            animation: "marquee 40s linear infinite",
+          }}
+        >
+          <div className="flex items-center gap-8 px-4">
             {newsItems.map((item, index) => (
-              <div key={index} className="flex items-center gap-3 text-white">
-                <div className="w-2 h-2 bg-white rounded-full flex-shrink-0"></div>
-                <span className="text-sm font-medium tracking-wide">
-                  {item.title}
-                </span>
+              <div key={index} className="flex items-center gap-2 text-white">
+                <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
+                <span className="text-sm font-medium">{item.title}</span>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes marquee {
+          0% {
+            transform: translateX(100%);
+          }
+          100% {
+            transform: translateX(-100%);
+          }
+        }
+        .animate-marquee {
+          animation: marquee 40s linear infinite;
+        }
+      `}</style>
     </div>
   );
 };
