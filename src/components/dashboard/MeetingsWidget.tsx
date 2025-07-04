@@ -110,9 +110,19 @@ export const MeetingsWidget = () => {
     };
 
     loadMeetings();
-    const timer = setInterval(loadMeetings, 60000); // Refresh every 60 seconds
+    const timer = setInterval(loadMeetings, 30000); // Refresh every 30 seconds
 
-    return () => clearInterval(timer);
+    // Listen for configuration updates
+    const handleConfigUpdate = () => {
+      loadMeetings();
+    };
+
+    window.addEventListener("cgt-config-updated", handleConfigUpdate);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("cgt-config-updated", handleConfigUpdate);
+    };
   }, []);
 
   // Group meetings by category
