@@ -26,19 +26,16 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 h-[calc(100vh-100px)] w-full">
         <div className="w-full h-full">
-          {/* TV Layout - Four separate widgets */}
+          {/* TV Layout - Three widgets with combined permanences */}
           <div className="grid grid-cols-12 grid-rows-3 gap-4 h-full">
-            {/* Row 1 - Four widgets: HEURE, PERMANENCES TECHNIQUES, PERMANENCES POLITIQUES, REUNIONS */}
-            <div className="col-span-3 row-span-1">
+            {/* Row 1 - Three widgets: HEURE, PERMANENCES (combined), REUNIONS */}
+            <div className="col-span-4 row-span-1">
               <DateTimeWidget />
             </div>
-            <div className="col-span-3 row-span-1">
-              <PermanencesWidget />
+            <div className="col-span-4 row-span-1">
+              <PermanencesCombinedWidget />
             </div>
-            <div className="col-span-3 row-span-1">
-              <PermanencesPolitiquesWidget />
-            </div>
-            <div className="col-span-3 row-span-1">
+            <div className="col-span-4 row-span-1">
               <MeetingsWidget />
             </div>
 
