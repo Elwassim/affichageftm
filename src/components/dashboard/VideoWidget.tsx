@@ -285,14 +285,14 @@ export const VideoWidget = () => {
               ref={videoRef}
               src={videoUrl}
               className="w-full h-full object-cover"
-              autoPlay
-              muted={isMuted}
-              loop
-              playsInline
-              webkit-playsinline=""
+              autoPlay={true}
+              muted={true}
+              loop={true}
+              playsInline={true}
               controls={true}
               preload="auto"
               style={{ minHeight: "300px" }}
+              data-setup="{}"
               onLoadedData={() => {
                 // Force play when video data is loaded
                 if (videoRef.current) {
