@@ -1,6 +1,7 @@
 import { DateTimeWidget } from "@/components/dashboard/DateTimeWidget";
 import { PermanencesCombinedWidget } from "@/components/dashboard/PermanencesCombinedWidget";
 import { MeetingsWidget } from "@/components/dashboard/MeetingsWidget";
+import { DiversWidget } from "@/components/dashboard/DiversWidget";
 import { VideoWidget } from "@/components/dashboard/VideoWidget";
 import { AlertBanner } from "@/components/dashboard/AlertBanner";
 import { SocialWidget } from "@/components/dashboard/SocialWidget";
@@ -26,7 +27,7 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 h-[calc(100vh-100px)] w-full">
         <div className="w-full h-full">
-          {/* Layout exactly matching schema */}
+          {/* Schema layout exact */}
           <div className="grid grid-cols-4 grid-rows-2 gap-4 h-full">
             {/* Row 1: DATE/MÉTÉO, PERMANENCES, DIVERS, HOMMAGE */}
             <div className="col-span-1 row-span-1">
@@ -36,7 +37,7 @@ const Index = () => {
               <PermanencesCombinedWidget />
             </div>
             <div className="col-span-1 row-span-1">
-              <MeetingsWidget />
+              <DiversWidget />
             </div>
             <div className="col-span-1 row-span-2">
               <SocialWidget />
