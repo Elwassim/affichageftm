@@ -314,6 +314,20 @@ export const getDashboardData = (): DashboardData => {
       data.users = DEFAULT_DATA.users;
       localStorage.setItem("union-dashboard-data", JSON.stringify(data));
     }
+    // Migration: update permanences structure with type field
+    if (data.permanences && data.permanences.length > 0) {
+      const firstPermanence = data.permanences[0] as any;
+      if (
+        !firstPermanence.type ||
+        typeof firstPermanence.type === "undefined"
+      ) {
+        data.permanences = DEFAULT_DATA.permanences;
+        localStorage.setItem("union-dashboard-data", JSON.stringify(data));
+      }
+    } else if (!data.permanences) {
+      data.permanences = DEFAULT_DATA.permanences;
+      localStorage.setItem("union-dashboard-data", JSON.stringify(data));
+    }
     return data;
   } catch (error) {
     console.error("Error parsing stored data:", error);
