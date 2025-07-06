@@ -615,35 +615,6 @@ const Admin = () => {
   };
 
   // FIX RLS PERMANENCES
-  // SYNC PERMANENCES
-  const handleSyncPermanences = async () => {
-    try {
-      toast({
-        title: "Synchronisation...",
-        description: "Mise à jour des permanences en cours...",
-      });
-
-      await refresh(); // Actualiser toutes les données
-
-      // Dispatch event for dashboard sync
-      window.dispatchEvent(
-        new CustomEvent("cgt-config-updated", {
-          detail: { key: "permanences", value: "synced" },
-        }),
-      );
-
-      toast({
-        title: "Synchronisation réussie",
-        description: "Les permanences ont été mises à jour.",
-      });
-    } catch (error) {
-      toast({
-        title: "Erreur de synchronisation",
-        description: "Impossible de synchroniser les permanences.",
-        variant: "destructive",
-      });
-    }
-  };
 
   const handleFixRLS = async () => {
     try {
