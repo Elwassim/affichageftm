@@ -115,6 +115,16 @@ const Admin = () => {
     alertText: "",
   });
 
+  // État pour gérer plusieurs vidéos
+  const [videosList, setVideosList] = useState([
+    { url: "", title: "", description: "" },
+  ]);
+  const [newVideo, setNewVideo] = useState({
+    url: "",
+    title: "",
+    description: "",
+  });
+
   // Synchroniser la config locale avec la config de la base
   useEffect(() => {
     setLocalConfig({
