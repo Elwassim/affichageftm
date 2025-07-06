@@ -1,38 +1,17 @@
 import { Card } from "@/components/ui/card";
-import {
-  Play,
-  Volume2,
-  VolumeX,
-  ChevronLeft,
-  ChevronRight,
-  List,
-} from "lucide-react";
+import { Play, Volume2, VolumeX } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { getConfig } from "@/lib/database";
 
-interface VideoItem {
-  url: string;
-  title: string;
-  description?: string;
-}
-
 export const VideoWidget = () => {
-  const [videos, setVideos] = useState<VideoItem[]>([
-    {
-      url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      title: "Vidéo par défaut",
-      description: "Vidéo d'exemple",
-    },
-  ]);
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [videoUrl, setVideoUrl] = useState(
+    "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  );
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [showSoundActivator, setShowSoundActivator] = useState(false);
-  const [showPlaylist, setShowPlaylist] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-
-  const currentVideo = videos[currentVideoIndex] || videos[0];
 
   // Charger les vidéos depuis la configuration
   useEffect(() => {
