@@ -13,22 +13,33 @@ export const RSSWidget = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<string>("");
 
-  // Charger le flux RSS réel de France Info via rss2json
+  // Charger le flux RSS réel de France Info avec plusieurs API de fallback
   const loadRealRSSFeed = async (): Promise<RSSItem[]> => {
+    const rssUrl = "https://www.franceinfo.fr/politique.rss";
+
+    // API primaire : rss2json
     try {
-      const rssUrl = "https://www.franceinfo.fr/politique.rss";
       const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+      console.log("📡 Tentative 1 : api.rss2json.com...");
 
-      console.log("📡 Chargement du flux RSS France Info via rss2json...");
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+        cache: "no-cache",
+      });
 
-      const response = await fetch(apiUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
       const data = await response.json();
 
       if (!data.items || data.status !== "ok") {
         throw new Error("Erreur API rss2json ou pas d'articles");
       }
 
-      // Convertir les données de rss2json vers notre format
       const rssItems: RSSItem[] = data.items.slice(0, 15).map((item: any) => ({
         title: item.title.trim(),
         link: item.link.trim(),
@@ -36,33 +47,95 @@ export const RSSWidget = () => {
       }));
 
       console.log(
-        "✅ Flux RSS France Info chargé:",
+        "✅ Flux RSS chargé via rss2json:",
         rssItems.length,
         "articles",
       );
       return rssItems;
-    } catch (error) {
-      console.error("❌ Erreur chargement RSS:", error);
-
-      // Fallback avec quelques actualités par défaut
-      return [
-        {
-          title: "France Info - Actualités politiques en temps réel",
-          link: "https://www.franceinfo.fr/politique",
-          pubDate: new Date().toISOString(),
-        },
-        {
-          title: "Suivez l'actualité politique française sur France Info",
-          link: "https://www.franceinfo.fr/politique",
-          pubDate: new Date().toISOString(),
-        },
-        {
-          title: "Informations politiques françaises - France Info",
-          link: "https://www.franceinfo.fr/politique",
-          pubDate: new Date().toISOString(),
-        },
-      ];
+    } catch (error1) {
+      console.warn("⚠️ Erreur API 1 (rss2json):", error1);
     }
+
+    // API fallback : AllOrigins
+    try {
+      const fallbackUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+      console.log("📡 Tentative 2 : api.allorigins.win...");
+
+      const response = await fetch(fallbackUrl, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+        cache: "no-cache",
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      if (!data.contents) {
+        throw new Error("Pas de contenu dans la réponse AllOrigins");
+      }
+
+      // Parser le XML RSS manuellement
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+      const items = xmlDoc.querySelectorAll("item");
+
+      const rssItems: RSSItem[] = Array.from(items)
+        .slice(0, 15)
+        .map((item) => ({
+          title:
+            item.querySelector("title")?.textContent?.trim() ||
+            "Titre non disponible",
+          link:
+            item.querySelector("link")?.textContent?.trim() ||
+            "https://www.franceinfo.fr/politique",
+          pubDate:
+            item.querySelector("pubDate")?.textContent?.trim() ||
+            new Date().toISOString(),
+        }));
+
+      console.log(
+        "✅ Flux RSS chargé via AllOrigins:",
+        rssItems.length,
+        "articles",
+      );
+      return rssItems;
+    } catch (error2) {
+      console.warn("⚠️ Erreur API 2 (AllOrigins):", error2);
+    }
+
+    // Fallback final avec du contenu statique mais réaliste
+    console.log("🔄 Utilisation du contenu de fallback");
+    return [
+      {
+        title: "Actualités politiques françaises - Flux RSS France Info",
+        link: "https://www.franceinfo.fr/politique",
+        pubDate: new Date().toISOString(),
+      },
+      {
+        title: "Suivez l'actualité politique en temps réel sur France Info",
+        link: "https://www.franceinfo.fr/politique",
+        pubDate: new Date().toISOString(),
+      },
+      {
+        title: "Informations et analyses politiques - France Info",
+        link: "https://www.franceinfo.fr/politique",
+        pubDate: new Date().toISOString(),
+      },
+      {
+        title: "Déclarations gouvernementales et réactions politiques",
+        link: "https://www.franceinfo.fr/politique",
+        pubDate: new Date().toISOString(),
+      },
+      {
+        title: "Débats parlementaires et actualité institutionnelle",
+        link: "https://www.franceinfo.fr/politique",
+        pubDate: new Date().toISOString(),
+      },
+    ];
   };
 
   useEffect(() => {
