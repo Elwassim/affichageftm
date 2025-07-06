@@ -684,7 +684,6 @@ export const createUser = async (user: {
     console.log("📱 Création utilisateur en localStorage");
     try {
       const localData = getLocalData();
-      const hashedPassword = await bcrypt.hash(user.password, 10);
       const newUser: User = {
         id: Date.now().toString(),
         username: user.username,
