@@ -62,20 +62,16 @@ export const useDatabaseSync = (
         permanences,
         users,
         videoUrl,
-        weatherCity,
         alertText,
         diversContent,
-        weatherData,
       ] = await Promise.all([
         getAllMeetings(),
         getTributes(),
         getPermanences(),
         getUsers(),
         getConfig("videoUrl"),
-        getConfig("weatherCity"),
         getConfig("alertText"),
         getConfig("diversContent"),
-        getConfig("weatherData"),
       ]);
 
       setState({
