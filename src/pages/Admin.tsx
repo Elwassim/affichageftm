@@ -132,6 +132,23 @@ const Admin = () => {
       weatherCity: config.weatherCity || "Paris",
       alertText: config.alertText || "",
     });
+
+    // Charger la liste des vidéos si elle existe
+    const loadVideosList = async () => {
+      try {
+        const videosConfig = await getConfig("videosList");
+        if (videosConfig) {
+          const parsedVideos = JSON.parse(videosConfig);
+          if (Array.isArray(parsedVideos) && parsedVideos.length > 0) {
+            setVideosList(parsedVideos);
+          }
+        }
+      } catch (error) {
+        console.log("Erreur chargement liste vidéos:", error);
+      }
+    };
+
+    loadVideosList();
   }, [config]);
 
   const [showPassword, setShowPassword] = useState(false);
