@@ -1971,7 +1971,7 @@ const Admin = () => {
                           </span>
                           {user.updated_at !== user.created_at && (
                             <>
-                              <span>��</span>
+                              <span>●</span>
                               <span>
                                 Modifié le{" "}
                                 {new Date(user.updated_at).toLocaleDateString(
