@@ -736,7 +736,7 @@ const Admin = () => {
         });
       } else {
         toast({
-          title: "⚠️ Problèmes D��tectés",
+          title: "⚠️ Problèmes Détectés",
           description: `${errorCount} erreurs sur ${totalTests} tests. Voir console pour détails.`,
           variant: "destructive",
         });
