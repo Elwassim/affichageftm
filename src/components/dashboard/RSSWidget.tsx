@@ -10,6 +10,7 @@ interface RSSItem {
 export const RSSWidget = () => {
   const [newsItems, setNewsItems] = useState<RSSItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<string>("");
 
   // Charger le flux RSS réel de France Info
