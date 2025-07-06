@@ -261,10 +261,7 @@ export const updateMeeting = async (
 };
 
 export const deleteMeeting = async (id: string): Promise<boolean> => {
-  const supabaseReady = await ensureSupabaseReady();
-
-  if (!supabaseReady) {
-    console.log("📱 Suppression locale pour ID:", id);
+  if (!useSupabase) {
     const localData = getLocalData();
     const filteredMeetings = localData.meetings.filter((m) => m.id !== id);
     saveLocalData({ ...localData, meetings: filteredMeetings });
@@ -272,27 +269,17 @@ export const deleteMeeting = async (id: string): Promise<boolean> => {
   }
 
   try {
-    console.log("🗄️ Suppression Supabase pour ID:", id);
     const { error } = await supabase!.from("meetings").delete().eq("id", id);
+
     if (error) {
-      console.error("❌ Erreur suppression Supabase:", error);
-      // Fallback vers localStorage
-      console.log("📱 Fallback suppression locale");
-      const localData = getLocalData();
-      const filteredMeetings = localData.meetings.filter((m) => m.id !== id);
-      saveLocalData({ ...localData, meetings: filteredMeetings });
-      return true;
+      console.error("Erreur suppression meeting:", error);
+      return false;
     }
-    console.log("✅ Suppression Supabase réussie");
+
     return true;
   } catch (error) {
-    console.error("❌ Exception suppression Supabase:", error);
-    // Fallback vers localStorage
-    console.log("📱 Fallback suppression locale");
-    const localData = getLocalData();
-    const filteredMeetings = localData.meetings.filter((m) => m.id !== id);
-    saveLocalData({ ...localData, meetings: filteredMeetings });
-    return true;
+    console.error("Erreur Supabase delete meeting:", error);
+    return false;
   }
 };
 
