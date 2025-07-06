@@ -11,6 +11,19 @@
   }
 }
 
+@keyframes marquee-rss {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.animate-marquee-rss {
+  animation: marquee-rss 80s linear infinite;
+}
+
 @layer base {
   /**
    * Tailwind CSS theme
