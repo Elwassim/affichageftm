@@ -237,24 +237,42 @@ export const updateMeeting = async (
 };
 
 export const deleteMeeting = async (id: string): Promise<boolean> => {
+  console.log("🗑️ deleteMeeting appelé pour ID:", id);
+  console.log("🗑️ Mode base de données:", useSupabase ? "Supabase" : "Local");
+
   if (!useSupabase) {
     const localData = getLocalData();
+    console.log(
+      "🗑️ Données locales avant suppression:",
+      localData.meetings.length,
+      "réunions",
+    );
+
     const filteredMeetings = localData.meetings.filter((m) => m.id !== id);
+    console.log(
+      "🗑️ Données après filtrage:",
+      filteredMeetings.length,
+      "réunions",
+    );
+
     saveLocalData({ ...localData, meetings: filteredMeetings });
+    console.log("✅ Suppression locale réussie");
     return true;
   }
 
   try {
+    console.log("🗑️ Tentative suppression Supabase...");
     const { error } = await supabase!.from("meetings").delete().eq("id", id);
 
     if (error) {
-      console.error("Erreur suppression meeting:", error);
+      console.error("❌ Erreur suppression meeting:", error);
       return false;
     }
 
+    console.log("✅ Suppression Supabase réussie");
     return true;
   } catch (error) {
-    console.error("Erreur Supabase delete meeting:", error);
+    console.error("❌ Erreur Supabase delete meeting:", error);
     return false;
   }
 };
