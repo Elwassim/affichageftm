@@ -240,6 +240,11 @@ export const DiversAdmin: React.FC = () => {
               <RefreshCw className="w-4 h-4 mr-2" />
               Réinitialiser
             </Button>
+
+            <Button onClick={handleTestSync} variant="outline">
+              <Info className="w-4 h-4 mr-2" />
+              Test Sync
+            </Button>
           </div>
         </div>
       </Card>
