@@ -52,12 +52,16 @@ export const DateTimeWidget = () => {
     const fetchWeatherData = async () => {
       try {
         setWeatherLoading(true);
+        console.log("🌤️ Démarrage chargement météo...");
 
         const apiKey = "5434483998d704e1fffaa68ff184dc46";
         const ville = "Paris";
         const url = `https://api.openweathermap.org/data/2.5/weather?q=${ville}&appid=${apiKey}&units=metric&lang=fr`;
 
+        console.log("🌤️ URL API météo:", url);
         const response = await fetch(url);
+        console.log("🌤️ Réponse API:", response.status, response.statusText);
+
         if (!response.ok) {
           if (response.status === 401) {
             console.warn(
@@ -72,6 +76,7 @@ export const DateTimeWidget = () => {
         }
 
         const data = await response.json();
+        console.log("🌤️ Données API reçues:", data);
 
         const weatherData: WeatherData = {
           temperature: Math.round(data.main.temp),
