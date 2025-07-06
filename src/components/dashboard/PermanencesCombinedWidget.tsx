@@ -130,12 +130,12 @@ export const PermanencesCombinedWidget = () => {
   const renderPermanenceItem = (permanence: DashboardPermanence) => (
     <div
       key={permanence.id}
-      className="group p-1 bg-gradient-to-r from-gray-50 to-white rounded border-l-2 hover:shadow-sm transition-shadow"
+      className="group p-1.5 bg-gradient-to-r from-gray-50 to-white rounded border-l-2 hover:shadow-sm transition-shadow"
       style={{ borderLeftColor: permanence.color }}
     >
-      <div className="flex items-start gap-1">
+      <div className="flex items-start gap-1.5">
         <div
-          className="w-4 h-4 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0"
+          className="w-5 h-5 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0"
           style={{ backgroundColor: permanence.color }}
         >
           {permanence.name
@@ -145,19 +145,16 @@ export const PermanencesCombinedWidget = () => {
             .slice(0, 2)}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-cgt-gray text-xs truncate leading-tight">
+          <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
             {permanence.name}
           </h3>
-          <div className="flex items-center gap-0.5 text-gray-600 text-xs mt-0.5">
-            <Calendar
-              className="w-2.5 h-2.5"
-              style={{ color: permanence.color }}
-            />
+          <div className="flex items-center gap-1 text-gray-600 text-sm mt-0.5">
+            <Calendar className="w-3 h-3" style={{ color: permanence.color }} />
             <span className="font-semibold">{permanence.displayDate}</span>
           </div>
           <div className="mt-0.5">
             <span
-              className="inline-block px-1 py-0.5 rounded text-xs font-semibold text-white"
+              className="inline-block px-1.5 py-0.5 rounded text-xs font-semibold text-white"
               style={{ backgroundColor: permanence.color }}
             >
               {getTypeLabel(permanence.type)}
@@ -173,9 +170,9 @@ export const PermanencesCombinedWidget = () => {
       {/* Rectangle 1 - Permanences Techniques */}
       <Card className="p-1 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
         <div className="mb-0.5">
-          <h2 className="text-xs font-black text-white bg-cgt-red px-1.5 py-0.5 rounded flex items-center gap-1">
-            <div className="w-3 h-3 bg-white rounded flex items-center justify-center">
-              <Users className="w-2 h-2 text-cgt-red" />
+          <h2 className="text-sm font-black text-white bg-cgt-red px-2 py-0.5 rounded flex items-center gap-1.5">
+            <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
+              <Users className="w-2.5 h-2.5 text-cgt-red" />
             </div>
             <p>PERMANENCE TECHNIQUE</p>
           </h2>
@@ -202,9 +199,9 @@ export const PermanencesCombinedWidget = () => {
       {/* Rectangle 2 - Permanences Politiques */}
       <Card className="p-1 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
         <div className="mb-0.5">
-          <h2 className="text-xs font-black text-white bg-cgt-red px-1.5 py-0.5 rounded flex items-center gap-1">
-            <div className="w-3 h-3 bg-white rounded flex items-center justify-center">
-              <Users className="w-2 h-2 text-cgt-red" />
+          <h2 className="text-sm font-black text-white bg-cgt-red px-2 py-0.5 rounded flex items-center gap-1.5">
+            <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
+              <Users className="w-2.5 h-2.5 text-cgt-red" />
             </div>
             <p>PERMANENCE POLITIQUE</p>
           </h2>
