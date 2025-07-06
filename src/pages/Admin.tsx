@@ -54,7 +54,7 @@ const MEETING_CATEGORIES = [
   "Délégu��s",
   "Formation",
   "Comité",
-  "Négociation",
+  "N��gociation",
   "Sécurité",
   "Autre",
 ];
@@ -241,7 +241,7 @@ const Admin = () => {
       if (meeting) {
         // Force clear localStorage to ensure sync
         localStorage.removeItem("union-dashboard-data");
-        await refresh(); // Actualiser les donn��es
+        await refresh(); // Actualiser les données
         // Dispatch event for dashboard sync
         window.dispatchEvent(
           new CustomEvent("cgt-config-updated", {
@@ -298,19 +298,17 @@ const Admin = () => {
     try {
       const success = await updateMeetingInDB(id, updates);
       if (success) {
-        // Force clear localStorage to ensure sync
-        localStorage.removeItem("union-dashboard-data");
         await refresh();
-        // Dispatch event for dashboard sync
-        window.dispatchEvent(
-          new CustomEvent("cgt-config-updated", {
-            detail: { key: "meetings", value: "updated" },
-          }),
-        );
         setEditingMeeting(null);
         toast({
           title: "Succès",
           description: "Réunion mise à jour avec succès.",
+        });
+      } else {
+        toast({
+          title: "Erreur",
+          description: "Impossible de mettre à jour la réunion.",
+          variant: "destructive",
         });
       }
     } catch (error) {
@@ -1057,7 +1055,7 @@ const Admin = () => {
                   <div className="admin-form-grid mt-6">
                     <div>
                       <label className="admin-label">
-                        Titre de la réunion *
+                        Titre de la r��union *
                       </label>
                       <input
                         type="text"
