@@ -50,7 +50,11 @@ export const DiversAdmin: React.FC = () => {
     try {
       setSaving(true);
 
-      await updateConfig("diversContent", JSON.stringify(diversContent));
+      const jsonContent = JSON.stringify(diversContent);
+      await updateConfig("diversContent", jsonContent);
+
+      // Also save to localStorage for immediate sync
+      localStorage.setItem("diversContent", jsonContent);
 
       // Dispatch event for dashboard sync
       window.dispatchEvent(
@@ -60,6 +64,11 @@ export const DiversAdmin: React.FC = () => {
             value: diversContent,
           },
         }),
+      );
+
+      console.log(
+        "✅ DiversAdmin: Contenu sauvé et événement émis",
+        diversContent,
       );
 
       toast({
