@@ -493,16 +493,23 @@ const Admin = () => {
   };
 
   const handleDeleteUser = async (id: string) => {
+    console.log("🚀 handleDeleteUser appelé pour ID:", id);
+
     try {
+      console.log("🗑️ Appel de deleteUser...");
       const success = await deleteUser(id);
+      console.log("📋 Résultat deleteUser:", success);
 
       if (success) {
+        console.log("🔄 Actualisation des données...");
         await refresh();
+        console.log("✅ Utilisateur supprimé avec succès");
         toast({
           title: "Succès",
           description: "Utilisateur supprimé avec succès.",
         });
       } else {
+        console.log("❌ deleteUser a retourné false");
         toast({
           title: "Erreur",
           description: "Échec de la suppression de l'utilisateur.",
@@ -510,6 +517,7 @@ const Admin = () => {
         });
       }
     } catch (error) {
+      console.error("💥 Exception dans handleDeleteUser:", error);
       toast({
         title: "Erreur",
         description: "Impossible de supprimer l'utilisateur.",
@@ -861,7 +869,7 @@ const Admin = () => {
 
       toast({
         title: "Test terminé",
-        description: "Vérifiez la console pour les résultats détaillés",
+        description: "V��rifiez la console pour les résultats détaillés",
       });
     } catch (error) {
       console.error("❌ Erreur test édition:", error);
