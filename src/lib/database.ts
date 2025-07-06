@@ -76,6 +76,12 @@ export const initializeDefaultConfig = async (): Promise<void> => {
     alertText:
       "🚨 APPEL CGT FTM - Rejoignez-nous pour défendre vos droits ! 🚨",
     weatherCity: "Paris",
+    diversContent: JSON.stringify({
+      title: "Informations diverses",
+      subtitle: "CGT FTM",
+      content: "Aucune information particulière pour le moment.",
+      isActive: false,
+    }),
   };
 
   for (const [key, defaultValue] of Object.entries(defaults)) {
