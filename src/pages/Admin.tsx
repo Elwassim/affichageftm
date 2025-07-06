@@ -1278,6 +1278,13 @@ const Admin = () => {
               </div>
             )}
 
+            {/* Permanences Tab */}
+            {activeTab === "permanences" && (
+              <div className="space-y-8">
+                <PermanencesAdmin />
+              </div>
+            )}
+
             {/* Tributes Tab */}
             {activeTab === "tributes" && (
               <div className="space-y-8">
@@ -1719,7 +1726,7 @@ const Admin = () => {
                           onChange={(e) =>
                             setNewUser({ ...newUser, password: e.target.value })
                           }
-                          placeholder="••••••••"
+                          placeholder="•••••���••"
                           className="admin-input w-full pr-10"
                         />
                         <button
