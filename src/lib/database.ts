@@ -17,8 +17,8 @@ import {
   insertDefaultData,
 } from "./initializeSupabase";
 
-// Forcer l'utilisation du localStorage pour éviter les problèmes Supabase
-const useSupabase = false;
+// Utiliser Supabase si configuré, sinon localStorage en fallback
+const useSupabase = !!supabase;
 
 // Initialisation automatique de Supabase au premier chargement
 let supabaseInitialized = false;
