@@ -928,6 +928,7 @@ const Admin = () => {
   };
 
   const handleLogout = () => {
+    logout();
     navigate("/");
   };
 
