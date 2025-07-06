@@ -265,9 +265,8 @@ export const getGroupInfo = (groupId: string): UserGroup | undefined => {
 
 export const getRoleLabel = (role: AuthUser["role"]): string => {
   const roleLabels = {
-    secretaire: "Secrétaire",
-    delegue: "Délégué syndical",
     admin: "Administrateur",
+    editor: "Éditeur",
   };
   return roleLabels[role];
 };
