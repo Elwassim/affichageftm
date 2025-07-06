@@ -106,7 +106,7 @@ const Admin = () => {
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [editUserData, setEditUserData] = useState<Partial<User>>({});
 
-  // État pour l'édition inline des réunions
+  // ��tat pour l'édition inline des réunions
   const [editingMeeting, setEditingMeeting] = useState<string | null>(null);
   const [editMeetingData, setEditMeetingData] = useState<Partial<Meeting>>({});
 
@@ -537,18 +537,38 @@ const Admin = () => {
   };
 
   const handleSaveUser = async (userId: string) => {
+    console.log(
+      "🚀 handleSaveUser appelé pour ID:",
+      userId,
+      "données:",
+      editUserData,
+    );
+
     try {
+      console.log("✏️ Appel de updateUser...");
       const success = await updateUser(userId, editUserData);
+      console.log("📋 Résultat updateUser:", success);
+
       if (success) {
         setEditingUser(null);
         setEditUserData({});
+        console.log("🔄 Actualisation des données...");
         await refresh();
+        console.log("✅ Utilisateur mis à jour avec succès");
         toast({
           title: "Succès",
           description: "Utilisateur mis à jour avec succès.",
         });
+      } else {
+        console.log("❌ updateUser a retourné false");
+        toast({
+          title: "Erreur",
+          description: "Échec de la mise à jour de l'utilisateur.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
+      console.error("💥 Exception dans handleSaveUser:", error);
       toast({
         title: "Erreur",
         description: "Impossible de mettre à jour l'utilisateur.",
@@ -869,7 +889,7 @@ const Admin = () => {
 
       toast({
         title: "Test terminé",
-        description: "V��rifiez la console pour les résultats détaillés",
+        description: "Vérifiez la console pour les résultats détaillés",
       });
     } catch (error) {
       console.error("❌ Erreur test édition:", error);
