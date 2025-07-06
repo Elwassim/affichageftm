@@ -454,6 +454,49 @@ const Admin = () => {
     }
   };
 
+  // VIDEO MANAGEMENT FUNCTIONS
+  const addVideo = () => {
+    if (newVideo.url.trim() && newVideo.title.trim()) {
+      setVideosList([...videosList, { ...newVideo }]);
+      setNewVideo({ url: "", title: "", description: "" });
+    }
+  };
+
+  const removeVideo = (index: number) => {
+    setVideosList(videosList.filter((_, i) => i !== index));
+  };
+
+  const updateVideo = (index: number, field: string, value: string) => {
+    const updated = [...videosList];
+    updated[index] = { ...updated[index], [field]: value };
+    setVideosList(updated);
+  };
+
+  const saveVideosList = async () => {
+    try {
+      const validVideos = videosList.filter(
+        (v) => v.url.trim() && v.title.trim(),
+      );
+      const success = await updateConfig(
+        "videosList",
+        JSON.stringify(validVideos),
+      );
+      if (success) {
+        await refresh();
+        toast({
+          title: "Succès",
+          description: "Liste de vidéos sauvegardée avec succès.",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de sauvegarder la liste de vidéos.",
+        variant: "destructive",
+      });
+    }
+  };
+
   // USER FUNCTIONS
   const handleAddUser = async () => {
     if (!newUser.username.trim() || !newUser.password.trim()) {
