@@ -37,14 +37,14 @@ const Index = () => {
               <DateTimeWidget />
             </div>
 
-            {/* Col 2 Row 1: DIVERS */}
+            {/* Col 2 Row 1: PERMANENCES (à côté de l'heure) */}
             <div className="col-start-2 col-end-3 row-start-1 row-end-2">
-              <DiversWidget />
+              <PermanencesCombinedWidget />
             </div>
 
-            {/* Col 3 Row 1: PERMANENCES */}
+            {/* Col 3 Row 1: DIVERS */}
             <div className="col-start-3 col-end-4 row-start-1 row-end-2">
-              <PermanencesCombinedWidget />
+              <DiversWidget />
             </div>
 
             {/* Col 4 Row 1-2: HOMMAGE (2 rangées) */}
@@ -57,14 +57,9 @@ const Index = () => {
               <MeetingsWidget />
             </div>
 
-            {/* Col 2 Row 2: VIDEO */}
-            <div className="col-start-2 col-end-3 row-start-2 row-end-3">
+            {/* Col 2-3 Row 2: VIDEO (prend plus d'espace - 2 colonnes) */}
+            <div className="col-start-2 col-end-4 row-start-2 row-end-3">
               <VideoWidget />
-            </div>
-
-            {/* Col 3 Row 2: Empty space */}
-            <div className="col-start-3 col-end-4 row-start-2 row-end-3">
-              {/* Espace libre */}
             </div>
           </div>
 
