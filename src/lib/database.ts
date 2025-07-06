@@ -557,7 +557,10 @@ export const authenticateUser = async (
 };
 
 export const getUsers = async (): Promise<User[]> => {
+  console.log("👥 getUsers appelé, useSupabase:", useSupabase);
+
   if (!useSupabase) {
+    console.log("📱 Mode localStorage pour les utilisateurs");
     const localData = getLocalData();
 
     // Si aucun utilisateur dans localStorage, créer des utilisateurs par défaut
