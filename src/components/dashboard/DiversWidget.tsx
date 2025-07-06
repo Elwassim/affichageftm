@@ -22,12 +22,21 @@ export const DiversWidget = () => {
   useEffect(() => {
     const loadDiversContent = async () => {
       try {
+        console.log("🔄 DiversWidget: Chargement du contenu...");
         const content = await getConfig("diversContent");
+        console.log("📄 DiversWidget: Contenu reçu:", content);
+
         if (content) {
-          setDiversContent(JSON.parse(content));
+          const parsed = JSON.parse(content);
+          console.log("✅ DiversWidget: Contenu parsé:", parsed);
+          setDiversContent(parsed);
+        } else {
+          console.log(
+            "⚠️ DiversWidget: Aucun contenu trouvé, utilisation des valeurs par défaut",
+          );
         }
       } catch (error) {
-        console.error("Erreur lors du chargement du contenu divers:", error);
+        console.error("❌ DiversWidget: Erreur lors du chargement:", error);
       }
     };
 
