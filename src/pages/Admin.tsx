@@ -40,7 +40,8 @@ import {
   updateUser,
   deleteUser,
 } from "../lib/database";
-import type { Meeting, Tribute, User } from "../lib/supabase";
+import type { Meeting, Tribute, User, Permanence } from "../lib/supabase";
+import { PermanencesAdmin } from "../components/admin/PermanencesAdmin";
 import { useAdminSync } from "../hooks/useDatabaseSync";
 
 const MEETING_CATEGORIES = [
@@ -697,7 +698,7 @@ const Admin = () => {
         });
       } else {
         toast({
-          title: "⚠️ Problèmes Détectés",
+          title: "⚠️ Problèmes D��tectés",
           description: `${errorCount} erreurs sur ${totalTests} tests. Voir console pour détails.`,
           variant: "destructive",
         });
