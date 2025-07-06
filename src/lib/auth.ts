@@ -161,11 +161,9 @@ export const authenticateUser = async (
         supabaseUser.username,
       );
 
-      // Pour la démo, vérifier avec des mots de passe simples
+      // Pour la démo, accepter n'importe quel mot de passe (minimum 3 caractères)
       // En production, utilisez bcrypt.compare avec le hash stocké
-      const validPasswords = ["cgtftm2024", "admin", "test", "password"];
-
-      if (validPasswords.includes(credentials.password)) {
+      if (credentials.password && credentials.password.length >= 3) {
         console.log("✅ Authentification réussie");
 
         // Debug des rôles
