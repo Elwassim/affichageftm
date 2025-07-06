@@ -108,30 +108,45 @@ export const DateTimeWidget = () => {
     };
   }, []);
 
-  // Mapper les icônes OpenWeatherMap vers nos icônes locales
-  const mapOpenWeatherIconToLocal = (openWeatherIcon: string): string => {
-    const iconMap: { [key: string]: string } = {
-      "01d": "sun", // clear sky day
-      "01n": "sun", // clear sky night
-      "02d": "cloud", // few clouds day
-      "02n": "cloud", // few clouds night
-      "03d": "cloud", // scattered clouds day
-      "03n": "cloud", // scattered clouds night
-      "04d": "cloud", // broken clouds day
-      "04n": "cloud", // broken clouds night
-      "09d": "cloud-rain", // shower rain day
-      "09n": "cloud-rain", // shower rain night
-      "10d": "cloud-rain", // rain day
-      "10n": "cloud-rain", // rain night
-      "11d": "cloud-rain", // thunderstorm day
-      "11n": "cloud-rain", // thunderstorm night
-      "13d": "snowflake", // snow day
-      "13n": "snowflake", // snow night
-      "50d": "cloud", // mist day
-      "50n": "cloud", // mist night
+  // Convertir les codes météo Open-Meteo en descriptions françaises
+  const getWeatherDescription = (weatherCode: number): string => {
+    const descriptions: { [key: number]: string } = {
+      0: "Ciel dégagé",
+      1: "Principalement dégagé",
+      2: "Partiellement nuageux",
+      3: "Couvert",
+      45: "Brouillard",
+      48: "Brouillard givrant",
+      51: "Bruine légère",
+      53: "Bruine modérée",
+      55: "Bruine dense",
+      61: "Pluie légère",
+      63: "Pluie modérée",
+      65: "Pluie forte",
+      71: "Neige légère",
+      73: "Neige modérée",
+      75: "Neige forte",
+      80: "Averses légères",
+      81: "Averses modérées",
+      82: "Averses violentes",
+      95: "Orage",
+      96: "Orage avec grêle légère",
+      99: "Orage avec grêle forte",
     };
 
-    return iconMap[openWeatherIcon] || "sun";
+    return descriptions[weatherCode] || "Conditions inconnues";
+  };
+
+  // Convertir les codes météo Open-Meteo en icônes locales
+  const getWeatherIconFromCode = (weatherCode: number): string => {
+    if (weatherCode === 0 || weatherCode === 1) return "sun";
+    if (weatherCode === 2 || weatherCode === 3) return "cloud";
+    if (weatherCode >= 45 && weatherCode <= 48) return "cloud";
+    if (weatherCode >= 51 && weatherCode <= 67) return "cloud-rain";
+    if (weatherCode >= 71 && weatherCode <= 77) return "snowflake";
+    if (weatherCode >= 80 && weatherCode <= 99) return "cloud-rain";
+
+    return "sun";
   };
 
   // Icône météo selon le type
