@@ -675,29 +675,37 @@ export const createUser = async (user: {
   role: string;
   is_admin: boolean;
 }): Promise<User | null> => {
-  console.log("👤 createUser appelé:", { username: user.username, role: user.role });
+  console.log("👤 createUser appelé:", {
+    username: user.username,
+    role: user.role,
+  });
 
   if (!useSupabase) {
     console.log("📱 Création utilisateur en localStorage");
     try {
-    const localData = getLocalData();
-    const hashedPassword = await bcrypt.hash(user.password, 10);
-    const newUser: User = {
-      id: Date.now().toString(),
-      username: user.username,
-      email: user.email,
-      role: user.role,
-      is_admin: user.is_admin,
-      is_active: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-    const users = localData.users || [];
-    saveLocalData({
-      ...localData,
-      users: [...users, newUser],
-    });
-    return newUser;
+      const localData = getLocalData();
+      const hashedPassword = await bcrypt.hash(user.password, 10);
+      const newUser: User = {
+        id: Date.now().toString(),
+        username: user.username,
+        email: user.email,
+        role: user.role,
+        is_admin: user.is_admin,
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      };
+      const users = localData.users || [];
+      saveLocalData({
+        ...localData,
+        users: [...users, newUser],
+      });
+      console.log("✅ Utilisateur créé en localStorage:", newUser.username);
+      return newUser;
+    } catch (error) {
+      console.error("❌ Erreur création utilisateur localStorage:", error);
+      return null;
+    }
   }
 
   try {
