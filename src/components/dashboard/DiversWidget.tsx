@@ -138,9 +138,15 @@ export const DiversWidget = () => {
           )}
 
           <p className="text-gray-700 text-base font-medium">
-            {diversContent.isActive && diversContent.content
-              ? diversContent.content
-              : "Informations diverses (par défaut)"}
+            🔴 WIDGET DIVERS ACTIF - TEST RÉUSSI ! 🔴
+          </p>
+
+          <p className="text-sm text-gray-600 mt-2">
+            Contenu: {diversContent.content}
+          </p>
+
+          <p className="text-xs text-gray-400 mt-1">
+            Active: {diversContent.isActive ? "OUI" : "NON"}
           </p>
 
           {/* Debug: Affichage du contenu brut */}
