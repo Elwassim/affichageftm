@@ -198,7 +198,6 @@ const Admin = () => {
     { id: "permanences", label: "Permanences", icon: Users, color: "green" },
     { id: "tributes", label: "Hommages", icon: Heart, color: "pink" },
     { id: "divers", label: "Divers", icon: Info, color: "indigo" },
-    { id: "weather", label: "Météo", icon: Cloud, color: "sky" },
     { id: "video", label: "Médias", icon: Video, color: "orange" },
     { id: "users", label: "Utilisateurs", icon: Shield, color: "purple" },
     { id: "settings", label: "Paramètres", icon: Settings, color: "gray" },
