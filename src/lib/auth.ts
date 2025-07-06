@@ -178,8 +178,11 @@ export const authenticateUser = async (
 
         // Convertir l'utilisateur Supabase vers le format AuthUser
         // Seulement 2 types : Admin (gère tout) et Éditeur (tout sauf users)
+        // Détecter admin : soit is_admin=true, soit username contient "admin"
         const isAdmin =
-          supabaseUser.is_admin === true || supabaseUser.is_admin === "true";
+          supabaseUser.is_admin === true ||
+          supabaseUser.is_admin === "true" ||
+          supabaseUser.username.toLowerCase().includes("admin");
 
         const authUser: AuthUser = {
           id: supabaseUser.id,
