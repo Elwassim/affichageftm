@@ -22,9 +22,24 @@ export const DiversWidget = () => {
   useEffect(() => {
     const loadDiversContent = async () => {
       try {
+        // Essayer localStorage d'abord (plus rapide)
+        const localContent = localStorage.getItem("diversContent");
+        if (localContent) {
+          setDiversContent(JSON.parse(localContent));
+          console.log(
+            "📄 DiversWidget: Contenu chargé depuis localStorage",
+            JSON.parse(localContent),
+          );
+        }
+
+        // Puis charger depuis la BDD
         const content = await getConfig("diversContent");
         if (content) {
           setDiversContent(JSON.parse(content));
+          console.log(
+            "📄 DiversWidget: Contenu chargé depuis BDD",
+            JSON.parse(content),
+          );
         }
       } catch (error) {
         console.error("Erreur lors du chargement du contenu divers:", error);
@@ -36,9 +51,14 @@ export const DiversWidget = () => {
 
     // Écouter les changements de configuration depuis l'admin
     const handleConfigUpdate = (event: CustomEvent) => {
+      console.log("🔄 DiversWidget: Événement reçu", event.detail);
       if (event.detail.key === "diversContent") {
         if (typeof event.detail.value === "object") {
           setDiversContent(event.detail.value);
+          console.log(
+            "✅ DiversWidget: Contenu mis à jour depuis événement",
+            event.detail.value,
+          );
         } else {
           // Recharger depuis la BDD
           loadDiversContent();
