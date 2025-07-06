@@ -28,7 +28,7 @@ export const RSSWidget = () => {
 
         const xmlText = await response.text();
 
-        // Parse XML pour extraire les él��ments RSS
+        // Parse XML pour extraire les éléments RSS
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(xmlText, "text/xml");
         const items = xmlDoc.querySelectorAll("item");
@@ -143,7 +143,7 @@ export const RSSWidget = () => {
         <div
           className="absolute flex items-center h-full whitespace-nowrap text-white"
           style={{
-            animation: "marqueeScroll 40s linear infinite",
+            animation: "marqueeScroll 80s linear infinite",
             animationDirection: "normal",
           }}
         >
