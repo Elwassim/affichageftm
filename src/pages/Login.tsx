@@ -27,16 +27,25 @@ const Login = () => {
     setLoading(true);
     setError("");
 
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    console.log("🚀 Tentative de connexion:", credentials.username);
 
-    const user = authenticateUser(credentials);
+    try {
+      // Simulate network delay
+      await new Promise((resolve) => setTimeout(resolve, 500));
 
-    if (user) {
-      setCurrentUser(user);
-      navigate("/admin");
-    } else {
-      setError("Nom d'utilisateur ou mot de passe incorrect");
+      const user = await authenticateUser(credentials);
+
+      if (user) {
+        console.log("✅ Connexion réussie:", user.username);
+        setCurrentUser(user);
+        navigate("/admin");
+      } else {
+        console.log("❌ Échec de la connexion");
+        setError("Nom d'utilisateur ou mot de passe incorrect");
+      }
+    } catch (error) {
+      console.error("💥 Erreur lors de la connexion:", error);
+      setError("Erreur lors de la connexion");
     }
 
     setLoading(false);
