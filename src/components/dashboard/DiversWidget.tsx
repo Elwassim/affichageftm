@@ -66,6 +66,20 @@ export const DiversWidget = () => {
       }
     };
 
+    // Écouter les événements localStorage pour sync cross-page
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === "diversContent" && event.newValue) {
+        try {
+          const newContent = JSON.parse(event.newValue);
+          setDiversContent(newContent);
+          console.log("✅ DiversWidget: Sync cross-page reçue", newContent);
+        } catch (error) {
+          console.error("Erreur parsing localStorage diversContent:", error);
+        }
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
     window.addEventListener(
       "cgt-config-updated",
       handleConfigUpdate as EventListener,
@@ -73,6 +87,7 @@ export const DiversWidget = () => {
 
     return () => {
       clearInterval(timer);
+      window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener(
         "cgt-config-updated",
         handleConfigUpdate as EventListener,
