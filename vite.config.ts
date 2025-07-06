@@ -8,7 +8,12 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  plugins: [react()],
+  plugins: [
+    react({
+      devTarget: mode === "development" ? "esnext" : "es2015",
+      jsxImportSource: "@react",
+    }),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
