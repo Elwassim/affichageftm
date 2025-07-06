@@ -2,21 +2,9 @@ import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Card } from "@/components/ui/card";
-import { Cloud, Sun, CloudRain, Snowflake, Thermometer } from "lucide-react";
-
-interface WeatherData {
-  temperature: number;
-  description: string;
-  icon: string;
-  humidity: number;
-  windSpeed: number;
-  lastUpdate: string;
-}
 
 export const DateTimeWidget = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [weatherLoading, setWeatherLoading] = useState(true);
 
   // Mise à jour de l'heure
   useEffect(() => {
