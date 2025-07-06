@@ -97,18 +97,15 @@ export const useDatabaseSync = (
           lastSync: new Date(),
         });
       } else {
-        console.log(
-          "📱 Données chargées depuis localStorage:",
-          Object.keys(localData),
-        );
+        console.log("✅ Utilisation des données chargées");
         setState({
-          meetings: localData.meetings || [],
-          tributes: localData.tributes || [],
-          permanences: localData.permanences || [],
-          users: localData.users || [],
+          meetings,
+          tributes,
+          permanences,
+          users,
           config: {
-            videoUrl: localData.videoUrl || "",
-            alertText: localData.alertText || "",
+            videoUrl: "",
+            alertText: "",
             diversContent: JSON.stringify({
               title: "Informations diverses",
               subtitle: "CGT FTM",
