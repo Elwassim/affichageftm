@@ -179,40 +179,6 @@ export const DateTimeWidget = () => {
           {format(currentTime, "EEE d MMM", { locale: fr })}
         </div>
       </div>
-
-      {/* Séparateur */}
-      <div className="h-px bg-gradient-to-r from-transparent via-cgt-red to-transparent w-3/4 mx-auto my-2"></div>
-
-      {/* Météo Paris */}
-      <div className="space-y-1">
-        <div className="flex items-center justify-center gap-2">
-          <div className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
-            Paris
-          </div>
-          {!weatherLoading && weather && getWeatherIcon(weather.icon)}
-        </div>
-
-        {weatherLoading ? (
-          <div className="text-sm text-gray-500">Chargement...</div>
-        ) : weather ? (
-          <div className="space-y-1">
-            <div className="flex items-center justify-center gap-2">
-              <Thermometer className="w-4 h-4 text-cgt-red" />
-              <span className="text-lg font-bold text-cgt-gray">
-                {weather.temperature}°C
-              </span>
-            </div>
-            <div className="text-sm text-gray-600 font-medium">
-              {weather.description}
-            </div>
-            <div className="text-xs text-gray-500">
-              Humidité {weather.humidity}% • Vent {weather.windSpeed} km/h
-            </div>
-          </div>
-        ) : (
-          <div className="text-sm text-gray-500">Météo indisponible</div>
-        )}
-      </div>
     </Card>
   );
 };
