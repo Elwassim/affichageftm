@@ -13,49 +13,33 @@ export const RSSWidget = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<string>("");
 
-  // Charger le flux RSS réel de France Info
+  // Charger le flux RSS réel de France Info via rss2json
   const loadRealRSSFeed = async (): Promise<RSSItem[]> => {
     try {
       const rssUrl = "https://www.franceinfo.fr/politique.rss";
+      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
 
-      // Utiliser un proxy CORS pour contourner les restrictions
-      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
+      console.log("📡 Chargement du flux RSS France Info via rss2json...");
 
-      console.log("📡 Chargement du flux RSS France Info depuis:", rssUrl);
-
-      const response = await fetch(proxyUrl);
+      const response = await fetch(apiUrl);
       const data = await response.json();
 
-      if (!data.contents) {
-        throw new Error("Pas de contenu RSS reçu");
+      if (!data.items || data.status !== "ok") {
+        throw new Error("Erreur API rss2json ou pas d'articles");
       }
 
-      // Parser le XML
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+      // Convertir les données de rss2json vers notre format
+      const rssItems: RSSItem[] = data.items.slice(0, 15).map((item: any) => ({
+        title: item.title.trim(),
+        link: item.link.trim(),
+        pubDate: item.pubDate || new Date().toISOString(),
+      }));
 
-      // Extraire les items RSS
-      const items = xmlDoc.querySelectorAll("item");
-      const rssItems: RSSItem[] = [];
-
-      items.forEach((item, index) => {
-        if (index < 20) {
-          // Limiter à 20 articles
-          const title = item.querySelector("title")?.textContent || "";
-          const link = item.querySelector("link")?.textContent || "";
-          const pubDate = item.querySelector("pubDate")?.textContent || "";
-
-          if (title && link) {
-            rssItems.push({
-              title: title.trim(),
-              link: link.trim(),
-              pubDate: pubDate || new Date().toISOString(),
-            });
-          }
-        }
-      });
-
-      console.log("✅ Flux RSS réel chargé:", rssItems.length, "articles");
+      console.log(
+        "✅ Flux RSS France Info chargé:",
+        rssItems.length,
+        "articles",
+      );
       return rssItems;
     } catch (error) {
       console.error("❌ Erreur chargement RSS:", error);
@@ -69,6 +53,11 @@ export const RSSWidget = () => {
         },
         {
           title: "Suivez l'actualité politique française sur France Info",
+          link: "https://www.franceinfo.fr/politique",
+          pubDate: new Date().toISOString(),
+        },
+        {
+          title: "Informations politiques françaises - France Info",
           link: "https://www.franceinfo.fr/politique",
           pubDate: new Date().toISOString(),
         },
