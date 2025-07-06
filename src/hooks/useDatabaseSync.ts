@@ -56,64 +56,52 @@ export const useDatabaseSync = (
       console.log("🔄 Refresh des données depuis localStorage...");
 
       // Charger les données via les fonctions de database
-      const [meetings, tributes, permanences, users, videoUrl, alertText, diversContent] = await Promise.all([
+      const [
+        meetings,
+        tributes,
+        permanences,
+        users,
+        videoUrl,
+        alertText,
+        diversContent,
+      ] = await Promise.all([
         getAllMeetings(),
         getTributes(),
         getPermanences(),
         getUsers(),
         getConfig("videoUrl"),
         getConfig("alertText"),
-        getConfig("diversContent")
+        getConfig("diversContent"),
       ]);
 
       console.log("📊 Données chargées:", {
         meetings: meetings.length,
         tributes: tributes.length,
         permanences: permanences.length,
-        users: users.length
+        users: users.length,
       });
 
-        setState({
-          meetings: defaultData.meetings,
-          tributes: defaultData.tributes,
-          permanences: defaultData.permanences,
-          users: defaultData.users || [],
-          config: {
-            videoUrl: defaultData.videoUrl,
-            alertText: defaultData.alertText,
-            diversContent: JSON.stringify({
+      setState({
+        meetings,
+        tributes,
+        permanences,
+        users,
+        config: {
+          videoUrl: videoUrl || "",
+          alertText: alertText || "",
+          diversContent:
+            diversContent ||
+            JSON.stringify({
               title: "Informations diverses",
               subtitle: "CGT FTM",
               content: "Aucune information particulière pour le moment.",
               isActive: false,
             }),
-          },
-          loading: false,
-          error: null,
-          lastSync: new Date(),
-        });
-      } else {
-        console.log("✅ Utilisation des données chargées");
-        setState({
-          meetings,
-          tributes,
-          permanences,
-          users,
-          config: {
-            videoUrl: "",
-            alertText: "",
-            diversContent: JSON.stringify({
-              title: "Informations diverses",
-              subtitle: "CGT FTM",
-              content: "Aucune information particulière pour le moment.",
-              isActive: false,
-            }),
-          },
-          loading: false,
-          error: null,
-          lastSync: new Date(),
-        });
-      }
+        },
+        loading: false,
+        error: null,
+        lastSync: new Date(),
+      });
 
       setIsConnected(true);
     } catch (error) {
