@@ -42,8 +42,8 @@ const Index = () => {
               <DiversWidget />
             </div>
 
-            {/* Col 3 Row 1: PERMANENCES */}
-            <div className="col-start-3 col-end-4 row-start-1 row-end-2">
+            {/* Col 3 Row 1-2: PERMANENCES (2 rangées) */}
+            <div className="col-start-3 col-end-4 row-start-1 row-end-3">
               <PermanencesCombinedWidget />
             </div>
 
@@ -60,11 +60,6 @@ const Index = () => {
             {/* Col 2 Row 2: VIDEO */}
             <div className="col-start-2 col-end-3 row-start-2 row-end-3">
               <VideoWidget />
-            </div>
-
-            {/* Col 3 Row 2: Empty for now */}
-            <div className="col-start-3 col-end-4 row-start-2 row-end-3">
-              {/* Espace réservé */}
             </div>
           </div>
 
