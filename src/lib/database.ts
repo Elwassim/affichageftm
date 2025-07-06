@@ -241,23 +241,48 @@ export const deleteMeeting = async (id: string): Promise<boolean> => {
   console.log("🗑️ Mode base de données:", useSupabase ? "Supabase" : "Local");
 
   if (!useSupabase) {
-    const localData = getLocalData();
-    console.log(
-      "🗑️ Données locales avant suppression:",
-      localData.meetings.length,
-      "réunions",
-    );
+    try {
+      const localData = getLocalData();
+      console.log(
+        "🗑️ Données locales avant suppression:",
+        localData.meetings.length,
+        "réunions",
+      );
+      console.log(
+        "🗑️ Liste des IDs avant:",
+        localData.meetings.map((m) => m.id),
+      );
 
-    const filteredMeetings = localData.meetings.filter((m) => m.id !== id);
-    console.log(
-      "🗑️ Données après filtrage:",
-      filteredMeetings.length,
-      "réunions",
-    );
+      const filteredMeetings = localData.meetings.filter((m) => m.id !== id);
+      console.log(
+        "🗑️ Données après filtrage:",
+        filteredMeetings.length,
+        "réunions",
+      );
+      console.log(
+        "🗑️ Liste des IDs après:",
+        filteredMeetings.map((m) => m.id),
+      );
 
-    saveLocalData({ ...localData, meetings: filteredMeetings });
-    console.log("✅ Suppression locale réussie");
-    return true;
+      const updatedData = { ...localData, meetings: filteredMeetings };
+      saveLocalData(updatedData);
+
+      // Vérifier que les données ont bien été sauvegardées
+      const verifyData = getLocalData();
+      console.log(
+        "🔍 Vérification après sauvegarde:",
+        verifyData.meetings.length,
+        "réunions",
+      );
+
+      const wasDeleted = !verifyData.meetings.some((m) => m.id === id);
+      console.log("✅ Suppression locale réussie:", wasDeleted);
+
+      return wasDeleted;
+    } catch (error) {
+      console.error("❌ Erreur lors de la suppression locale:", error);
+      return false;
+    }
   }
 
   try {
@@ -409,7 +434,7 @@ export const getTributes = async (): Promise<Tribute[]> => {
     console.log("📊 Résultat tributes:", { data, error });
 
     if (error) {
-      console.log("❌ Table tributes bloquée par RLS, tentative RPC...");
+      console.log("�� Table tributes bloquée par RLS, tentative RPC...");
 
       // Fallback RPC bypass RLS
       try {
