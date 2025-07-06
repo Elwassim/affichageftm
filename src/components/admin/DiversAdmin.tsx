@@ -603,24 +603,119 @@ export const DiversAdmin: React.FC = () => {
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Aperçu du widget
         </h3>
-        <div className="bg-gray-50 rounded-lg p-4 border-2 border-dashed border-gray-200">
-          <div className="text-center">
-            <div className="w-8 h-8 bg-cgt-red rounded flex items-center justify-center mx-auto mb-2">
-              <Info className="w-5 h-5 text-white" />
-            </div>
-            <h4 className="font-bold text-cgt-gray text-lg mb-1">
+        <div
+          className="rounded-lg p-4 border-2 border-dashed border-gray-200"
+          style={{
+            backgroundColor: diversContent.backgroundColor,
+            borderColor: diversContent.showBorder
+              ? diversContent.borderColor
+              : undefined,
+            borderStyle: diversContent.showBorder ? "solid" : "dashed",
+            textAlign: diversContent.alignment as any,
+            color: diversContent.textColor,
+          }}
+        >
+          <div>
+            {/* Icône */}
+            {diversContent.showIcon && (
+              <div
+                className="w-8 h-8 bg-cgt-red rounded flex items-center justify-center mx-auto mb-2"
+                style={{
+                  marginLeft:
+                    diversContent.alignment === "left"
+                      ? 0
+                      : diversContent.alignment === "right"
+                        ? "auto"
+                        : "auto",
+                  marginRight:
+                    diversContent.alignment === "right"
+                      ? 0
+                      : diversContent.alignment === "left"
+                        ? "auto"
+                        : "auto",
+                }}
+              >
+                <Info className="w-5 h-5 text-white" />
+              </div>
+            )}
+
+            {/* Titre */}
+            <h4
+              className={`font-bold mb-1 ${
+                diversContent.fontSize === "small"
+                  ? "text-base"
+                  : diversContent.fontSize === "large"
+                    ? "text-xl"
+                    : "text-lg"
+              }`}
+              style={{ color: diversContent.textColor }}
+            >
               {diversContent.title}
             </h4>
+
+            {/* Sous-titre */}
             {diversContent.subtitle && (
-              <p className="text-sm text-gray-500 mb-2">
+              <p
+                className={`text-gray-500 mb-2 ${
+                  diversContent.fontSize === "small"
+                    ? "text-sm"
+                    : diversContent.fontSize === "large"
+                      ? "text-base"
+                      : "text-sm"
+                }`}
+              >
                 {diversContent.subtitle}
               </p>
             )}
-            <p className="text-gray-700 text-base">
+
+            {/* Contenu */}
+            <p
+              className={`${
+                diversContent.fontSize === "small"
+                  ? "text-sm"
+                  : diversContent.fontSize === "large"
+                    ? "text-lg"
+                    : "text-base"
+              }`}
+              style={{ color: diversContent.textColor }}
+            >
               {diversContent.isActive && diversContent.content
                 ? diversContent.content
                 : "Informations diverses"}
             </p>
+
+            {/* Lien */}
+            {diversContent.link && diversContent.linkText && (
+              <div className="mt-3">
+                <a
+                  href={diversContent.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-cgt-red hover:text-cgt-red-dark font-medium text-sm"
+                >
+                  {diversContent.linkText}
+                  <svg
+                    className="w-4 h-4 ml-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
+                  </svg>
+                </a>
+              </div>
+            )}
+
+            {/* Indicateur de style */}
+            <div className="mt-2 text-xs text-gray-400">
+              Style: {diversContent.style} | Taille: {diversContent.fontSize} |
+              Alignement: {diversContent.alignment}
+            </div>
           </div>
         </div>
       </Card>
