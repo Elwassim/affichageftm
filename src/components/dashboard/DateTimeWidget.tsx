@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Card } from "@/components/ui/card";
 import { Cloud, Sun, CloudRain, Snowflake, Thermometer } from "lucide-react";
+import { getConfig, updateConfig } from "@/lib/database";
 
 interface WeatherData {
   temperature: number;
@@ -10,6 +11,7 @@ interface WeatherData {
   icon: string;
   humidity: number;
   windSpeed: number;
+  lastUpdate: string;
 }
 
 export const DateTimeWidget = () => {
@@ -26,17 +28,31 @@ export const DateTimeWidget = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Chargement de la météo
+  // Chargement de la météo synchronisée
   useEffect(() => {
-    const loadWeather = async () => {
+    const loadWeatherFromDB = async () => {
       try {
         setWeatherLoading(true);
 
-        // Utiliser l'API OpenWeatherMap (gratuite)
-        const API_KEY = "demo"; // Pour la démo, on utilisera des données simulées
+        // Charger depuis la configuration
+        const weatherData = await getConfig("weatherData");
+        if (weatherData) {
+          const parsed = JSON.parse(weatherData);
+          setWeather(parsed);
+          console.log("🌤️ Météo chargée depuis BDD:", parsed);
+        }
 
-        // Simuler des données météo réalistes pour Paris
-        const mockWeatherData: WeatherData = {
+        setWeatherLoading(false);
+      } catch (error) {
+        console.error("❌ Erreur chargement météo:", error);
+        setWeatherLoading(false);
+      }
+    };
+
+    const updateWeatherData = async () => {
+      try {
+        // Générer de nouvelles données météo réalistes
+        const newWeatherData: WeatherData = {
           temperature: Math.round(15 + Math.random() * 10), // 15-25°C
           description: [
             "Ensoleillé",
@@ -49,25 +65,59 @@ export const DateTimeWidget = () => {
           ],
           humidity: Math.round(45 + Math.random() * 30), // 45-75%
           windSpeed: Math.round(5 + Math.random() * 15), // 5-20 km/h
+          lastUpdate: new Date().toISOString(),
         };
 
-        setWeather(mockWeatherData);
-        setWeatherLoading(false);
+        // Sauvegarder en BDD
+        await updateConfig("weatherData", JSON.stringify(newWeatherData));
+        setWeather(newWeatherData);
 
-        console.log("🌤️ Météo Paris chargée:", mockWeatherData);
+        // Émettre événement de synchronisation
+        window.dispatchEvent(
+          new CustomEvent("cgt-config-updated", {
+            detail: { key: "weatherData", value: newWeatherData },
+          }),
+        );
+
+        console.log("🌤️ Météo mise à jour et synchronisée:", newWeatherData);
       } catch (error) {
-        console.error("❌ Erreur chargement météo:", error);
-        setWeatherLoading(false);
+        console.error("❌ Erreur mise à jour météo:", error);
       }
     };
 
     // Charger immédiatement
-    loadWeather();
+    loadWeatherFromDB();
 
-    // Actualiser toutes les 10 minutes
-    const weatherInterval = setInterval(loadWeather, 600000);
+    // Mettre à jour les données météo toutes les 10 minutes
+    const weatherUpdateInterval = setInterval(updateWeatherData, 600000);
 
-    return () => clearInterval(weatherInterval);
+    // Écouter les changements de configuration
+    const handleConfigUpdate = (event: CustomEvent) => {
+      if (event.detail.key === "weatherData") {
+        if (typeof event.detail.value === "object") {
+          setWeather(event.detail.value);
+        } else if (typeof event.detail.value === "string") {
+          try {
+            setWeather(JSON.parse(event.detail.value));
+          } catch (error) {
+            loadWeatherFromDB();
+          }
+        }
+      }
+    };
+
+    window.addEventListener(
+      "cgt-config-updated",
+      handleConfigUpdate as EventListener,
+    );
+
+    return () => {
+      clearInterval(weatherUpdateInterval);
+      window.removeEventListener(
+        "cgt-config-updated",
+        handleConfigUpdate as EventListener,
+      );
+    };
   }, []);
 
   // Icône météo selon le type
