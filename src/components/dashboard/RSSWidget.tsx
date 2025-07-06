@@ -30,7 +30,7 @@ export const RSSWidget = () => {
       "Défense - Présentation du nouveau livre blanc sur la sécurité nationale",
       "International - La France préside le G7 sur les questions climatiques",
       "Écologie - Nouveau plan de transition énergétique présenté par le gouvernement",
-      "Santé - Réforme du système hospitalier débattue à l'Assemblée",
+      "Santé - Réforme du syst��me hospitalier débattue à l'Assemblée",
       "Éducation - Présentation de la réforme de l'enseignement professionnel",
       "Culture - Plan de soutien aux industries créatives et culturelles",
       "Agriculture - Négociations européennes sur la PAC et les subventions",
@@ -97,7 +97,7 @@ export const RSSWidget = () => {
           </span>
         </div>
         <div className="flex-1 flex items-center px-4">
-          <span className="text-white text-sm">
+          <span className="text-white text-base">
             Connexion à https://www.franceinfo.fr/politique.rss...
           </span>
         </div>
@@ -110,12 +110,12 @@ export const RSSWidget = () => {
       <div className="fixed bottom-0 left-0 w-full h-12 bg-cgt-red z-50 flex items-center">
         <div className="flex items-center px-4 gap-2">
           <Globe className="w-4 h-4 text-white" />
-          <span className="text-white font-bold text-sm">
+          <span className="text-white font-bold text-base">
             FLUX RSS FRANCE INFO
           </span>
         </div>
         <div className="flex-1 flex items-center px-4">
-          <span className="text-white text-sm">
+          <span className="text-white text-base">
             Aucune actualité disponible
           </span>
         </div>
@@ -129,7 +129,7 @@ export const RSSWidget = () => {
         {/* Label avec statut temps réel */}
         <div className="flex items-center px-4 gap-2 bg-cgt-red flex-shrink-0">
           <Globe className="w-4 h-4 text-white" />
-          <span className="text-white font-bold text-sm whitespace-nowrap">
+          <span className="text-white font-bold text-base whitespace-nowrap">
             FLUX RSS FRANCE INFO
           </span>
           <div className="flex items-center gap-1">
