@@ -12,43 +12,94 @@ export const RSSWidget = () => {
   const [newsItems, setNewsItems] = useState<RSSItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Données RSS France Info (simulées pour éviter les problèmes CORS)
+  // Récupération du flux RSS France Info
   useEffect(() => {
-    const franceInfoNews: RSSItem[] = [
-      {
-        title:
-          "Politique - Emmanuel Macron annonce de nouvelles réformes sociales",
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: new Date().toISOString(),
-        description: "Le président présente son plan pour l'emploi",
-      },
-      {
-        title: "Assemblée nationale - Débat sur le budget 2025",
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: new Date().toISOString(),
-        description: "Les députés examinent les propositions budgétaires",
-      },
-      {
-        title: "Syndicats - Manifestation nationale prévue jeudi",
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: new Date().toISOString(),
-        description: "Les organisations syndicales appellent à la mobilisation",
-      },
-      {
-        title: "Gouvernement - Mesures pour l'industrie française",
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: new Date().toISOString(),
-        description: "Soutien renforcé aux secteurs stratégiques",
-      },
-      {
-        title: "Europe - Sommet des dirigeants européens à Bruxelles",
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: new Date().toISOString(),
-        description: "Questions économiques et sociales à l'ordre du jour",
-      },
-    ];
+    const fetchRSSFeed = async () => {
+      try {
+        // Utilisation d'un proxy CORS différent plus fiable
+        const proxyUrl = "https://corsproxy.io/?";
+        const targetUrl = "https://www.franceinfo.fr/politique.rss";
 
-    setNewsItems(franceInfoNews);
+        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
+
+        if (!response.ok) {
+          throw new Error("Erreur réseau");
+        }
+
+        const xmlText = await response.text();
+
+        // Parse XML pour extraire les él��ments RSS
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+        const items = xmlDoc.querySelectorAll("item");
+
+        if (items.length === 0) {
+          throw new Error("Aucun élément RSS trouvé");
+        }
+
+        const rssItems: RSSItem[] = Array.from(items)
+          .slice(0, 8)
+          .map((item) => {
+            const title = item.querySelector("title")?.textContent || "";
+            const link = item.querySelector("link")?.textContent || "#";
+            const pubDate =
+              item.querySelector("pubDate")?.textContent ||
+              new Date().toISOString();
+            const description =
+              item.querySelector("description")?.textContent || "";
+
+            return {
+              title: title.replace(/&[^;]+;/g, "").trim(), // Nettoie les entités HTML
+              link,
+              pubDate,
+              description: description
+                .replace(/<[^>]*>/g, "")
+                .substring(0, 100)
+                .trim(),
+            };
+          });
+
+        console.log(
+          "✅ Flux RSS France Info chargé:",
+          rssItems.length,
+          "articles",
+        );
+        setNewsItems(rssItems);
+      } catch (error) {
+        console.error("❌ Erreur flux RSS France Info:", error);
+
+        // Fallback vers des données de secours basées sur France Info
+        const fallbackNews: RSSItem[] = [
+          {
+            title: "France Info Politique - Actualités en cours de chargement",
+            link: "https://www.franceinfo.fr/politique",
+            pubDate: new Date().toISOString(),
+            description: "Connexion au flux RSS en cours",
+          },
+          {
+            title: "Politique française - Suivez l'actualité gouvernementale",
+            link: "https://www.franceinfo.fr/politique",
+            pubDate: new Date().toISOString(),
+            description: "Toute l'actualité politique sur France Info",
+          },
+          {
+            title: "Parlement - Sessions et débats parlementaires",
+            link: "https://www.franceinfo.fr/politique",
+            pubDate: new Date().toISOString(),
+            description: "Suivez les travaux de l'Assemblée nationale",
+          },
+        ];
+        setNewsItems(fallbackNews);
+      }
+    };
+
+    // Charger immédiatement
+    fetchRSSFeed();
+
+    // Actualiser toutes les 5 minutes
+    const interval = setInterval(fetchRSSFeed, 300000);
+
+    return () => clearInterval(interval);
   }, []);
 
   // Défilement automatique
