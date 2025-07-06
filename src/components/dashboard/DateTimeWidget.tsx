@@ -157,6 +157,9 @@ export const DateTimeWidget = () => {
     }
   };
 
+  // Debug log de l'état météo
+  console.log("🌤️ État météo actuel:", { weather, weatherLoading });
+
   return (
     <Card className="p-3 bg-white text-center professional-shadow border-0 h-full flex flex-col">
       {/* Heure principale */}
