@@ -174,8 +174,8 @@ export const PermanencesCombinedWidget = () => {
       <Card className="p-1.5 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
         <div className="mb-1">
           <h2 className="text-xs font-black text-white bg-cgt-red px-1.5 py-0.5 rounded flex items-center gap-1">
-            <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
-              <Users className="w-2.5 h-2.5 text-cgt-red" />
+            <div className="w-3 h-3 bg-white rounded flex items-center justify-center">
+              <Users className="w-2 h-2 text-cgt-red" />
             </div>
             <p>PERMANENCE TECHNIQUE</p>
           </h2>
@@ -192,7 +192,7 @@ export const PermanencesCombinedWidget = () => {
               </p>
             </div>
           ) : (
-            <div className="space-y-1.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
+            <div className="space-y-1 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
               {permanencesTech.map(renderPermanenceItem)}
             </div>
           )}
@@ -203,8 +203,8 @@ export const PermanencesCombinedWidget = () => {
       <Card className="p-1.5 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
         <div className="mb-1">
           <h2 className="text-xs font-black text-white bg-cgt-red px-1.5 py-0.5 rounded flex items-center gap-1">
-            <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
-              <Users className="w-2.5 h-2.5 text-cgt-red" />
+            <div className="w-3 h-3 bg-white rounded flex items-center justify-center">
+              <Users className="w-2 h-2 text-cgt-red" />
             </div>
             <p>PERMANENCE POLITIQUE</p>
           </h2>
@@ -221,7 +221,7 @@ export const PermanencesCombinedWidget = () => {
               </p>
             </div>
           ) : (
-            <div className="space-y-1.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
+            <div className="space-y-1 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
               {permanencesPolitiques.map(renderPermanenceItem)}
             </div>
           )}
