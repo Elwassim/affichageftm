@@ -42,6 +42,7 @@ import {
 } from "../lib/database";
 import type { Meeting, Tribute, User, Permanence } from "../lib/supabase";
 import { PermanencesAdmin } from "../components/admin/PermanencesAdmin";
+import { verifyCompleteDatabaseSync } from "../lib/verifyDatabaseSync";
 import { useAdminSync } from "../hooks/useDatabaseSync";
 
 const MEETING_CATEGORIES = [
@@ -101,7 +102,7 @@ const Admin = () => {
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [editUserData, setEditUserData] = useState<Partial<User>>({});
 
-  // État pour l'édition inline des réunions
+  // ��tat pour l'édition inline des réunions
   const [editingMeeting, setEditingMeeting] = useState<string | null>(null);
   const [editMeetingData, setEditMeetingData] = useState<Partial<Meeting>>({});
 
@@ -707,7 +708,7 @@ const Admin = () => {
       // Compter les résultats
       const totalTests = results.length - 1; // Exclure le résumé
       const successCount = results.filter((r) => r.status === "✅ OK").length;
-      const errorCount = results.filter((r) => r.status === "❌ ERREUR").length;
+      const errorCount = results.filter((r) => r.status === "�� ERREUR").length;
       const warningCount = results.filter(
         (r) => r.status === "⚠️ ATTENTION",
       ).length;
