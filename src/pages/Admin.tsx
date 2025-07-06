@@ -49,9 +49,9 @@ import { verifyCompleteDatabaseSync } from "../lib/verifyDatabaseSync";
 import { useAdminSync } from "../hooks/useDatabaseSync";
 
 const MEETING_CATEGORIES = [
-  "Assembl��e Générale",
+  "Assemblée Générale",
   "Commission",
-  "Délégu��s",
+  "Délégués",
   "Formation",
   "Comité",
   "Négociation",
