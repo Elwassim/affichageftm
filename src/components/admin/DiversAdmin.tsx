@@ -53,10 +53,20 @@ export const DiversAdmin: React.FC = () => {
       const jsonContent = JSON.stringify(diversContent);
       await updateConfig("diversContent", jsonContent);
 
-      // Also save to localStorage for immediate sync
+      // Save to localStorage with timestamp for cross-page sync
       localStorage.setItem("diversContent", jsonContent);
+      localStorage.setItem("diversContent-timestamp", Date.now().toString());
 
-      // Dispatch event for dashboard sync
+      // Trigger storage event for cross-page communication
+      window.dispatchEvent(
+        new StorageEvent("storage", {
+          key: "diversContent",
+          newValue: jsonContent,
+          storageArea: localStorage,
+        }),
+      );
+
+      // Also dispatch local event if on same page
       window.dispatchEvent(
         new CustomEvent("cgt-config-updated", {
           detail: {
@@ -67,7 +77,7 @@ export const DiversAdmin: React.FC = () => {
       );
 
       console.log(
-        "✅ DiversAdmin: Contenu sauvé et événement émis",
+        "✅ DiversAdmin: Contenu sauvé avec sync cross-page",
         diversContent,
       );
 
