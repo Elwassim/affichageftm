@@ -1040,7 +1040,7 @@ const Admin = () => {
                         ? "Base de données connectée"
                         : "Connexion échouée"}
                     </span>
-                    <span>{meetings.length} r��unions au total</span>
+                    <span>{meetings.length} réunions au total</span>
                   </div>
                 </div>
 
