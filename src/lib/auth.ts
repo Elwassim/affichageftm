@@ -238,6 +238,10 @@ export const isAuthenticated = (): boolean => {
 };
 
 export const hasAdminAccess = (user: AuthUser | null): boolean => {
+  return user?.group === "admin";
+};
+
+export const hasEditorAccess = (user: AuthUser | null): boolean => {
   return user?.group === "admin" || user?.group === "editor";
 };
 
