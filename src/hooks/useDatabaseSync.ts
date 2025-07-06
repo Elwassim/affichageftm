@@ -56,26 +56,22 @@ export const useDatabaseSync = (
       console.log("🔄 Refresh des données depuis localStorage...");
 
       // Charger les données via les fonctions de database
-      const [meetings, tributes, permanences, users] = await Promise.all([
+      const [meetings, tributes, permanences, users, videoUrl, alertText, diversContent] = await Promise.all([
         getAllMeetings(),
         getTributes(),
         getPermanences(),
         getUsers(),
+        getConfig("videoUrl"),
+        getConfig("alertText"),
+        getConfig("diversContent")
       ]);
 
       console.log("📊 Données chargées:", {
         meetings: meetings.length,
         tributes: tributes.length,
         permanences: permanences.length,
-        users: users.length,
+        users: users.length
       });
-
-      if (meetings.length === 0) {
-        console.log(
-          "📦 Aucune réunion trouvée, utilisation données par défaut",
-        );
-        const { getDashboardData } = await import("../lib/storage");
-        const defaultData = getDashboardData();
 
         setState({
           meetings: defaultData.meetings,
