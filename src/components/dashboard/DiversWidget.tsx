@@ -14,41 +14,26 @@ export const DiversWidget = () => {
   const [diversContent, setDiversContent] = useState<DiversContent>({
     title: "Informations diverses",
     subtitle: "CGT FTM",
-    content: "TEST WIDGET DIVERS - SI VOUS VOYEZ CECI, LE WIDGET FONCTIONNE !",
-    isActive: true,
+    content: "Aucune information particulière pour le moment.",
+    isActive: false,
   });
-
-  console.log("🔍 DiversWidget: DÉMARRAGE DU WIDGET", diversContent);
 
   // Charger le contenu configuré
   useEffect(() => {
-    console.log("🔍 DiversWidget: useEffect démarré");
-
     const loadDiversContent = async () => {
       try {
-        console.log("🔍 DiversWidget: loadDiversContent appelé");
-
         // Essayer localStorage d'abord
         const localContent = localStorage.getItem("diversContent");
-        console.log("🔍 DiversWidget: localStorage content", localContent);
-
         if (localContent) {
           const parsed = JSON.parse(localContent);
           setDiversContent(parsed);
-          console.log(
-            "✅ DiversWidget: État mis à jour depuis localStorage",
-            parsed,
-          );
         }
 
         // Charger depuis la BDD
         const content = await getConfig("diversContent");
-        console.log("🔍 DiversWidget: BDD content", content);
-
         if (content) {
           const parsed = JSON.parse(content);
           setDiversContent(parsed);
-          console.log("✅ DiversWidget: État mis à jour depuis BDD", parsed);
 
           // Mettre à jour localStorage
           localStorage.setItem("diversContent", content);
@@ -58,36 +43,30 @@ export const DiversWidget = () => {
           );
         }
       } catch (error) {
-        console.error("❌ DiversWidget: Erreur loadDiversContent", error);
+        console.error("Erreur lors du chargement du contenu divers:", error);
       }
     };
 
     loadDiversContent();
+    const timer = setInterval(loadDiversContent, 30000);
 
     // Écouter les événements localStorage pour sync cross-page
     const handleStorageChange = (event: StorageEvent) => {
-      console.log("🔍 DiversWidget: Storage event", event);
       if (event.key === "diversContent" && event.newValue) {
         try {
           const newContent = JSON.parse(event.newValue);
           setDiversContent(newContent);
-          console.log("✅ DiversWidget: Sync cross-page reçue", newContent);
         } catch (error) {
-          console.error("❌ DiversWidget: Erreur parsing storage", error);
+          console.error("Erreur parsing localStorage diversContent:", error);
         }
       }
     };
 
     // Écouter les changements de configuration depuis l'admin
     const handleConfigUpdate = (event: CustomEvent) => {
-      console.log("🔍 DiversWidget: Config event", event.detail);
       if (event.detail.key === "diversContent") {
         if (typeof event.detail.value === "object") {
           setDiversContent(event.detail.value);
-          console.log(
-            "✅ DiversWidget: État mis à jour depuis event",
-            event.detail.value,
-          );
         }
       }
     };
@@ -99,6 +78,7 @@ export const DiversWidget = () => {
     );
 
     return () => {
+      clearInterval(timer);
       window.removeEventListener("storage", handleStorageChange);
       window.removeEventListener(
         "cgt-config-updated",
@@ -126,11 +106,6 @@ export const DiversWidget = () => {
             <Info className="w-3 h-3 text-gray-400" />
           </div>
 
-          {/* Debug: Affichage forcé du contenu */}
-          <div className="text-sm text-gray-500 mb-2">
-            Debug: isActive={diversContent.isActive.toString()}
-          </div>
-
           {diversContent.subtitle && (
             <p className="text-sm text-gray-500 mb-2">
               {diversContent.subtitle}
@@ -138,21 +113,10 @@ export const DiversWidget = () => {
           )}
 
           <p className="text-gray-700 text-base font-medium">
-            🔴 WIDGET DIVERS ACTIF - TEST RÉUSSI ! 🔴
+            {diversContent.isActive && diversContent.content
+              ? diversContent.content
+              : "Informations diverses"}
           </p>
-
-          <p className="text-sm text-gray-600 mt-2">
-            Contenu: {diversContent.content}
-          </p>
-
-          <p className="text-xs text-gray-400 mt-1">
-            Active: {diversContent.isActive ? "OUI" : "NON"}
-          </p>
-
-          {/* Debug: Affichage du contenu brut */}
-          <div className="text-xs text-gray-400 mt-2 border-t pt-2">
-            Contenu: {diversContent.content}
-          </div>
         </div>
       </div>
     </Card>
