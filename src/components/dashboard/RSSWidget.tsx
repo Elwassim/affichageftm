@@ -106,7 +106,7 @@ export const RSSWidget = () => {
     // Recharger le flux RSS toutes les 2 minutes pour plus de réactivité
     const interval = setInterval(() => {
       console.log("🔄 Actualisation automatique du flux RSS France Info...");
-      loadRSSData();
+      loadRSSData(true); // Mode refresh
     }, 120000); // 2 minutes
 
     return () => clearInterval(interval);
