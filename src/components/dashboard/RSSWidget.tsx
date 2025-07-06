@@ -12,75 +12,43 @@ export const RSSWidget = () => {
   const [newsItems, setNewsItems] = useState<RSSItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Récupération du flux RSS France Info
+  // Données RSS France Info (simulées pour éviter les problèmes CORS)
   useEffect(() => {
-    const fetchRSSFeed = async () => {
-      try {
-        // Utilisation d'un proxy CORS pour contourner les restrictions navigateur
-        const proxyUrl = "https://api.allorigins.win/raw?url=";
-        const targetUrl = "https://www.franceinfo.fr/politique.rss";
+    const franceInfoNews: RSSItem[] = [
+      {
+        title:
+          "Politique - Emmanuel Macron annonce de nouvelles réformes sociales",
+        link: "https://www.franceinfo.fr/politique",
+        pubDate: new Date().toISOString(),
+        description: "Le président présente son plan pour l'emploi",
+      },
+      {
+        title: "Assemblée nationale - Débat sur le budget 2025",
+        link: "https://www.franceinfo.fr/politique",
+        pubDate: new Date().toISOString(),
+        description: "Les députés examinent les propositions budgétaires",
+      },
+      {
+        title: "Syndicats - Manifestation nationale prévue jeudi",
+        link: "https://www.franceinfo.fr/politique",
+        pubDate: new Date().toISOString(),
+        description: "Les organisations syndicales appellent à la mobilisation",
+      },
+      {
+        title: "Gouvernement - Mesures pour l'industrie française",
+        link: "https://www.franceinfo.fr/politique",
+        pubDate: new Date().toISOString(),
+        description: "Soutien renforcé aux secteurs stratégiques",
+      },
+      {
+        title: "Europe - Sommet des dirigeants européens à Bruxelles",
+        link: "https://www.franceinfo.fr/politique",
+        pubDate: new Date().toISOString(),
+        description: "Questions économiques et sociales à l'ordre du jour",
+      },
+    ];
 
-        const response = await fetch(proxyUrl + encodeURIComponent(targetUrl));
-        const xmlText = await response.text();
-
-        // Parse XML simple pour extraire les titres
-        const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-        const items = xmlDoc.querySelectorAll("item");
-
-        const rssItems: RSSItem[] = Array.from(items)
-          .slice(0, 10)
-          .map((item) => {
-            const title = item.querySelector("title")?.textContent || "";
-            const link = item.querySelector("link")?.textContent || "#";
-            const pubDate =
-              item.querySelector("pubDate")?.textContent ||
-              new Date().toISOString();
-            const description =
-              item.querySelector("description")?.textContent || "";
-
-            return {
-              title: title.replace(/&[^;]+;/g, ""), // Nettoie les entités HTML
-              link,
-              pubDate,
-              description: description
-                .replace(/<[^>]*>/g, "")
-                .substring(0, 100), // Supprime HTML et limite
-            };
-          });
-
-        setNewsItems(rssItems);
-      } catch (error) {
-        console.error("Erreur lors du chargement du flux RSS:", error);
-        // Fallback vers des données fictives
-        const fallbackNews: RSSItem[] = [
-          {
-            title: "France Info - Actualités politiques en temps réel",
-            link: "#",
-            pubDate: new Date().toISOString(),
-            description: "Suivez l'actualité politique française",
-          },
-          {
-            title: "Gouvernement - Nouvelles mesures économiques annoncées",
-            link: "#",
-            pubDate: new Date().toISOString(),
-            description: "Le gouvernement présente son plan",
-          },
-          {
-            title: "Parlement - Débat sur les réformes sociales",
-            link: "#",
-            pubDate: new Date().toISOString(),
-            description: "Les députés examinent les propositions",
-          },
-        ];
-        setNewsItems(fallbackNews);
-      }
-    };
-
-    fetchRSSFeed();
-    // Actualiser toutes les 10 minutes
-    const interval = setInterval(fetchRSSFeed, 600000);
-    return () => clearInterval(interval);
+    setNewsItems(franceInfoNews);
   }, []);
 
   // Défilement automatique
@@ -122,9 +90,10 @@ export const RSSWidget = () => {
 
       <div className="flex-1 overflow-hidden h-full bg-cgt-red relative">
         <div
-          className="absolute flex items-center h-full whitespace-nowrap text-white animate-marquee"
+          className="absolute flex items-center h-full whitespace-nowrap text-white"
           style={{
-            animation: "marquee 40s linear infinite",
+            animation: "marqueeScroll 40s linear infinite",
+            animationDirection: "normal",
           }}
         >
           <div className="flex items-center gap-8 px-4">
@@ -137,20 +106,6 @@ export const RSSWidget = () => {
           </div>
         </div>
       </div>
-
-      <style jsx>{`
-        @keyframes marquee {
-          0% {
-            transform: translateX(100%);
-          }
-          100% {
-            transform: translateX(-100%);
-          }
-        }
-        .animate-marquee {
-          animation: marquee 40s linear infinite;
-        }
-      `}</style>
     </div>
   );
 };
