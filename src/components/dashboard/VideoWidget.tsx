@@ -311,8 +311,8 @@ export const VideoWidget = () => {
         </div>
       )}
 
-      {videoUrl ? (
-        <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200 relative">
+      {currentVideo?.url ? (
+        <div className="w-full h-[calc(100%-5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200 relative">
           {/* Activateur de son intelligent */}
           {showSoundActivator && (
             <div className="absolute top-4 right-4 z-20">
@@ -325,10 +325,10 @@ export const VideoWidget = () => {
             </div>
           )}
 
-          {isDirectVideo(videoUrl) ? (
+          {isDirectVideo(currentVideo.url) ? (
             <video
               ref={videoRef}
-              src={videoUrl}
+              src={currentVideo.url}
               className="w-full h-full object-cover"
               autoPlay={true}
               muted={true}
@@ -369,11 +369,11 @@ export const VideoWidget = () => {
           ) : (
             <iframe
               ref={iframeRef}
-              src={getEmbedUrl(videoUrl)}
+              src={getEmbedUrl(currentVideo.url)}
               className="w-full h-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-              title="Vidéo institutionnelle CGT FTM"
+              title={currentVideo.title || "Vidéo CGT FTM"}
               style={{ minHeight: "300px" }}
             />
           )}
