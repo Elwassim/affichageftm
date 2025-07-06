@@ -168,21 +168,39 @@ export const authenticateUser = async (
       if (validPasswords.includes(credentials.password)) {
         console.log("✅ Authentification réussie");
 
+        // Debug des rôles
+        console.log("🔍 Détails utilisateur Supabase:", {
+          username: supabaseUser.username,
+          is_admin: supabaseUser.is_admin,
+          is_admin_type: typeof supabaseUser.is_admin,
+          role: supabaseUser.role,
+        });
+
         // Convertir l'utilisateur Supabase vers le format AuthUser
         // Seulement 2 types : Admin (gère tout) et Éditeur (tout sauf users)
+        const isAdmin =
+          supabaseUser.is_admin === true || supabaseUser.is_admin === "true";
+
         const authUser: AuthUser = {
           id: supabaseUser.id,
           username: supabaseUser.username,
           password: credentials.password, // Ne pas stocker le vrai mot de passe
           name: supabaseUser.username,
           email: supabaseUser.email || "",
-          role: supabaseUser.is_admin ? "admin" : "delegue", // admin ou delegue (éditeur)
-          group: supabaseUser.is_admin ? "admin" : "editor", // admin ou editor
+          role: isAdmin ? "admin" : "delegue", // admin ou delegue (éditeur)
+          group: isAdmin ? "admin" : "editor", // admin ou editor
           section: "CGT FTM",
           active: supabaseUser.is_active,
           lastLogin: new Date().toISOString(),
           createdAt: supabaseUser.created_at,
         };
+
+        console.log("✅ AuthUser créé:", {
+          username: authUser.username,
+          role: authUser.role,
+          group: authUser.group,
+          isAdmin: isAdmin,
+        });
 
         return authUser;
       } else {
