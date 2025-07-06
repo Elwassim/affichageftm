@@ -42,11 +42,10 @@ import {
 } from "../lib/database";
 import type { Meeting, Tribute, User, Permanence } from "../lib/supabase";
 import { PermanencesAdmin } from "../components/admin/PermanencesAdmin";
-import { verifyCompleteDatabaseSync } from "../lib/verifyDatabaseSync";
 import { useAdminSync } from "../hooks/useDatabaseSync";
 
 const MEETING_CATEGORIES = [
-  "Assemblée Générale",
+  "Assembl��e Générale",
   "Commission",
   "Délégu��s",
   "Formation",
@@ -102,7 +101,7 @@ const Admin = () => {
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [editUserData, setEditUserData] = useState<Partial<User>>({});
 
-  // ��tat pour l'édition inline des réunions
+  // État pour l'édition inline des réunions
   const [editingMeeting, setEditingMeeting] = useState<string | null>(null);
   const [editMeetingData, setEditMeetingData] = useState<Partial<Meeting>>({});
 
@@ -708,7 +707,7 @@ const Admin = () => {
       // Compter les résultats
       const totalTests = results.length - 1; // Exclure le résumé
       const successCount = results.filter((r) => r.status === "✅ OK").length;
-      const errorCount = results.filter((r) => r.status === "�� ERREUR").length;
+      const errorCount = results.filter((r) => r.status === "❌ ERREUR").length;
       const warningCount = results.filter(
         (r) => r.status === "⚠️ ATTENTION",
       ).length;
@@ -1018,7 +1017,7 @@ const Admin = () => {
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900">
-                        Réunions CGT FTM
+                        R��unions CGT FTM
                       </h2>
                       <p className="text-gray-700">
                         Planifiez et organisez les assemblées syndicales
