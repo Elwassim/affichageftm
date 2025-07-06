@@ -73,8 +73,6 @@ export const RSSWidget = () => {
           }
           // Continuer avec le proxy suivant
         }
-      }
-
       } catch (finalError) {
         console.error('❌ Tous les proxies ont échoué:', finalError);
 
