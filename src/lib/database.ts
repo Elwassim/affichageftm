@@ -17,8 +17,8 @@ import {
   insertDefaultData,
 } from "./initializeSupabase";
 
-// Forcer localStorage car Supabase pose des problèmes (erreurs 404)
-const useSupabase = false;
+// Utiliser Supabase après recréation des tables
+const useSupabase = !!supabase;
 
 // Initialisation automatique de Supabase au premier chargement
 let supabaseInitialized = false;
