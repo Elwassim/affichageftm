@@ -176,9 +176,9 @@ export const MeetingsWidget = () => {
   return (
     <Card className="p-3 bg-white professional-shadow border-0 h-full flex flex-col">
       <div className="mb-3">
-        <h2 className="text-lg font-black text-cgt-gray flex items-center gap-2">
-          <div className="w-6 h-6 bg-cgt-red rounded flex items-center justify-center">
-            <Calendar className="w-4 h-4 text-white" />
+        <h2 className="text-xl font-black text-cgt-gray flex items-center gap-2">
+          <div className="w-7 h-7 bg-cgt-red rounded flex items-center justify-center">
+            <Calendar className="w-5 h-5 text-white" />
           </div>
           <p>Réunions</p>
         </h2>
@@ -190,7 +190,7 @@ export const MeetingsWidget = () => {
           <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
             <Calendar className="w-3 h-3 text-gray-400" />
           </div>
-          <p className="text-gray-500 text-xs">
+          <p className="text-gray-500 text-base">
             Aucune réunion ces 7 prochains jours
           </p>
         </div>
@@ -205,7 +205,7 @@ export const MeetingsWidget = () => {
                 {/* Category Header */}
                 <div className="flex items-center gap-2 px-2">
                   <div className="w-2 h-2 bg-cgt-red rounded-full"></div>
-                  <h4 className="text-xs font-bold text-cgt-red uppercase tracking-wide">
+                  <h4 className="text-sm font-bold text-cgt-red uppercase tracking-wide">
                     {category}
                   </h4>
                   <div className="flex-1 h-px bg-cgt-red/30"></div>
@@ -222,10 +222,10 @@ export const MeetingsWidget = () => {
                         {index + 1}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
+                        <h3 className="font-bold text-cgt-gray text-base truncate leading-tight">
                           {meeting.title}
                         </h3>
-                        <div className="flex flex-col gap-1 text-gray-600 text-xs mt-1">
+                        <div className="flex flex-col gap-1 text-gray-600 text-sm mt-1">
                           <div className="flex items-center gap-1">
                             <Calendar className="w-3 h-3 text-cgt-red" />
                             <span className="font-semibold text-cgt-red">
