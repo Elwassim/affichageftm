@@ -222,22 +222,94 @@ export const VideoWidget = () => {
             <div className="w-7 h-7 bg-cgt-red rounded-lg flex items-center justify-center shadow-sm">
               <Play className="w-5 h-5 text-white" />
             </div>
-            <p>Vidéo FTM CGT</p>
+            <div>
+              <p>Vidéos CGT FTM</p>
+              {videos.length > 1 && (
+                <p className="text-xs text-gray-500">
+                  {currentVideoIndex + 1} / {videos.length}
+                </p>
+              )}
+            </div>
           </h2>
-          <button
-            onClick={toggleMute}
-            className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
-            title={isMuted ? "Activer le son" : "Couper le son"}
-          >
-            {isMuted ? (
-              <VolumeX className="w-4 h-4 text-gray-600" />
-            ) : (
-              <Volume2 className="w-4 h-4 text-cgt-red" />
+          <div className="flex items-center gap-2">
+            {videos.length > 1 && (
+              <>
+                <button
+                  onClick={() => setShowPlaylist(!showPlaylist)}
+                  className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                  title="Afficher la playlist"
+                >
+                  <List className="w-4 h-4 text-gray-600" />
+                </button>
+                <button
+                  onClick={previousVideo}
+                  className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                  title="Vidéo précédente"
+                >
+                  <ChevronLeft className="w-4 h-4 text-gray-600" />
+                </button>
+                <button
+                  onClick={nextVideo}
+                  className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+                  title="Vidéo suivante"
+                >
+                  <ChevronRight className="w-4 h-4 text-gray-600" />
+                </button>
+              </>
             )}
-          </button>
+            <button
+              onClick={toggleMute}
+              className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 transition-colors"
+              title={isMuted ? "Activer le son" : "Couper le son"}
+            >
+              {isMuted ? (
+                <VolumeX className="w-4 h-4 text-gray-600" />
+              ) : (
+                <Volume2 className="w-4 h-4 text-cgt-red" />
+              )}
+            </button>
+          </div>
         </div>
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
+
+        {/* Titre de la vidéo actuelle */}
+        {currentVideo && (
+          <div className="mt-2">
+            <p className="text-sm font-semibold text-gray-700 truncate">
+              {currentVideo.title}
+            </p>
+            {currentVideo.description && (
+              <p className="text-xs text-gray-500 truncate">
+                {currentVideo.description}
+              </p>
+            )}
+          </div>
+        )}
       </div>
+
+      {/* Playlist dropdown */}
+      {showPlaylist && videos.length > 1 && (
+        <div className="mb-3 bg-gray-50 rounded-lg border p-2 max-h-32 overflow-y-auto">
+          {videos.map((video, index) => (
+            <button
+              key={index}
+              onClick={() => selectVideo(index)}
+              className={`w-full text-left p-2 rounded transition-colors text-sm ${
+                index === currentVideoIndex
+                  ? "bg-cgt-red text-white"
+                  : "hover:bg-gray-200 text-gray-700"
+              }`}
+            >
+              <div className="font-medium truncate">{video.title}</div>
+              {video.description && (
+                <div className="text-xs opacity-75 truncate">
+                  {video.description}
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
 
       {videoUrl ? (
         <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200 relative">
