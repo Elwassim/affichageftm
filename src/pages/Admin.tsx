@@ -804,7 +804,7 @@ const Admin = () => {
   // TEST EDIT FUNCTIONALITY
   const handleTestEdit = async () => {
     try {
-      console.log("🧪 Test des fonctions d'édition...");
+      console.log("🧪 Test des fonctions d'��dition...");
 
       toast({
         title: "Test d'édition...",
@@ -839,7 +839,7 @@ const Admin = () => {
 
       toast({
         title: "Test terminé",
-        description: "Vérifiez la console pour les résultats détaill��s",
+        description: "Vérifiez la console pour les résultats détaillés",
       });
     } catch (error) {
       console.error("❌ Erreur test édition:", error);
