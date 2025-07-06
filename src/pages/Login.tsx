@@ -30,13 +30,16 @@ const Login = () => {
     console.log("🚀 Tentative de connexion:", credentials.username);
 
     try {
+      // Nettoyer les anciennes données d'authentification locale
+      localStorage.removeItem("cgt-ftm-auth-users");
+
       // Simulate network delay
       await new Promise((resolve) => setTimeout(resolve, 500));
 
       const user = await authenticateUser(credentials);
 
       if (user) {
-        console.log("✅ Connexion réussie:", user.username);
+        console.log("✅ Connexion réussie avec Supabase:", user.username);
         setCurrentUser(user);
         navigate("/admin");
       } else {
