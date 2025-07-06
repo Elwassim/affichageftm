@@ -27,20 +27,34 @@ export const DateTimeWidget = () => {
     return () => clearInterval(timer);
   }, []);
 
-  // Chargement de la météo synchronisée
+  // Chargement de la météo via OpenWeatherMap API
   useEffect(() => {
-    const loadWeatherFromDB = async () => {
+    const fetchWeatherData = async () => {
       try {
         setWeatherLoading(true);
 
-        // Charger depuis la configuration
-        const weatherData = await getConfig("weatherData");
-        if (weatherData) {
-          const parsed = JSON.parse(weatherData);
-          setWeather(parsed);
-          console.log("🌤️ Météo chargée depuis BDD:", parsed);
+        const apiKey = "5434483998d704e1fffaa68ff184dc46";
+        const ville = "Paris";
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${ville}&appid=${apiKey}&units=metric&lang=fr`;
+
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
+        const data = await response.json();
+
+        const weatherData: WeatherData = {
+          temperature: Math.round(data.main.temp),
+          description: data.weather[0].description,
+          icon: mapOpenWeatherIconToLocal(data.weather[0].icon),
+          humidity: data.main.humidity,
+          windSpeed: Math.round(data.wind?.speed * 3.6 || 0), // Convert m/s to km/h
+          lastUpdate: new Date().toISOString(),
+        };
+
+        setWeather(weatherData);
+        console.log("🌤️ Météo chargée depuis OpenWeatherMap:", weatherData);
         setWeatherLoading(false);
       } catch (error) {
         console.error("❌ Erreur chargement météo:", error);
@@ -48,76 +62,42 @@ export const DateTimeWidget = () => {
       }
     };
 
-    const updateWeatherData = async () => {
-      try {
-        // Générer de nouvelles données météo réalistes
-        const newWeatherData: WeatherData = {
-          temperature: Math.round(15 + Math.random() * 10), // 15-25°C
-          description: [
-            "Ensoleillé",
-            "Nuageux",
-            "Partiellement nuageux",
-            "Pluie légère",
-          ][Math.floor(Math.random() * 4)],
-          icon: ["sun", "cloud", "cloud-rain", "snowflake"][
-            Math.floor(Math.random() * 4)
-          ],
-          humidity: Math.round(45 + Math.random() * 30), // 45-75%
-          windSpeed: Math.round(5 + Math.random() * 15), // 5-20 km/h
-          lastUpdate: new Date().toISOString(),
-        };
-
-        // Sauvegarder en BDD
-        await updateConfig("weatherData", JSON.stringify(newWeatherData));
-        setWeather(newWeatherData);
-
-        // Émettre événement de synchronisation
-        window.dispatchEvent(
-          new CustomEvent("cgt-config-updated", {
-            detail: { key: "weatherData", value: newWeatherData },
-          }),
-        );
-
-        console.log("🌤️ Météo mise à jour et synchronisée:", newWeatherData);
-      } catch (error) {
-        console.error("❌ Erreur mise à jour météo:", error);
-      }
-    };
-
     // Charger immédiatement
-    loadWeatherFromDB();
+    fetchWeatherData();
 
-    // Mettre à jour les données météo toutes les 10 minutes
-    const weatherUpdateInterval = setInterval(updateWeatherData, 600000);
-
-    // Écouter les changements de configuration
-    const handleConfigUpdate = (event: CustomEvent) => {
-      if (event.detail.key === "weatherData") {
-        if (typeof event.detail.value === "object") {
-          setWeather(event.detail.value);
-        } else if (typeof event.detail.value === "string") {
-          try {
-            setWeather(JSON.parse(event.detail.value));
-          } catch (error) {
-            loadWeatherFromDB();
-          }
-        }
-      }
-    };
-
-    window.addEventListener(
-      "cgt-config-updated",
-      handleConfigUpdate as EventListener,
-    );
+    // Mettre à jour la météo toutes les 10 minutes
+    const weatherUpdateInterval = setInterval(fetchWeatherData, 600000);
 
     return () => {
       clearInterval(weatherUpdateInterval);
-      window.removeEventListener(
-        "cgt-config-updated",
-        handleConfigUpdate as EventListener,
-      );
     };
   }, []);
+
+  // Mapper les icônes OpenWeatherMap vers nos icônes locales
+  const mapOpenWeatherIconToLocal = (openWeatherIcon: string): string => {
+    const iconMap: { [key: string]: string } = {
+      "01d": "sun", // clear sky day
+      "01n": "sun", // clear sky night
+      "02d": "cloud", // few clouds day
+      "02n": "cloud", // few clouds night
+      "03d": "cloud", // scattered clouds day
+      "03n": "cloud", // scattered clouds night
+      "04d": "cloud", // broken clouds day
+      "04n": "cloud", // broken clouds night
+      "09d": "cloud-rain", // shower rain day
+      "09n": "cloud-rain", // shower rain night
+      "10d": "cloud-rain", // rain day
+      "10n": "cloud-rain", // rain night
+      "11d": "cloud-rain", // thunderstorm day
+      "11n": "cloud-rain", // thunderstorm night
+      "13d": "snowflake", // snow day
+      "13n": "snowflake", // snow night
+      "50d": "cloud", // mist day
+      "50n": "cloud", // mist night
+    };
+
+    return iconMap[openWeatherIcon] || "sun";
+  };
 
   // Icône météo selon le type
   const getWeatherIcon = (iconType: string) => {
