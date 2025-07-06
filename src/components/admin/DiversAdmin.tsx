@@ -52,22 +52,12 @@ export const DiversAdmin: React.FC = () => {
 
       await updateConfig("diversContent", JSON.stringify(diversContent));
 
-      // Dispatch event for dashboard sync with proper data
+      // Dispatch event for dashboard sync
       window.dispatchEvent(
         new CustomEvent("cgt-config-updated", {
           detail: {
             key: "diversContent",
             value: diversContent,
-          },
-        }),
-      );
-
-      // Force reload for all dashboard widgets
-      window.dispatchEvent(
-        new CustomEvent("cgt-config-updated", {
-          detail: {
-            key: "diversContent-force-reload",
-            value: JSON.stringify(diversContent),
           },
         }),
       );
