@@ -270,9 +270,11 @@ export const updateMeeting = async (
 
 export const deleteMeeting = async (id: string): Promise<boolean> => {
   console.log("🗑️ deleteMeeting appelé pour ID:", id);
-  console.log("🗑️ Mode base de données:", useSupabase ? "Supabase" : "Local");
 
-  if (!useSupabase) {
+  const supabaseReady = await ensureSupabaseReady();
+  console.log("🗑️ Mode base de données:", supabaseReady ? "Supabase" : "Local");
+
+  if (!supabaseReady) {
     try {
       const localData = getLocalData();
       console.log(
