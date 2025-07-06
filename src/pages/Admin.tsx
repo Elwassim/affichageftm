@@ -276,13 +276,16 @@ const Admin = () => {
       // FORCER la suppression immédiate dans l'interface utilisateur
       const updatedMeetings = meetings.filter((m) => m.id !== id);
 
-      // Mettre à jour l'état local immédiatement (optimistic update)
-      setState((prev) => ({
-        ...prev,
-        meetings: updatedMeetings,
-      }));
+      // Forcer la mise à jour des données locales immédiatement
+      const localData = JSON.parse(
+        localStorage.getItem("union-dashboard-data") || "{}",
+      );
+      if (localData.meetings) {
+        localData.meetings = localData.meetings.filter((m: any) => m.id !== id);
+        localStorage.setItem("union-dashboard-data", JSON.stringify(localData));
+      }
 
-      console.log("🚀 Interface mise à jour immédiatement");
+      console.log("🚀 Interface et localStorage mis à jour immédiatement");
 
       // Essayer de supprimer en base en arrière-plan
       try {
