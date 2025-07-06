@@ -1290,6 +1290,13 @@ const Admin = () => {
               </div>
             )}
 
+            {/* Divers Tab */}
+            {activeTab === "divers" && (
+              <div className="space-y-8">
+                <DiversAdmin />
+              </div>
+            )}
+
             {/* Tributes Tab */}
             {activeTab === "tributes" && (
               <div className="space-y-8">
