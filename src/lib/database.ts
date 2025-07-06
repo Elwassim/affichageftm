@@ -776,11 +776,10 @@ export const getDashboardDataFromDB = async (): Promise<DashboardData> => {
     return getLocalData();
   }
 
-  const [videoUrl, alertText, weatherCity, meetings, permanences, tributes] =
+  const [videoUrl, alertText, meetings, permanences, tributes] =
     await Promise.all([
       getConfig("videoUrl"),
       getConfig("alertText"),
-      getConfig("weatherCity"),
       getMeetings(),
       getPermanences(),
       getTributes(),
@@ -789,7 +788,6 @@ export const getDashboardDataFromDB = async (): Promise<DashboardData> => {
   return {
     videoUrl: videoUrl || "",
     alertText: alertText || "",
-    weatherCity: weatherCity || "Paris",
     meetings,
     permanences,
     tributes,
