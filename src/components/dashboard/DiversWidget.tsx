@@ -38,16 +38,30 @@ export const DiversWidget = () => {
 
     // Écouter les changements de configuration depuis l'admin
     const handleConfigUpdate = (event: CustomEvent) => {
-      if (event.detail.key === "diversContent") {
-        if (typeof event.detail.value === "string") {
+      if (
+        event.detail.key === "diversContent" ||
+        event.detail.key === "diversContent-force-reload"
+      ) {
+        console.log("🔄 DiversWidget: Mise à jour reçue", event.detail);
+
+        if (event.detail.key === "diversContent-force-reload") {
+          // Force reload depuis la BDD
+          loadDiversContent();
+        } else if (typeof event.detail.value === "string") {
           try {
             setDiversContent(JSON.parse(event.detail.value));
           } catch {
             // Si ce n'est pas du JSON, recharger depuis la BDD
             loadDiversContent();
           }
-        } else {
+        } else if (
+          event.detail.value &&
+          typeof event.detail.value === "object"
+        ) {
           setDiversContent(event.detail.value);
+        } else {
+          // Fallback: recharger depuis la BDD
+          loadDiversContent();
         }
       }
     };
