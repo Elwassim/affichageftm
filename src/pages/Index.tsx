@@ -1,5 +1,4 @@
 import { DateTimeWidget } from "@/components/dashboard/DateTimeWidget";
-import { PermanencesCombinedWidget } from "@/components/dashboard/PermanencesCombinedWidget";
 import { MeetingsWidget } from "@/components/dashboard/MeetingsWidget";
 import { DiversWidget } from "@/components/dashboard/DiversWidget";
 import { VideoWidget } from "@/components/dashboard/VideoWidget";
@@ -27,9 +26,9 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 h-[calc(100vh-150px)] w-full">
         <div className="w-full h-full">
-          {/* Layout exact selon schéma - rangée du bas plus grande */}
+          {/* Layout sans permanences - 3 colonnes */}
           <div
-            className="grid grid-cols-4 gap-4 h-full"
+            className="grid grid-cols-3 gap-4 h-full"
             style={{ gridTemplateRows: "1fr 2fr" }}
           >
             {/* Col 1 Row 1: DATE/MÉTÉO */}
@@ -37,18 +36,13 @@ const Index = () => {
               <DateTimeWidget />
             </div>
 
-            {/* Col 2 Row 1: PERMANENCES */}
+            {/* Col 2 Row 1: DIVERS */}
             <div className="col-start-2 col-end-3 row-start-1 row-end-2">
-              <PermanencesCombinedWidget />
-            </div>
-
-            {/* Col 3 Row 1: DIVERS */}
-            <div className="col-start-3 col-end-4 row-start-1 row-end-2">
               <DiversWidget />
             </div>
 
-            {/* Col 4 Row 1-2: HOMMAGE (2 rangées) */}
-            <div className="col-start-4 col-end-5 row-start-1 row-end-3">
+            {/* Col 3 Row 1-2: HOMMAGE (2 rangées) */}
+            <div className="col-start-3 col-end-4 row-start-1 row-end-3">
               <SocialWidget />
             </div>
 
@@ -57,8 +51,8 @@ const Index = () => {
               <MeetingsWidget />
             </div>
 
-            {/* Col 2-3 Row 2: VIDEO (2 colonnes) */}
-            <div className="col-start-2 col-end-4 row-start-2 row-end-3">
+            {/* Col 2 Row 2: VIDEO */}
+            <div className="col-start-2 col-end-3 row-start-2 row-end-3">
               <VideoWidget />
             </div>
           </div>
