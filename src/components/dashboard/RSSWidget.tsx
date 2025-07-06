@@ -158,9 +158,15 @@ export const RSSWidget = () => {
             FLUX RSS FRANCE INFO
           </span>
           <div className="flex items-center gap-1">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            {refreshing ? (
+              <Globe className="w-3 h-3 text-white animate-spin" />
+            ) : (
+              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            )}
             <span className="text-white/90 text-xs">
-              AUTO • {newsItems.length} infos • MAJ {lastUpdate}
+              {refreshing
+                ? "ACTUALISATION..."
+                : `AUTO • ${newsItems.length} infos • MAJ ${lastUpdate}`}
             </span>
           </div>
         </div>
