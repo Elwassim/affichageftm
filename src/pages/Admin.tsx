@@ -54,7 +54,7 @@ const MEETING_CATEGORIES = [
   "Délégu��s",
   "Formation",
   "Comité",
-  "N��gociation",
+  "Négociation",
   "Sécurité",
   "Autre",
 ];
@@ -270,15 +270,22 @@ const Admin = () => {
   };
 
   const handleDeleteMeeting = async (id: string) => {
+    console.log("🚀 handleDeleteMeeting appelé pour ID:", id);
     try {
+      console.log("🗑️ Appel de deleteMeetingFromDB...");
       const success = await deleteMeetingFromDB(id);
+      console.log("📋 Résultat de deleteMeetingFromDB:", success);
+
       if (success) {
+        console.log("🔄 Actualisation des données...");
         await refresh();
+        console.log("✅ Données actualisées");
         toast({
           title: "Succès",
           description: "Réunion supprimée avec succès.",
         });
       } else {
+        console.log("❌ Échec de la suppression");
         toast({
           title: "Erreur",
           description: "Impossible de supprimer la réunion.",
@@ -286,6 +293,7 @@ const Admin = () => {
         });
       }
     } catch (error) {
+      console.error("💥 Exception dans handleDeleteMeeting:", error);
       toast({
         title: "Erreur",
         description: "Impossible de supprimer la réunion.",
@@ -1055,7 +1063,7 @@ const Admin = () => {
                   <div className="admin-form-grid mt-6">
                     <div>
                       <label className="admin-label">
-                        Titre de la r��union *
+                        Titre de la réunion *
                       </label>
                       <input
                         type="text"
