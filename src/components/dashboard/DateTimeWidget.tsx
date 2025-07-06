@@ -54,41 +54,34 @@ export const DateTimeWidget = () => {
         setWeatherLoading(true);
         console.log("🌤️ Démarrage chargement météo...");
 
-        const apiKey = "5434483998d704e1fffaa68ff184dc46";
-        const ville = "Paris";
-        const url = `https://api.openweathermap.org/data/2.5/weather?q=${ville}&appid=${apiKey}&units=metric&lang=fr`;
+        // Utiliser Open-Meteo API (gratuit, pas de clé API nécessaire)
+        const lat = 48.8566; // Latitude de Paris
+        const lon = 2.3522; // Longitude de Paris
+        const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=Europe/Paris`;
 
         console.log("🌤️ URL API météo:", url);
         const response = await fetch(url);
         console.log("🌤️ Réponse API:", response.status, response.statusText);
 
         if (!response.ok) {
-          if (response.status === 401) {
-            console.warn(
-              "⚠️ Clé API OpenWeatherMap invalide, utilisation des données simulées",
-            );
-          } else {
-            console.warn(
-              `⚠️ Erreur API OpenWeatherMap (${response.status}), utilisation des données simulées`,
-            );
-          }
           throw new Error(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
         console.log("🌤️ Données API reçues:", data);
 
+        const current = data.current;
         const weatherData: WeatherData = {
-          temperature: Math.round(data.main.temp),
-          description: data.weather[0].description,
-          icon: mapOpenWeatherIconToLocal(data.weather[0].icon),
-          humidity: data.main.humidity,
-          windSpeed: Math.round(data.wind?.speed * 3.6 || 0), // Convert m/s to km/h
+          temperature: Math.round(current.temperature_2m),
+          description: getWeatherDescription(current.weather_code),
+          icon: getWeatherIconFromCode(current.weather_code),
+          humidity: current.relative_humidity_2m,
+          windSpeed: Math.round(current.wind_speed_10m * 3.6), // Convert m/s to km/h
           lastUpdate: new Date().toISOString(),
         };
 
         setWeather(weatherData);
-        console.log("🌤️ Météo chargée depuis OpenWeatherMap:", weatherData);
+        console.log("🌤️ Météo chargée depuis Open-Meteo:", weatherData);
         setWeatherLoading(false);
       } catch (error) {
         console.error(
