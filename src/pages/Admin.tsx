@@ -1453,57 +1453,6 @@ const Admin = () => {
               </div>
             )}
 
-            {/* Permanences Tab */}
-            {activeTab === "permanences" && (
-              <div className="space-y-8">
-                {/* Section Header with Sync Button */}
-                <div className="admin-section-header">
-                  <div className="admin-section-title">
-                    <div className="admin-section-icon bg-blue-100">
-                      <Calendar className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-slate-800">
-                        Permanences Avancées
-                      </h2>
-                      <p className="text-slate-600">
-                        Gestion des permanences techniques et politiques
-                      </p>
-                    </div>
-                  </div>
-                  <div className="admin-section-stats">
-                    <button
-                      onClick={handleFixRLS}
-                      className="admin-btn-secondary mr-2"
-                      title="Réparer les permissions RLS"
-                    >
-                      <Shield className="w-4 h-4 mr-2" />
-                      Réparer RLS
-                    </button>
-                    <button
-                      onClick={handleSyncPermanences}
-                      className="admin-btn-primary mr-4"
-                      title="Synchroniser avec la base de données"
-                    >
-                      <RefreshCw className="w-4 h-4 mr-2" />
-                      Synchroniser BDD
-                    </button>
-                    <span className="admin-connection-status">
-                      <div
-                        className={`admin-connection-dot ${dbConnected ? "bg-green-500" : "bg-red-500"}`}
-                      ></div>
-                      {dbConnected
-                        ? "Base de données connectée"
-                        : "Connexion échouée"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Permanences Admin Component */}
-                <PermanencesAdmin onRefresh={refresh} />
-              </div>
-            )}
-
             {/* Video Tab */}
             {activeTab === "video" && (
               <div className="space-y-8">
