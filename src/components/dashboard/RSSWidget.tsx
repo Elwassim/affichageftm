@@ -116,7 +116,7 @@ export const RSSWidget = () => {
         </div>
         <div className="flex-1 flex items-center px-4">
           <span className="text-white text-base">
-            Connexion à https://www.franceinfo.fr/politique.rss...
+            Chargement du flux RSS France Info...
           </span>
         </div>
       </div>
@@ -134,7 +134,7 @@ export const RSSWidget = () => {
         </div>
         <div className="flex-1 flex items-center px-4">
           <span className="text-white text-base">
-            Aucune actualité disponible
+            Flux RSS temporairement indisponible
           </span>
         </div>
       </div>
