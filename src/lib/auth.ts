@@ -9,8 +9,8 @@ export interface AuthUser {
   password: string; // In production, this would be hashed
   name: string;
   email: string;
-  role: "secretaire" | "delegue" | "admin";
-  group: "admin" | "editor" | "viewer";
+  role: "admin" | "editor";
+  group: "admin" | "editor";
   section: string;
   active: boolean;
   lastLogin?: string;
