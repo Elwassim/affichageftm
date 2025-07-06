@@ -1325,13 +1325,6 @@ const Admin = () => {
               </div>
             )}
 
-            {/* Weather Tab */}
-            {activeTab === "weather" && (
-              <div className="space-y-8">
-                <WeatherAdmin />
-              </div>
-            )}
-
             {/* Tributes Tab */}
             {activeTab === "tributes" && (
               <div className="space-y-8">
