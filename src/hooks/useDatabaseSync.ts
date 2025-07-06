@@ -16,10 +16,8 @@ interface DatabaseState {
   users: User[];
   config: {
     videoUrl: string;
-    weatherCity: string;
     alertText: string;
     diversContent: string;
-    weatherData: string;
   };
   loading: boolean;
   error: string | null;
