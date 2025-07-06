@@ -97,7 +97,7 @@ const Admin = () => {
     title: "",
     time: "",
     room: "",
-    category: "Assemblée Générale",
+    category: "Assemblée G��nérale",
     date: new Date().toISOString().split("T")[0],
   });
 
@@ -206,10 +206,6 @@ const Admin = () => {
   const displayUsers = users.length > 0 ? users : fallbackUsers;
 
   const navigate = useNavigate();
-
-  // Vérifier les permissions de l'utilisateur actuel
-  const currentUser = getCurrentUser();
-  const canManageUsersAccess = canManageUsers(currentUser);
 
   // Filtrer les éléments de navigation selon les permissions
   const allNavigationItems = [
