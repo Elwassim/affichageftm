@@ -39,10 +39,8 @@ export const useDatabaseSync = (
     users: [],
     config: {
       videoUrl: "",
-      weatherCity: "Paris",
       alertText: "",
       diversContent: "",
-      weatherData: "",
     },
     loading: true,
     error: null,
