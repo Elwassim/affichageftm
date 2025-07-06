@@ -195,15 +195,24 @@ const Admin = () => {
 
   const navigate = useNavigate();
 
-  const navigationItems = [
+  // Vérifier les permissions de l'utilisateur actuel
+  const currentUser = getCurrentUser();
+  const canManageUsersAccess = canManageUsers(currentUser);
+
+  // Filtrer les éléments de navigation selon les permissions
+  const allNavigationItems = [
     { id: "meetings", label: "Réunions", icon: Calendar, color: "blue" },
     { id: "permanences", label: "Permanences", icon: Users, color: "green" },
     { id: "tributes", label: "Hommages", icon: Heart, color: "pink" },
     { id: "divers", label: "Divers", icon: Info, color: "indigo" },
     { id: "video", label: "Médias", icon: Video, color: "orange" },
-    { id: "users", label: "Utilisateurs", icon: Shield, color: "purple" },
+    ...(canManageUsersAccess
+      ? [{ id: "users", label: "Utilisateurs", icon: Shield, color: "purple" }]
+      : []),
     { id: "settings", label: "Paramètres", icon: Settings, color: "gray" },
   ];
+
+  const navigationItems = allNavigationItems;
 
   // Afficher les erreurs de synchronisation
   useEffect(() => {
@@ -1530,7 +1539,7 @@ const Admin = () => {
                                 <span className="bg-pink-100 text-pink-700 px-2 py-1 rounded-full text-xs font-medium">
                                   Position #{index + 1}
                                 </span>
-                                <span>•</span>
+                                <span>��</span>
                                 <span>
                                   Ajouté le{" "}
                                   {new Date(
