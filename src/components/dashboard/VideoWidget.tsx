@@ -13,50 +13,26 @@ export const VideoWidget = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Charger les vidéos depuis la configuration
+  // Charger l'URL de la vidéo depuis la configuration
   useEffect(() => {
-    const loadVideos = async () => {
+    const loadVideoUrl = async () => {
       try {
-        // Essayer de charger une liste de vidéos depuis la config
-        const videosConfig = await getConfig("videosList");
-        if (videosConfig) {
-          try {
-            const parsedVideos = JSON.parse(videosConfig);
-            if (Array.isArray(parsedVideos) && parsedVideos.length > 0) {
-              setVideos(parsedVideos);
-              return;
-            }
-          } catch (e) {
-            console.log("Format de vidéos non valide, utilisation URL simple");
-          }
-        }
-
-        // Fallback vers l'ancienne configuration videoUrl
         const url = await getConfig("videoUrl");
-        if (url) {
-          setVideos([
-            {
-              url,
-              title: "Vidéo CGT FTM",
-              description: "Vidéo institutionnelle",
-            },
-          ]);
-        }
+        setVideoUrl(url || "https://www.youtube.com/embed/dQw4w9WgXcQ");
       } catch (error) {
-        console.log("Erreur chargement vidéos, utilisation par défaut");
+        // Garder l'URL par défaut
       }
     };
 
-    loadVideos();
-    const timer = setInterval(loadVideos, 30000);
+    loadVideoUrl();
+    const timer = setInterval(loadVideoUrl, 30000);
 
     // Écouter les changements de configuration depuis l'admin
     const handleConfigUpdate = (event: CustomEvent) => {
-      if (
-        event.detail.key === "videosList" ||
-        event.detail.key === "videoUrl"
-      ) {
-        loadVideos();
+      if (event.detail.key === "videoUrl") {
+        setVideoUrl(
+          event.detail.value || "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        );
       }
     };
 
