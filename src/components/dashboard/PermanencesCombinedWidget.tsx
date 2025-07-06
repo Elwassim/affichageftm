@@ -174,7 +174,7 @@ export const PermanencesCombinedWidget = () => {
             <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
               <Users className="w-2.5 h-2.5 text-cgt-red" />
             </div>
-            <p>PERMANENCE TECHNIQUE DU JOUR</p>
+            <p>PERMANENCE TECHNIQUE</p>
           </h2>
         </div>
 
@@ -203,7 +203,7 @@ export const PermanencesCombinedWidget = () => {
             <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
               <Users className="w-2.5 h-2.5 text-cgt-red" />
             </div>
-            PERMANENCE POLITIQUE SEMAINE
+            <p>PERMANENCE POLITIQUE</p>
           </h2>
         </div>
 
