@@ -570,29 +570,56 @@ const Admin = () => {
     try {
       toast({
         title: "Synchronisation en cours...",
-        description:
-          "Migration et synchronisation des permanences avec la base de données.",
+        description: "Mise à jour des permanences avec la base de données.",
       });
 
-      const result = await syncPermanencesWithDB();
+      await refresh(); // Actualiser les données
 
-      if (result.success) {
-        await refresh(); // Actualiser les données
-        toast({
-          title: "Succès",
-          description: result.message,
-        });
-      } else {
-        toast({
-          title: "Erreur de synchronisation",
-          description: result.message,
-          variant: "destructive",
-        });
-      }
+      // Dispatch event for dashboard sync
+      window.dispatchEvent(
+        new CustomEvent("cgt-config-updated", {
+          detail: { key: "permanences", value: "synced" },
+        }),
+      );
+
+      toast({
+        title: "Succès",
+        description: "Permanences synchronisées avec succès.",
+      });
     } catch (error) {
       toast({
         title: "Erreur",
         description: "Impossible de synchroniser les permanences.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // SYNC DIVERS CONTENT
+  const handleSyncDivers = async () => {
+    try {
+      toast({
+        title: "Synchronisation...",
+        description: "Mise à jour du contenu divers en cours...",
+      });
+
+      await refresh(); // Actualiser toutes les données
+
+      // Dispatch event for dashboard sync
+      window.dispatchEvent(
+        new CustomEvent("cgt-config-updated", {
+          detail: { key: "diversContent", value: "synced" },
+        }),
+      );
+
+      toast({
+        title: "Synchronisation réussie",
+        description: "Le contenu divers a été mis à jour.",
+      });
+    } catch (error) {
+      toast({
+        title: "Erreur de synchronisation",
+        description: "Impossible de synchroniser le contenu divers.",
         variant: "destructive",
       });
     }
