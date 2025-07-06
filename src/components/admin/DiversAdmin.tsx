@@ -97,6 +97,26 @@ export const DiversAdmin: React.FC = () => {
     });
   };
 
+  // Test de synchronisation
+  const handleTestSync = () => {
+    console.log("🧪 Test de synchronisation Divers:", diversContent);
+
+    // Émettre l'événement de mise à jour
+    window.dispatchEvent(
+      new CustomEvent("cgt-config-updated", {
+        detail: {
+          key: "diversContent",
+          value: diversContent,
+        },
+      }),
+    );
+
+    toast({
+      title: "Test de synchronisation",
+      description: "Événement envoyé au dashboard. Vérifiez la console.",
+    });
+  };
+
   if (loading) {
     return (
       <Card className="p-6">
