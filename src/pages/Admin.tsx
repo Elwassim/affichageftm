@@ -1637,51 +1637,6 @@ const Admin = () => {
                 </div>
 
                 {/* Weather Configuration */}
-                <div className="admin-add-card">
-                  <div className="admin-section-title">
-                    <div className="admin-section-icon bg-blue-500">
-                      <Settings className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-slate-800">
-                        Ville météo
-                      </h3>
-                      <p className="text-sm text-slate-600">
-                        Ville pour l'affichage météorologique
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="mt-6">
-                    <label className="admin-label">Nom de la ville</label>
-                    <div className="flex gap-2">
-                      <input
-                        type="text"
-                        value={localConfig.weatherCity}
-                        onChange={(e) =>
-                          setLocalConfig({
-                            ...localConfig,
-                            weatherCity: e.target.value,
-                          })
-                        }
-                        placeholder="Paris"
-                        className="admin-input flex-1"
-                      />
-                      <button
-                        onClick={() =>
-                          handleUpdateConfig(
-                            "weatherCity",
-                            localConfig.weatherCity,
-                          )
-                        }
-                        className="admin-btn-primary"
-                      >
-                        <Save className="w-4 h-4 mr-2" />
-                        Sauvegarder
-                      </button>
-                    </div>
-                  </div>
-                </div>
               </div>
             )}
 
