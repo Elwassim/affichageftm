@@ -1024,7 +1024,7 @@ const Admin = () => {
                     </div>
                     <div>
                       <h2 className="text-2xl font-bold text-gray-900">
-                        R��unions CGT FTM
+                        Réunions CGT FTM
                       </h2>
                       <p className="text-gray-700">
                         Planifiez et organisez les assemblées syndicales
