@@ -194,6 +194,7 @@ const Admin = () => {
     { id: "meetings", label: "Réunions", icon: Calendar, color: "blue" },
     { id: "permanences", label: "Permanences", icon: Users, color: "green" },
     { id: "tributes", label: "Hommages", icon: Heart, color: "pink" },
+    { id: "divers", label: "Divers", icon: Info, color: "indigo" },
     { id: "video", label: "Médias", icon: Video, color: "orange" },
     { id: "users", label: "Utilisateurs", icon: Shield, color: "purple" },
     { id: "settings", label: "Paramètres", icon: Settings, color: "gray" },
@@ -382,7 +383,7 @@ const Admin = () => {
   // CONFIG FUNCTIONS
   const handleUpdateConfig = async (key: string, value: string) => {
     try {
-      console.log("🔧 Tentative sauvegarde:", { key, value });
+      console.log("��� Tentative sauvegarde:", { key, value });
       const success = await updateConfig(key, value);
       console.log("📊 Résultat sauvegarde:", success);
 
