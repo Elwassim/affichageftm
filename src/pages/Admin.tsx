@@ -271,65 +271,15 @@ const Admin = () => {
 
   const handleDeleteMeeting = async (id: string) => {
     try {
-      console.log("🗑️ Tentative suppression réunion:", id);
-
-      // FORCER la suppression immédiate dans l'interface utilisateur
-      const updatedMeetings = meetings.filter((m) => m.id !== id);
-
-      // Forcer la mise à jour des données locales immédiatement
-      const localData = JSON.parse(
-        localStorage.getItem("union-dashboard-data") || "{}",
-      );
-      if (localData.meetings) {
-        localData.meetings = localData.meetings.filter((m: any) => m.id !== id);
-        localStorage.setItem("union-dashboard-data", JSON.stringify(localData));
-      }
-
-      console.log("🚀 Interface et localStorage mis à jour immédiatement");
-
-      // Forcer un refresh immédiat des données
-      await refresh();
-
-      // Essayer de supprimer en base en arrière-plan
-      try {
-        const success = await deleteMeetingFromDB(id);
-        console.log("🗑️ Résultat suppression base:", success);
-
-        if (success) {
-          console.log("✅ Suppression en base réussie");
-
-          // Forcer le refresh pour synchroniser avec la base
-          await refresh();
-
-          toast({
-            title: "Succès",
-            description: "Réunion supprimée avec succès.",
-          });
-        } else {
-          console.warn("⚠️ Échec suppression base, mais interface mise à jour");
-          toast({
-            title: "Succès (Local)",
-            description:
-              "Réunion supprimée de l'interface. Synchronisation en cours...",
-          });
-        }
-      } catch (dbError) {
-        console.error("❌ Erreur base de données:", dbError);
+      const success = await deleteMeetingFromDB(id);
+      if (success) {
+        await refresh();
         toast({
-          title: "Succès (Local)",
-          description:
-            "Réunion supprimée localement. La base sera synchronisée plus tard.",
+          title: "Succès",
+          description: "Réunion supprimée avec succès.",
         });
       }
-
-      // Déclencher les événements de synchronisation
-      window.dispatchEvent(
-        new CustomEvent("cgt-config-updated", {
-          detail: { key: "meetings", value: "deleted" },
-        }),
-      );
     } catch (error) {
-      console.error("❌ Erreur générale suppression:", error);
       toast({
         title: "Erreur",
         description: "Impossible de supprimer la réunion.",
