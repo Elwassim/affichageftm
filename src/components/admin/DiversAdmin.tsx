@@ -13,6 +13,20 @@ interface DiversContent {
   subtitle: string;
   content: string;
   isActive: boolean;
+  // Options avancées
+  backgroundColor: string;
+  textColor: string;
+  icon: string;
+  showIcon: boolean;
+  image?: string;
+  showImage: boolean;
+  link?: string;
+  linkText?: string;
+  showBorder: boolean;
+  borderColor: string;
+  fontSize: "small" | "medium" | "large";
+  alignment: "left" | "center" | "right";
+  style: "default" | "highlight" | "warning" | "success";
 }
 
 export const DiversAdmin: React.FC = () => {
@@ -21,6 +35,19 @@ export const DiversAdmin: React.FC = () => {
     subtitle: "CGT FTM",
     content: "Aucune information particulière pour le moment.",
     isActive: false,
+    backgroundColor: "#ffffff",
+    textColor: "#374151",
+    icon: "Info",
+    showIcon: true,
+    image: "",
+    showImage: false,
+    link: "",
+    linkText: "",
+    showBorder: false,
+    borderColor: "#e5e7eb",
+    fontSize: "medium",
+    alignment: "center",
+    style: "default",
   });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -103,6 +130,19 @@ export const DiversAdmin: React.FC = () => {
       subtitle: "CGT FTM",
       content: "Aucune information particulière pour le moment.",
       isActive: false,
+      backgroundColor: "#ffffff",
+      textColor: "#374151",
+      icon: "Info",
+      showIcon: true,
+      image: "",
+      showImage: false,
+      link: "",
+      linkText: "",
+      showBorder: false,
+      borderColor: "#e5e7eb",
+      fontSize: "medium",
+      alignment: "center",
+      style: "default",
     });
   };
 
