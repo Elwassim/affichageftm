@@ -1712,8 +1712,8 @@ const Admin = () => {
               </div>
             )}
 
-            {/* Users Tab */}
-            {activeTab === "users" && (
+            {/* Users Tab - ADMIN ONLY */}
+            {activeTab === "users" && canManageUsersAccess && (
               <div className="space-y-8">
                 {/* Section Header */}
                 <div className="admin-section-header">
