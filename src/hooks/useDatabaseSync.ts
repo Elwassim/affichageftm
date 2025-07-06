@@ -53,48 +53,71 @@ export const useDatabaseSync = (
     setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
-      // Initialiser les configurations par défaut
-      await initializeDefaultConfig();
+      console.log("🔄 Refresh des données depuis localStorage...");
 
-      const [
-        meetings,
-        tributes,
-        permanences,
-        users,
-        videoUrl,
-        alertText,
-        diversContent,
-      ] = await Promise.all([
-        getAllMeetings(),
-        getTributes(),
-        getPermanences(),
-        getUsers(),
-        getConfig("videoUrl"),
-        getConfig("alertText"),
-        getConfig("diversContent"),
-      ]);
+      // Utiliser directement localStorage
+      const localData = JSON.parse(
+        localStorage.getItem("union-dashboard-data") || "null",
+      );
 
-      setState({
-        meetings,
-        tributes,
-        permanences,
-        users,
-        config: {
-          videoUrl: videoUrl || "",
-          alertText: alertText || "",
-          diversContent: diversContent || "",
-        },
-        loading: false,
-        error: null,
-        lastSync: new Date(),
-      });
+      if (!localData) {
+        console.log("📦 Initialisation des données par défaut");
+        // Utiliser les données par défaut du storage
+        const { getDashboardData } = await import("../lib/storage");
+        const defaultData = getDashboardData();
+
+        setState({
+          meetings: defaultData.meetings,
+          tributes: defaultData.tributes,
+          permanences: defaultData.permanences,
+          users: defaultData.users || [],
+          config: {
+            videoUrl: defaultData.videoUrl,
+            alertText: defaultData.alertText,
+            diversContent: JSON.stringify({
+              title: "Informations diverses",
+              subtitle: "CGT FTM",
+              content: "Aucune information particulière pour le moment.",
+              isActive: false,
+            }),
+          },
+          loading: false,
+          error: null,
+          lastSync: new Date(),
+        });
+      } else {
+        console.log(
+          "📱 Données chargées depuis localStorage:",
+          Object.keys(localData),
+        );
+        setState({
+          meetings: localData.meetings || [],
+          tributes: localData.tributes || [],
+          permanences: localData.permanences || [],
+          users: localData.users || [],
+          config: {
+            videoUrl: localData.videoUrl || "",
+            alertText: localData.alertText || "",
+            diversContent: JSON.stringify({
+              title: "Informations diverses",
+              subtitle: "CGT FTM",
+              content: "Aucune information particulière pour le moment.",
+              isActive: false,
+            }),
+          },
+          loading: false,
+          error: null,
+          lastSync: new Date(),
+        });
+      }
 
       setIsConnected(true);
     } catch (error) {
+      console.error("❌ Erreur refresh:", error);
       setState((prev) => ({
         ...prev,
         loading: false,
-        error: "Erreur de connexion à la base de données",
+        error: "Erreur de chargement des données",
       }));
       setIsConnected(false);
     }
