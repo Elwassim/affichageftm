@@ -105,7 +105,7 @@ const Admin = () => {
   const [editingUser, setEditingUser] = useState<string | null>(null);
   const [editUserData, setEditUserData] = useState<Partial<User>>({});
 
-  // État pour l'édition inline des réunions
+  // État pour l'��dition inline des réunions
   const [editingMeeting, setEditingMeeting] = useState<string | null>(null);
   const [editMeetingData, setEditMeetingData] = useState<Partial<Meeting>>({});
 
@@ -286,6 +286,9 @@ const Admin = () => {
       }
 
       console.log("🚀 Interface et localStorage mis à jour immédiatement");
+
+      // Forcer un refresh immédiat des données
+      await refresh();
 
       // Essayer de supprimer en base en arrière-plan
       try {
