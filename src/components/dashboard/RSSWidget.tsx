@@ -12,77 +12,95 @@ export const RSSWidget = () => {
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState<string>("");
 
-  // Générateur d'actualités France Info réalistes
-  const generateFranceInfoNews = (): RSSItem[] => {
-    const topics = [
-      "Assemblée nationale - Examen du projet de loi de finances 2025",
-      "Élysée - Emmanuel Macron reçoit les syndicats pour un dialogue social",
-      "Gouvernement - Annonce de nouvelles mesures pour l'emploi des jeunes",
-      "Sénat - Débat sur la réforme des retraites complémentaires",
-      "Ministère de l'Économie - Plan de soutien à l'industrie française",
-      "Parlement - Vote sur les crédits budgétaires de l'éducation nationale",
-      "Europe - Sommet franco-allemand sur les questions énergétiques",
-      "Politique - Sondage sur la confiance dans les institutions républicaines",
-      "Régions - Les présidents de région demandent plus d'autonomie fiscale",
-      "Social - Négociations sur les salaires dans la fonction publique",
-      "Syndicats - Appel à manifestation nationale pour les droits sociaux",
-      "Justice - Réforme de la procédure pénale en cours d'examen",
-      "Défense - Présentation du nouveau livre blanc sur la sécurité nationale",
-      "International - La France préside le G7 sur les questions climatiques",
-      "Écologie - Nouveau plan de transition énergétique présenté par le gouvernement",
-      "Santé - Réforme du système hospitalier débattue à l'Assemblée",
-      "Éducation - Présentation de la réforme de l'enseignement professionnel",
-      "Culture - Plan de soutien aux industries créatives et culturelles",
-      "Agriculture - Négociations européennes sur la PAC et les subventions",
-      "Transport - Grève nationale SNCF prévue la semaine prochaine",
-      "Numérique - Stratégie France 2030 pour la souveraineté technologique",
-      "Immigration - Projet de loi sur l'intégration et l'asile en débat",
-      "Collectivités - Réforme de la fiscalité locale en préparation",
-      "Outre-mer - Plan de développement économique pour les DOM-TOM",
-      "Logement - Nouvelles mesures contre la crise du logement social",
-    ];
+  // Charger le flux RSS réel de France Info
+  const loadRealRSSFeed = async (): Promise<RSSItem[]> => {
+    try {
+      const rssUrl = "https://www.franceinfo.fr/politique.rss";
 
-    const baseTime = new Date();
+      // Utiliser un proxy CORS pour contourner les restrictions
+      const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(rssUrl)}`;
 
-    return topics.map((topic, index) => {
-      const pubDate = new Date(baseTime.getTime() - index * 15 * 60 * 1000); // 15 min d'écart
-      return {
-        title: topic,
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: pubDate.toISOString(),
-      };
-    });
+      console.log("📡 Chargement du flux RSS France Info depuis:", rssUrl);
+
+      const response = await fetch(proxyUrl);
+      const data = await response.json();
+
+      if (!data.contents) {
+        throw new Error("Pas de contenu RSS reçu");
+      }
+
+      // Parser le XML
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+
+      // Extraire les items RSS
+      const items = xmlDoc.querySelectorAll("item");
+      const rssItems: RSSItem[] = [];
+
+      items.forEach((item, index) => {
+        if (index < 20) {
+          // Limiter à 20 articles
+          const title = item.querySelector("title")?.textContent || "";
+          const link = item.querySelector("link")?.textContent || "";
+          const pubDate = item.querySelector("pubDate")?.textContent || "";
+
+          if (title && link) {
+            rssItems.push({
+              title: title.trim(),
+              link: link.trim(),
+              pubDate: pubDate || new Date().toISOString(),
+            });
+          }
+        }
+      });
+
+      console.log("✅ Flux RSS réel chargé:", rssItems.length, "articles");
+      return rssItems;
+    } catch (error) {
+      console.error("❌ Erreur chargement RSS:", error);
+
+      // Fallback avec quelques actualités par défaut
+      return [
+        {
+          title: "France Info - Actualités politiques en temps réel",
+          link: "https://www.franceinfo.fr/politique",
+          pubDate: new Date().toISOString(),
+        },
+        {
+          title: "Suivez l'actualité politique française sur France Info",
+          link: "https://www.franceinfo.fr/politique",
+          pubDate: new Date().toISOString(),
+        },
+      ];
+    }
   };
 
   useEffect(() => {
-    const loadRSSData = () => {
+    const loadRSSData = async () => {
       setLoading(true);
-      console.log("🔄 Simulation du flux RSS France Info politique...");
+      console.log("🔄 Chargement du flux RSS France Info politique...");
 
-      // Simuler un délai de chargement réaliste
-      setTimeout(
-        () => {
-          const news = generateFranceInfoNews();
-          setNewsItems(news);
-          setLastUpdate(new Date().toLocaleTimeString("fr-FR"));
-          setLoading(false);
-          console.log("✅ Flux RSS simulé chargé:", news.length, "articles");
-          console.log(
-            "📰 Source simulée: https://www.franceinfo.fr/politique.rss",
-          );
-        },
-        500 + Math.random() * 1000,
-      ); // Délai réaliste entre 0.5-1.5s
+      try {
+        const news = await loadRealRSSFeed();
+        setNewsItems(news);
+        setLastUpdate(new Date().toLocaleTimeString("fr-FR"));
+        setLoading(false);
+        console.log("✅ Flux RSS chargé:", news.length, "articles");
+      } catch (error) {
+        console.error("❌ Erreur chargement RSS:", error);
+        setLoading(false);
+        // Garder les anciens articles en cas d'erreur
+      }
     };
 
     // Charger immédiatement
     loadRSSData();
 
-    // Recharger avec de nouvelles actualités toutes les 2 minutes
+    // Recharger le flux RSS toutes les 5 minutes (pour éviter la surcharge)
     const interval = setInterval(() => {
-      console.log("🔄 Actualisation du flux RSS...");
+      console.log("🔄 Actualisation du flux RSS France Info...");
       loadRSSData();
-    }, 120000);
+    }, 300000); // 5 minutes
 
     return () => clearInterval(interval);
   }, []);
