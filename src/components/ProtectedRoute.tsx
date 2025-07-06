@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { isAuthenticated, getCurrentUser, hasAdminAccess } from "@/lib/auth";
+import { isAuthenticated, getCurrentUser, hasEditorAccess } from "@/lib/auth";
 
 interface ProtectedRouteProps {
   children: ReactNode;
