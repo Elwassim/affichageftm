@@ -269,69 +269,22 @@ export const updateMeeting = async (
 };
 
 export const deleteMeeting = async (id: string): Promise<boolean> => {
-  console.log("🗑️ deleteMeeting appelé pour ID:", id);
-
-  const supabaseReady = await ensureSupabaseReady();
-  console.log("🗑️ Mode base de données:", supabaseReady ? "Supabase" : "Local");
-
-  if (!supabaseReady) {
-    try {
-      const localData = getLocalData();
-      console.log(
-        "🗑️ Données locales avant suppression:",
-        localData.meetings.length,
-        "réunions",
-      );
-      console.log(
-        "🗑️ Liste des IDs avant:",
-        localData.meetings.map((m) => m.id),
-      );
-
-      const filteredMeetings = localData.meetings.filter((m) => m.id !== id);
-      console.log(
-        "🗑️ Données après filtrage:",
-        filteredMeetings.length,
-        "réunions",
-      );
-      console.log(
-        "🗑️ Liste des IDs après:",
-        filteredMeetings.map((m) => m.id),
-      );
-
-      const updatedData = { ...localData, meetings: filteredMeetings };
-      saveLocalData(updatedData);
-
-      // Vérifier que les données ont bien été sauvegardées
-      const verifyData = getLocalData();
-      console.log(
-        "🔍 Vérification après sauvegarde:",
-        verifyData.meetings.length,
-        "réunions",
-      );
-
-      const wasDeleted = !verifyData.meetings.some((m) => m.id === id);
-      console.log("✅ Suppression locale réussie:", wasDeleted);
-
-      return wasDeleted;
-    } catch (error) {
-      console.error("❌ Erreur lors de la suppression locale:", error);
-      return false;
-    }
+  if (!useSupabase) {
+    const localData = getLocalData();
+    const filteredMeetings = localData.meetings.filter((m) => m.id !== id);
+    saveLocalData({ ...localData, meetings: filteredMeetings });
+    return true;
   }
 
   try {
-    console.log("🗑️ Tentative suppression Supabase...");
     const { error } = await supabase!.from("meetings").delete().eq("id", id);
-
     if (error) {
-      console.error("❌ Erreur suppression meeting:", error);
+      console.error("Erreur suppression meeting:", error);
       return false;
     }
-
-    console.log("✅ Suppression Supabase réussie");
     return true;
   } catch (error) {
-    console.error("❌ Erreur Supabase delete meeting:", error);
+    console.error("Erreur Supabase delete meeting:", error);
     return false;
   }
 };
