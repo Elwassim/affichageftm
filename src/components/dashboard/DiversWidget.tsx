@@ -14,11 +14,11 @@ export const DiversWidget = () => {
   const [diversContent, setDiversContent] = useState<DiversContent>({
     title: "Informations diverses",
     subtitle: "CGT FTM",
-    content: "Aucune information particulière pour le moment.",
-    isActive: false,
+    content: "TEST WIDGET DIVERS - SI VOUS VOYEZ CECI, LE WIDGET FONCTIONNE !",
+    isActive: true,
   });
 
-  console.log("🔍 DiversWidget: Rendu avec contenu", diversContent);
+  console.log("🔍 DiversWidget: DÉMARRAGE DU WIDGET", diversContent);
 
   // Charger le contenu configuré
   useEffect(() => {
