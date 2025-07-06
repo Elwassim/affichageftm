@@ -630,7 +630,7 @@ export const getUsers = async (): Promise<User[]> => {
         console.log("📊 Résultat RPC:", rpcResult);
 
         if (!rpcResult.error && rpcResult.data) {
-          console.log("✅ Méthode RPC réussie!");
+          console.log("✅ M��thode RPC réussie!");
           return rpcResult.data;
         }
       } catch (rpcError) {
@@ -758,16 +758,25 @@ export const updateUser = async (
   id: string,
   updates: Partial<User>,
 ): Promise<boolean> => {
+  console.log("✏️ updateUser appelé pour ID:", id, "updates:", updates);
+
   if (!useSupabase) {
-    const localData = getLocalData();
-    const users = localData.users || [];
-    const updatedUsers = users.map((u) =>
-      u.id === id
-        ? { ...u, ...updates, updated_at: new Date().toISOString() }
-        : u,
-    );
-    saveLocalData({ ...localData, users: updatedUsers });
-    return true;
+    console.log("📱 Mise à jour utilisateur en localStorage");
+    try {
+      const localData = getLocalData();
+      const users = localData.users || [];
+      const updatedUsers = users.map((u) =>
+        u.id === id
+          ? { ...u, ...updates, updated_at: new Date().toISOString() }
+          : u,
+      );
+      saveLocalData({ ...localData, users: updatedUsers });
+      console.log("✅ Utilisateur mis à jour en localStorage");
+      return true;
+    } catch (error) {
+      console.error("❌ Erreur mise à jour utilisateur localStorage:", error);
+      return false;
+    }
   }
 
   try {
