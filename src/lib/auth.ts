@@ -173,14 +173,15 @@ export const authenticateUser = async (
         console.log("✅ Authentification réussie");
 
         // Convertir l'utilisateur Supabase vers le format AuthUser
+        // Seulement 2 types : Admin (gère tout) et Éditeur (tout sauf users)
         const authUser: AuthUser = {
           id: supabaseUser.id,
           username: supabaseUser.username,
           password: credentials.password, // Ne pas stocker le vrai mot de passe
           name: supabaseUser.username,
           email: supabaseUser.email || "",
-          role: supabaseUser.is_admin ? "admin" : (supabaseUser.role as any),
-          group: supabaseUser.is_admin ? "admin" : "editor",
+          role: supabaseUser.is_admin ? "admin" : "delegue", // admin ou delegue (éditeur)
+          group: supabaseUser.is_admin ? "admin" : "editor", // admin ou editor
           section: "CGT FTM",
           active: supabaseUser.is_active,
           lastLogin: new Date().toISOString(),
