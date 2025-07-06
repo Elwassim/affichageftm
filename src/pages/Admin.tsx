@@ -27,6 +27,7 @@ import {
   Cloud,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getCurrentUser, canManageUsers } from "@/lib/auth";
 
 // Import des styles améliorés
 import "../styles/admin-improvements.css";
