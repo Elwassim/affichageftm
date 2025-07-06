@@ -12,9 +12,33 @@ import {
   getDashboardData as getLocalData,
   saveDashboardData as saveLocalData,
 } from "./storage";
+import {
+  initializeSupabaseTables,
+  insertDefaultData,
+} from "./initializeSupabase";
 
 // Utiliser Supabase si configuré, sinon localStorage en fallback
 const useSupabase = !!supabase;
+
+// Initialisation automatique de Supabase au premier chargement
+let supabaseInitialized = false;
+const ensureSupabaseReady = async (): Promise<boolean> => {
+  if (!useSupabase || supabaseInitialized) return useSupabase;
+
+  try {
+    console.log("🔧 Initialisation automatique de Supabase...");
+    const success = await initializeSupabaseTables();
+    if (success) {
+      await insertDefaultData();
+      supabaseInitialized = true;
+      console.log("✅ Supabase initialisé et prêt");
+    }
+    return success;
+  } catch (error) {
+    console.error("❌ Échec initialisation Supabase:", error);
+    return false;
+  }
+};
 
 // ===== CONFIGURATION =====
 export const getConfig = async (key: string): Promise<any> => {
