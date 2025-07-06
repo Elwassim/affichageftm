@@ -271,23 +271,43 @@ const Admin = () => {
 
   const handleDeleteMeeting = async (id: string) => {
     try {
+      console.log("🗑️ Tentative suppression réunion:", id);
+
+      // Supprimer immédiatement de l'interface utilisateur
+      const updatedMeetings = meetings.filter((m) => m.id !== id);
+
       const success = await deleteMeetingFromDB(id);
+      console.log("🗑️ Résultat suppression base:", success);
+
       if (success) {
         // Force clear localStorage to ensure sync
         localStorage.removeItem("union-dashboard-data");
-        await refresh(); // Actualiser toutes les données
+
+        // Actualiser immédiatement les données locales
+        await refresh();
+
         // Dispatch event for dashboard sync
         window.dispatchEvent(
           new CustomEvent("cgt-config-updated", {
             detail: { key: "meetings", value: "deleted" },
           }),
         );
+
+        // Forcer un second refresh après 500ms pour s'assurer
+        setTimeout(async () => {
+          console.log("🔄 Second refresh forcé");
+          await refresh();
+        }, 500);
+
         toast({
           title: "Succès",
           description: "Réunion supprimée avec succès.",
         });
+      } else {
+        throw new Error("Échec de la suppression en base");
       }
     } catch (error) {
+      console.error("❌ Erreur suppression réunion:", error);
       toast({
         title: "Erreur",
         description: "Impossible de supprimer la réunion.",
