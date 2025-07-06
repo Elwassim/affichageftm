@@ -1821,9 +1821,8 @@ const Admin = () => {
                         }
                         className="admin-input w-full"
                       >
-                        <option value="user">Utilisateur</option>
+                        <option value="editor">Éditeur</option>
                         <option value="admin">Administrateur</option>
-                        <option value="moderator">Modérateur</option>
                       </select>
                     </div>
                   </div>
