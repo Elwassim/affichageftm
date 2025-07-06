@@ -22,6 +22,7 @@ import {
   Settings,
   Eye,
   EyeOff,
+  Info,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -383,7 +384,7 @@ const Admin = () => {
   // CONFIG FUNCTIONS
   const handleUpdateConfig = async (key: string, value: string) => {
     try {
-      console.log("��� Tentative sauvegarde:", { key, value });
+      console.log("🔧 Tentative sauvegarde:", { key, value });
       const success = await updateConfig(key, value);
       console.log("📊 Résultat sauvegarde:", success);
 
