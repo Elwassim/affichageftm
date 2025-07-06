@@ -168,7 +168,7 @@ export const VideoWidget = () => {
 
     const cleanup = forceAutoplay();
     return cleanup;
-  }, [videoUrl]);
+  }, [currentVideo?.url]);
 
   // Fonction pour activer le son
   const activateSound = () => {
