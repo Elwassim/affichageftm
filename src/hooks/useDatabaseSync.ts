@@ -81,10 +81,8 @@ export const useDatabaseSync = (
         users,
         config: {
           videoUrl: videoUrl || "",
-          weatherCity: weatherCity || "Paris",
           alertText: alertText || "",
           diversContent: diversContent || "",
-          weatherData: weatherData || "",
         },
         loading: false,
         error: null,
