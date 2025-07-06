@@ -6,6 +6,7 @@ import { AlertBanner } from "@/components/dashboard/AlertBanner";
 import { SocialWidget } from "@/components/dashboard/SocialWidget";
 import { RSSWidget } from "@/components/dashboard/RSSWidget";
 import { CGTHeader } from "@/components/dashboard/CGTHeader";
+import { PermanencesCombinedWidget } from "@/components/dashboard/PermanencesCombinedWidget";
 import { useRealTimeUpdates } from "@/hooks/useRealTimeUpdates";
 import { Wifi } from "lucide-react";
 
@@ -26,9 +27,9 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 h-[calc(100vh-150px)] w-full">
         <div className="w-full h-full">
-          {/* Layout sans permanences - 3 colonnes */}
+          {/* Layout avec permanences - 4 colonnes */}
           <div
-            className="grid grid-cols-3 gap-4 h-full"
+            className="grid grid-cols-4 gap-4 h-full"
             style={{ gridTemplateRows: "1fr 2fr" }}
           >
             {/* Col 1 Row 1: DATE/MÉTÉO */}
@@ -41,8 +42,13 @@ const Index = () => {
               <DiversWidget />
             </div>
 
-            {/* Col 3 Row 1-2: HOMMAGE (2 rangées) */}
-            <div className="col-start-3 col-end-4 row-start-1 row-end-3">
+            {/* Col 3 Row 1: PERMANENCES */}
+            <div className="col-start-3 col-end-4 row-start-1 row-end-2">
+              <PermanencesCombinedWidget />
+            </div>
+
+            {/* Col 4 Row 1-2: HOMMAGE (2 rangées) */}
+            <div className="col-start-4 col-end-5 row-start-1 row-end-3">
               <SocialWidget />
             </div>
 
@@ -54,6 +60,11 @@ const Index = () => {
             {/* Col 2 Row 2: VIDEO */}
             <div className="col-start-2 col-end-3 row-start-2 row-end-3">
               <VideoWidget />
+            </div>
+
+            {/* Col 3 Row 2: Empty for now */}
+            <div className="col-start-3 col-end-4 row-start-2 row-end-3">
+              {/* Espace réservé */}
             </div>
           </div>
 
