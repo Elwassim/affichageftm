@@ -929,7 +929,7 @@ const Admin = () => {
 
   const handleLogout = () => {
     logout();
-    navigate("/");
+    navigate("/login");
   };
 
   if (loading) {
