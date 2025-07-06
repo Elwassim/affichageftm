@@ -33,10 +33,22 @@ export const DiversWidget = () => {
 
     loadDiversContent();
 
+    // Auto-refresh toutes les 60 secondes pour synchronisation BDD
+    const interval = setInterval(loadDiversContent, 60000);
+
     // Écouter les changements de configuration depuis l'admin
     const handleConfigUpdate = (event: CustomEvent) => {
       if (event.detail.key === "diversContent") {
-        setDiversContent(event.detail.value);
+        if (typeof event.detail.value === "string") {
+          try {
+            setDiversContent(JSON.parse(event.detail.value));
+          } catch {
+            // Si ce n'est pas du JSON, recharger depuis la BDD
+            loadDiversContent();
+          }
+        } else {
+          setDiversContent(event.detail.value);
+        }
       }
     };
 
@@ -46,6 +58,7 @@ export const DiversWidget = () => {
     );
 
     return () => {
+      clearInterval(interval);
       window.removeEventListener(
         "cgt-config-updated",
         handleConfigUpdate as EventListener,
