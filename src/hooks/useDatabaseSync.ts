@@ -18,6 +18,7 @@ interface DatabaseState {
     videoUrl: string;
     weatherCity: string;
     alertText: string;
+    diversContent: string;
   };
   loading: boolean;
   error: string | null;
@@ -41,6 +42,7 @@ export const useDatabaseSync = (
       videoUrl: "",
       weatherCity: "Paris",
       alertText: "",
+      diversContent: "",
     },
     loading: true,
     error: null,
@@ -64,6 +66,7 @@ export const useDatabaseSync = (
         videoUrl,
         weatherCity,
         alertText,
+        diversContent,
       ] = await Promise.all([
         getAllMeetings(),
         getTributes(),
@@ -72,6 +75,7 @@ export const useDatabaseSync = (
         getConfig("videoUrl"),
         getConfig("weatherCity"),
         getConfig("alertText"),
+        getConfig("diversContent"),
       ]);
 
       setState({
@@ -83,6 +87,7 @@ export const useDatabaseSync = (
           videoUrl: videoUrl || "",
           weatherCity: weatherCity || "Paris",
           alertText: alertText || "",
+          diversContent: diversContent || "",
         },
         loading: false,
         error: null,
