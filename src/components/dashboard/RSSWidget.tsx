@@ -77,8 +77,12 @@ export const RSSWidget = () => {
   };
 
   useEffect(() => {
-    const loadRSSData = async () => {
-      setLoading(true);
+    const loadRSSData = async (isRefresh = false) => {
+      if (isRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
       console.log("🔄 Chargement du flux RSS France Info politique...");
 
       try {
@@ -86,10 +90,12 @@ export const RSSWidget = () => {
         setNewsItems(news);
         setLastUpdate(new Date().toLocaleTimeString("fr-FR"));
         setLoading(false);
+        setRefreshing(false);
         console.log("✅ Flux RSS chargé:", news.length, "articles");
       } catch (error) {
         console.error("❌ Erreur chargement RSS:", error);
         setLoading(false);
+        setRefreshing(false);
         // Garder les anciens articles en cas d'erreur
       }
     };
