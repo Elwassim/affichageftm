@@ -2027,7 +2027,7 @@ const Admin = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-slate-800">
-                        État du syst��me
+                        État du système
                       </h3>
                       <p className="text-sm text-slate-600">
                         Informations sur l'état de l'application
