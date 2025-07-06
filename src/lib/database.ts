@@ -13,8 +13,8 @@ import {
   saveDashboardData as saveLocalData,
 } from "./storage";
 
-// Fallback vers localStorage si Supabase n'est pas configuré
-const useSupabase = !!supabase;
+// Forcer l'utilisation du localStorage car Supabase pose des problèmes
+const useSupabase = false; // Désactivé temporairement pour éviter les erreurs 404
 
 // ===== CONFIGURATION =====
 export const getConfig = async (key: string): Promise<any> => {
