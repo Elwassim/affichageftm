@@ -22,54 +22,25 @@ export const DiversWidget = () => {
   useEffect(() => {
     const loadDiversContent = async () => {
       try {
-        console.log("🔄 DiversWidget: Chargement du contenu...");
         const content = await getConfig("diversContent");
-        console.log("📄 DiversWidget: Contenu reçu:", content);
-
         if (content) {
-          const parsed = JSON.parse(content);
-          console.log("✅ DiversWidget: Contenu parsé:", parsed);
-          setDiversContent(parsed);
-        } else {
-          console.log(
-            "⚠️ DiversWidget: Aucun contenu trouvé, utilisation des valeurs par défaut",
-          );
+          setDiversContent(JSON.parse(content));
         }
       } catch (error) {
-        console.error("❌ DiversWidget: Erreur lors du chargement:", error);
+        console.error("Erreur lors du chargement du contenu divers:", error);
       }
     };
 
     loadDiversContent();
-
-    // Auto-refresh toutes les 60 secondes pour synchronisation BDD
-    const interval = setInterval(loadDiversContent, 60000);
+    const timer = setInterval(loadDiversContent, 30000);
 
     // Écouter les changements de configuration depuis l'admin
     const handleConfigUpdate = (event: CustomEvent) => {
-      if (
-        event.detail.key === "diversContent" ||
-        event.detail.key === "diversContent-force-reload"
-      ) {
-        console.log("🔄 DiversWidget: Mise à jour reçue", event.detail);
-
-        if (event.detail.key === "diversContent-force-reload") {
-          // Force reload depuis la BDD
-          loadDiversContent();
-        } else if (typeof event.detail.value === "string") {
-          try {
-            setDiversContent(JSON.parse(event.detail.value));
-          } catch {
-            // Si ce n'est pas du JSON, recharger depuis la BDD
-            loadDiversContent();
-          }
-        } else if (
-          event.detail.value &&
-          typeof event.detail.value === "object"
-        ) {
+      if (event.detail.key === "diversContent") {
+        if (typeof event.detail.value === "object") {
           setDiversContent(event.detail.value);
         } else {
-          // Fallback: recharger depuis la BDD
+          // Recharger depuis la BDD
           loadDiversContent();
         }
       }
@@ -81,7 +52,7 @@ export const DiversWidget = () => {
     );
 
     return () => {
-      clearInterval(interval);
+      clearInterval(timer);
       window.removeEventListener(
         "cgt-config-updated",
         handleConfigUpdate as EventListener,
