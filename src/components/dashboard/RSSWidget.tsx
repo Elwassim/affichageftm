@@ -69,12 +69,7 @@ export const RSSWidget = () => {
           console.error(`❌ Échec proxy ${i + 1}:`, error);
           if (i === proxies.length - 1) {
             // Dernier proxy échoué, utiliser fallback
-            throw error;
-          }
-          // Continuer avec le proxy suivant
-        }
-      } catch (finalError) {
-        console.error('❌ Tous les proxies ont échoué:', finalError);
+            console.error('❌ Tous les proxies ont échoué');
 
         // Fallback vers des données de secours basées sur France Info
         const fallbackNews: RSSItem[] = [
