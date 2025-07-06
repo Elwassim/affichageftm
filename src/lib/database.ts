@@ -789,13 +789,17 @@ export const updateUser = async (
 };
 
 export const deleteUser = async (id: string): Promise<boolean> => {
+  console.log("🗑️ deleteUser appelé pour ID:", id);
+
   if (!useSupabase) {
+    console.log("📱 Suppression utilisateur en localStorage");
     try {
       const { removeUser } = await import("./storage");
       removeUser(id);
+      console.log("✅ Utilisateur supprimé en localStorage");
       return true;
     } catch (error) {
-      console.error("Erreur suppression user localStorage:", error);
+      console.error("❌ Erreur suppression user localStorage:", error);
       return false;
     }
   }
