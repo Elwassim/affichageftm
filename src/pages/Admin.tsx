@@ -63,6 +63,14 @@ const MEETING_CATEGORIES = [
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("meetings");
+
+  // Vérifier si l'utilisateur essaie d'accéder à un onglet non autorisé
+  useEffect(() => {
+    if (activeTab === "users" && !canManageUsersAccess) {
+      console.log("⚠️ Accès refusé à la gestion des utilisateurs");
+      setActiveTab("meetings");
+    }
+  }, [activeTab, canManageUsersAccess]);
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const { toast } = useToast();
 
@@ -1539,7 +1547,7 @@ const Admin = () => {
                                 <span className="bg-pink-100 text-pink-700 px-2 py-1 rounded-full text-xs font-medium">
                                   Position #{index + 1}
                                 </span>
-                                <span>��</span>
+                                <span>•</span>
                                 <span>
                                   Ajouté le{" "}
                                   {new Date(
