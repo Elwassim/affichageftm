@@ -675,7 +675,11 @@ export const createUser = async (user: {
   role: string;
   is_admin: boolean;
 }): Promise<User | null> => {
+  console.log("👤 createUser appelé:", { username: user.username, role: user.role });
+
   if (!useSupabase) {
+    console.log("📱 Création utilisateur en localStorage");
+    try {
     const localData = getLocalData();
     const hashedPassword = await bcrypt.hash(user.password, 10);
     const newUser: User = {
