@@ -174,16 +174,11 @@ export const getMeetings = async (): Promise<Meeting[]> => {
 };
 
 export const getAllMeetings = async (): Promise<Meeting[]> => {
-  const supabaseReady = await ensureSupabaseReady();
-
-  if (!supabaseReady) {
-    console.log("📱 Utilisation du localStorage pour les réunions");
-    const localData = getLocalData();
-    return localData.meetings;
+  if (!useSupabase) {
+    return getLocalData().meetings;
   }
 
   try {
-    console.log("🗄️ Chargement des réunions depuis Supabase...");
     const { data, error } = await supabase!
       .from("meetings")
       .select("*")
@@ -191,16 +186,13 @@ export const getAllMeetings = async (): Promise<Meeting[]> => {
       .order("time", { ascending: true });
 
     if (error) {
-      console.error("❌ Erreur Supabase meetings:", error);
-      console.log("📱 Fallback vers localStorage");
+      console.error("Erreur récupération all meetings:", error);
       return getLocalData().meetings;
     }
 
-    console.log("✅ Réunions chargées depuis Supabase:", data?.length || 0);
     return data || [];
   } catch (error) {
-    console.error("❌ Exception Supabase meetings:", error);
-    console.log("📱 Fallback vers localStorage");
+    console.error("Erreur Supabase all meetings:", error);
     return getLocalData().meetings;
   }
 };
