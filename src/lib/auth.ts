@@ -25,14 +25,14 @@ export interface UserGroup {
   description: string;
 }
 
-// Groups with permissions
+// Groups with permissions - Seulement 2 types
 export const USER_GROUPS: UserGroup[] = [
   {
     id: "admin",
     name: "Administrateur",
     permissions: ["all"],
     color: "bg-red-100 text-red-800",
-    description: "Accès complet à toutes les fonctionnalités",
+    description: "Accès complet - Gère tout y compris les utilisateurs",
   },
   {
     id: "editor",
@@ -43,16 +43,12 @@ export const USER_GROUPS: UserGroup[] = [
       "manage_permanences",
       "edit_social",
       "edit_video",
+      "manage_tributes",
+      "edit_divers",
+      "view_settings",
     ],
     color: "bg-blue-100 text-blue-800",
-    description: "Peut modifier le contenu du tableau de bord",
-  },
-  {
-    id: "viewer",
-    name: "Observateur",
-    permissions: ["view_dashboard"],
-    color: "bg-gray-100 text-gray-800",
-    description: "Lecture seule du tableau de bord",
+    description: "Peut tout modifier sauf les utilisateurs",
   },
 ];
 
