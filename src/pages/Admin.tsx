@@ -1666,6 +1666,143 @@ const Admin = () => {
                   )}
                 </div>
 
+                {/* Multiple Videos Configuration */}
+                <div className="admin-add-card">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-purple-500">
+                      <List className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-slate-800">
+                        Playlist Vidéos
+                      </h3>
+                      <p className="text-sm text-slate-600">
+                        Gérer plusieurs vidéos avec navigation
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Add New Video Form */}
+                  <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                    <h4 className="text-sm font-semibold text-slate-700 mb-3">
+                      Ajouter une vidéo
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                      <input
+                        type="url"
+                        value={newVideo.url}
+                        onChange={(e) =>
+                          setNewVideo({ ...newVideo, url: e.target.value })
+                        }
+                        placeholder="URL YouTube/Vimeo..."
+                        className="admin-input"
+                      />
+                      <input
+                        type="text"
+                        value={newVideo.title}
+                        onChange={(e) =>
+                          setNewVideo({ ...newVideo, title: e.target.value })
+                        }
+                        placeholder="Titre de la vidéo"
+                        className="admin-input"
+                      />
+                      <input
+                        type="text"
+                        value={newVideo.description}
+                        onChange={(e) =>
+                          setNewVideo({
+                            ...newVideo,
+                            description: e.target.value,
+                          })
+                        }
+                        placeholder="Description (optionnel)"
+                        className="admin-input"
+                      />
+                    </div>
+                    <button
+                      onClick={addVideo}
+                      disabled={!newVideo.url.trim() || !newVideo.title.trim()}
+                      className="mt-3 admin-btn-secondary disabled:opacity-50"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Ajouter
+                    </button>
+                  </div>
+
+                  {/* Videos List */}
+                  {videosList.length > 0 && (
+                    <div className="mt-6">
+                      <div className="flex items-center justify-between mb-3">
+                        <h4 className="text-sm font-semibold text-slate-700">
+                          Vidéos configurées ({videosList.length})
+                        </h4>
+                        <button
+                          onClick={saveVideosList}
+                          className="admin-btn-primary"
+                        >
+                          <Save className="w-4 h-4 mr-2" />
+                          Sauvegarder la playlist
+                        </button>
+                      </div>
+
+                      <div className="space-y-3">
+                        {videosList.map((video, index) => (
+                          <div
+                            key={index}
+                            className="p-3 bg-white border rounded-lg"
+                          >
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
+                              <input
+                                type="url"
+                                value={video.url}
+                                onChange={(e) =>
+                                  updateVideo(index, "url", e.target.value)
+                                }
+                                placeholder="URL de la vidéo"
+                                className="admin-input text-sm"
+                              />
+                              <input
+                                type="text"
+                                value={video.title}
+                                onChange={(e) =>
+                                  updateVideo(index, "title", e.target.value)
+                                }
+                                placeholder="Titre"
+                                className="admin-input text-sm"
+                              />
+                              <input
+                                type="text"
+                                value={video.description}
+                                onChange={(e) =>
+                                  updateVideo(
+                                    index,
+                                    "description",
+                                    e.target.value,
+                                  )
+                                }
+                                placeholder="Description"
+                                className="admin-input text-sm"
+                              />
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-gray-500">
+                                Vidéo #{index + 1}
+                              </span>
+                              <button
+                                onClick={() => removeVideo(index)}
+                                className="text-red-600 hover:text-red-800 p-1"
+                                title="Supprimer cette vidéo"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 {/* Alert Banner Configuration */}
                 <div className="admin-add-card">
                   <div className="admin-section-title">
