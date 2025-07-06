@@ -190,7 +190,7 @@ export const authenticateUser = async (
           password: credentials.password, // Ne pas stocker le vrai mot de passe
           name: supabaseUser.username,
           email: supabaseUser.email || "",
-          role: isAdmin ? "admin" : "delegue", // admin ou delegue (éditeur)
+          role: isAdmin ? "admin" : "editor", // admin ou editor
           group: isAdmin ? "admin" : "editor", // admin ou editor
           section: "CGT FTM",
           active: supabaseUser.is_active,
