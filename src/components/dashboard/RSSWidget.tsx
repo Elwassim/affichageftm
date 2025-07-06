@@ -153,7 +153,7 @@ export const RSSWidget = () => {
           <div className="flex items-center gap-1">
             <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
             <span className="text-white/90 text-xs">
-              DIRECT • {newsItems.length} infos • MAJ {lastUpdate}
+              AUTO • {newsItems.length} infos • MAJ {lastUpdate}
             </span>
           </div>
         </div>
