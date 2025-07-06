@@ -958,7 +958,9 @@ const Admin = () => {
             </div>
             <div>
               <h1 className="text-lg font-bold text-slate-800">CGT FTM</h1>
-              <p className="text-xs text-slate-500">Administration</p>
+              <p className="text-xs text-slate-500">
+                {currentUser?.group === "admin" ? "Administrateur" : "Éditeur"}
+              </p>
             </div>
           </div>
           <Button
