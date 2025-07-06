@@ -13,8 +13,8 @@ import {
   saveDashboardData as saveLocalData,
 } from "./storage";
 
-// Forcer l'utilisation du localStorage car Supabase pose des problèmes
-const useSupabase = false; // Désactivé temporairement pour éviter les erreurs 404
+// Utiliser Supabase si configuré, sinon localStorage en fallback
+const useSupabase = !!supabase;
 
 // ===== CONFIGURATION =====
 export const getConfig = async (key: string): Promise<any> => {
@@ -434,7 +434,7 @@ export const getTributes = async (): Promise<Tribute[]> => {
     console.log("📊 Résultat tributes:", { data, error });
 
     if (error) {
-      console.log("�� Table tributes bloquée par RLS, tentative RPC...");
+      console.log("❌ Table tributes bloquée par RLS, tentative RPC...");
 
       // Fallback RPC bypass RLS
       try {
