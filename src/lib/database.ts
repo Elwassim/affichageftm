@@ -75,15 +75,6 @@ export const initializeDefaultConfig = async (): Promise<void> => {
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
     alertText:
       "🚨 APPEL CGT FTM - Rejoignez-nous pour défendre vos droits ! 🚨",
-    weatherCity: "Paris",
-    weatherData: JSON.stringify({
-      temperature: 18,
-      description: "Partiellement nuageux",
-      icon: "cloud",
-      humidity: 65,
-      windSpeed: 12,
-      lastUpdate: new Date().toISOString(),
-    }),
     diversContent: JSON.stringify({
       title: "Informations diverses",
       subtitle: "CGT FTM",
