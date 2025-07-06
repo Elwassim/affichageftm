@@ -3,7 +3,6 @@ import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { Card } from "@/components/ui/card";
 import { Cloud, Sun, CloudRain, Snowflake, Thermometer } from "lucide-react";
-import { getConfig, updateConfig } from "@/lib/database";
 
 interface WeatherData {
   temperature: number;
