@@ -50,23 +50,9 @@ export const VideoWidget = () => {
     };
   }, []);
 
-  // Navigation functions
-  const nextVideo = () => {
-    setCurrentVideoIndex((prev) => (prev + 1) % videos.length);
-  };
-
-  const previousVideo = () => {
-    setCurrentVideoIndex((prev) => (prev - 1 + videos.length) % videos.length);
-  };
-
-  const selectVideo = (index: number) => {
-    setCurrentVideoIndex(index);
-    setShowPlaylist(false);
-  };
-
   // AUTOPLAY ULTRA-AGRESSIF pour environnement TV/kiosque
   useEffect(() => {
-    if (!currentVideo?.url) return;
+    if (!videoUrl) return;
 
     const forceAutoplay = () => {
       if (videoRef.current) {
