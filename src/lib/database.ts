@@ -174,9 +174,28 @@ export const getMeetings = async (): Promise<Meeting[]> => {
 };
 
 export const getAllMeetings = async (): Promise<Meeting[]> => {
-  // Forcer l'utilisation du localStorage pour éviter les problèmes Supabase
-  console.log("📱 Utilisation du localStorage pour les réunions");
-  return getLocalData().meetings;
+  console.log("📱 Chargement des réunions depuis localStorage");
+
+  const localData = getLocalData();
+  console.log("📊 Données locales:", {
+    meetings: localData.meetings?.length || 0,
+    hasData: !!localData.meetings,
+  });
+
+  // Si pas de réunions, réinitialiser avec les données par défaut
+  if (!localData.meetings || localData.meetings.length === 0) {
+    console.log("🔄 Réinitialisation des données par défaut");
+    localStorage.removeItem("union-dashboard-data");
+    const freshData = getLocalData(); // Cela va charger les données par défaut
+    console.log(
+      "✨ Nouvelles données par défaut:",
+      freshData.meetings?.length || 0,
+      "réunions",
+    );
+    return freshData.meetings;
+  }
+
+  return localData.meetings;
 };
 
 export const createMeeting = async (
@@ -585,7 +604,7 @@ export const getUsers = async (): Promise<User[]> => {
 
       // Méthode 2: Requête avec RPC (bypass RLS)
       try {
-        console.log("📋 Méthode 2: Tentative avec RPC...");
+        console.log("���� Méthode 2: Tentative avec RPC...");
         const rpcResult = await supabase!.rpc("get_all_users");
         console.log("📊 Résultat RPC:", rpcResult);
 
