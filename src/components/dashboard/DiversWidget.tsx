@@ -24,21 +24,39 @@ export const DiversWidget = () => {
       try {
         // Essayer localStorage d'abord (plus rapide)
         const localContent = localStorage.getItem("diversContent");
+        const localTimestamp = localStorage.getItem("diversContent-timestamp");
+
         if (localContent) {
           setDiversContent(JSON.parse(localContent));
           console.log(
             "📄 DiversWidget: Contenu chargé depuis localStorage",
             JSON.parse(localContent),
           );
+
+          // Si le contenu localStorage est récent (< 5 minutes), ne pas charger depuis BDD
+          if (
+            localTimestamp &&
+            Date.now() - parseInt(localTimestamp) < 300000
+          ) {
+            console.log(
+              "⚡ DiversWidget: Contenu localStorage récent, skip BDD",
+            );
+            return;
+          }
         }
 
-        // Puis charger depuis la BDD
+        // Charger depuis la BDD si pas de localStorage ou trop ancien
         const content = await getConfig("diversContent");
         if (content) {
-          setDiversContent(JSON.parse(content));
-          console.log(
-            "📄 DiversWidget: Contenu chargé depuis BDD",
-            JSON.parse(content),
+          const parsed = JSON.parse(content);
+          setDiversContent(parsed);
+          console.log("📄 DiversWidget: Contenu chargé depuis BDD", parsed);
+
+          // Mettre à jour localStorage avec contenu BDD
+          localStorage.setItem("diversContent", content);
+          localStorage.setItem(
+            "diversContent-timestamp",
+            Date.now().toString(),
           );
         }
       } catch (error) {
