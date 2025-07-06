@@ -63,6 +63,12 @@ const MEETING_CATEGORIES = [
 
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("meetings");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { toast } = useToast();
+
+  // Vérifier les permissions de l'utilisateur actuel
+  const currentUser = getCurrentUser();
+  const canManageUsersAccess = canManageUsers(currentUser);
 
   // Vérifier si l'utilisateur essaie d'accéder à un onglet non autorisé
   useEffect(() => {
@@ -71,8 +77,6 @@ const Admin = () => {
       setActiveTab("meetings");
     }
   }, [activeTab, canManageUsersAccess]);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const { toast } = useToast();
 
   // Utilisation du hook de synchronisation
   const {
