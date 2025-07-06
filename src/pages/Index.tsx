@@ -13,7 +13,6 @@ import { Wifi } from "lucide-react";
 const Index = () => {
   const { lastUpdate, isUpdating, updateCount } = useRealTimeUpdates({
     interval: 60000, // 1 minute
-    enableWeather: true,
     enableDashboard: true,
   });
 
