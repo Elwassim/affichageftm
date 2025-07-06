@@ -27,7 +27,7 @@ import {
   Cloud,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getCurrentUser, canManageUsers } from "@/lib/auth";
+import { getCurrentUser, canManageUsers, logout } from "@/lib/auth";
 
 // Import des styles améliorés
 import "../styles/admin-improvements.css";
@@ -97,7 +97,7 @@ const Admin = () => {
     title: "",
     time: "",
     room: "",
-    category: "Assemblée G��nérale",
+    category: "Assemblée Générale",
     date: new Date().toISOString().split("T")[0],
   });
 
