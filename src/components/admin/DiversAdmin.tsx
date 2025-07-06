@@ -215,6 +215,7 @@ export const DiversAdmin: React.FC = () => {
       {/* Configuration Form */}
       <Card className="p-6">
         <div className="space-y-6">
+          {/* Contenu principal */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Titre */}
             <div className="space-y-2">
@@ -260,24 +261,308 @@ export const DiversAdmin: React.FC = () => {
             />
           </div>
 
+          {/* Options d'apparence */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Apparence
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Style prédéfini */}
+              <div className="space-y-2">
+                <Label htmlFor="style">Style</Label>
+                <select
+                  id="style"
+                  value={diversContent.style}
+                  onChange={(e) =>
+                    setDiversContent({
+                      ...diversContent,
+                      style: e.target.value as any,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="default">Par défaut</option>
+                  <option value="highlight">Mise en avant</option>
+                  <option value="warning">Avertissement</option>
+                  <option value="success">Succès</option>
+                </select>
+              </div>
+
+              {/* Taille du texte */}
+              <div className="space-y-2">
+                <Label htmlFor="fontSize">Taille du texte</Label>
+                <select
+                  id="fontSize"
+                  value={diversContent.fontSize}
+                  onChange={(e) =>
+                    setDiversContent({
+                      ...diversContent,
+                      fontSize: e.target.value as any,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="small">Petit</option>
+                  <option value="medium">Moyen</option>
+                  <option value="large">Grand</option>
+                </select>
+              </div>
+
+              {/* Alignement */}
+              <div className="space-y-2">
+                <Label htmlFor="alignment">Alignement</Label>
+                <select
+                  id="alignment"
+                  value={diversContent.alignment}
+                  onChange={(e) =>
+                    setDiversContent({
+                      ...diversContent,
+                      alignment: e.target.value as any,
+                    })
+                  }
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                >
+                  <option value="left">Gauche</option>
+                  <option value="center">Centre</option>
+                  <option value="right">Droite</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Couleurs */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+              {/* Couleur de fond */}
+              <div className="space-y-2">
+                <Label htmlFor="backgroundColor">Couleur de fond</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="backgroundColor"
+                    type="color"
+                    value={diversContent.backgroundColor}
+                    onChange={(e) =>
+                      setDiversContent({
+                        ...diversContent,
+                        backgroundColor: e.target.value,
+                      })
+                    }
+                    className="w-16 h-10"
+                  />
+                  <Input
+                    value={diversContent.backgroundColor}
+                    onChange={(e) =>
+                      setDiversContent({
+                        ...diversContent,
+                        backgroundColor: e.target.value,
+                      })
+                    }
+                    placeholder="#ffffff"
+                    className="flex-1"
+                  />
+                </div>
+              </div>
+
+              {/* Couleur du texte */}
+              <div className="space-y-2">
+                <Label htmlFor="textColor">Couleur du texte</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="textColor"
+                    type="color"
+                    value={diversContent.textColor}
+                    onChange={(e) =>
+                      setDiversContent({
+                        ...diversContent,
+                        textColor: e.target.value,
+                      })
+                    }
+                    className="w-16 h-10"
+                  />
+                  <Input
+                    value={diversContent.textColor}
+                    onChange={(e) =>
+                      setDiversContent({
+                        ...diversContent,
+                        textColor: e.target.value,
+                      })
+                    }
+                    placeholder="#374151"
+                    className="flex-1"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Options d'icône */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Icône</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Afficher l'icône */}
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="showIcon"
+                  checked={diversContent.showIcon}
+                  onChange={(e) =>
+                    setDiversContent({
+                      ...diversContent,
+                      showIcon: e.target.checked,
+                    })
+                  }
+                  className="w-4 h-4 text-cgt-red border-gray-300 rounded focus:ring-cgt-red"
+                />
+                <Label htmlFor="showIcon">Afficher une icône</Label>
+              </div>
+
+              {/* Choix de l'icône */}
+              {diversContent.showIcon && (
+                <div className="space-y-2">
+                  <Label htmlFor="icon">Type d'icône</Label>
+                  <select
+                    id="icon"
+                    value={diversContent.icon}
+                    onChange={(e) =>
+                      setDiversContent({
+                        ...diversContent,
+                        icon: e.target.value,
+                      })
+                    }
+                    className="w-full p-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="Info">Information</option>
+                    <option value="AlertTriangle">Attention</option>
+                    <option value="CheckCircle">Succès</option>
+                    <option value="Bell">Notification</option>
+                    <option value="Megaphone">Annonce</option>
+                    <option value="Calendar">Calendrier</option>
+                    <option value="Clock">Horloge</option>
+                    <option value="Users">Personnes</option>
+                    <option value="Star">Étoile</option>
+                    <option value="Heart">Cœur</option>
+                  </select>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* Options de lien */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Lien (optionnel)
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* URL du lien */}
+              <div className="space-y-2">
+                <Label htmlFor="link">URL du lien</Label>
+                <Input
+                  id="link"
+                  value={diversContent.link || ""}
+                  onChange={(e) =>
+                    setDiversContent({ ...diversContent, link: e.target.value })
+                  }
+                  placeholder="https://example.com"
+                />
+              </div>
+
+              {/* Texte du lien */}
+              <div className="space-y-2">
+                <Label htmlFor="linkText">Texte du lien</Label>
+                <Input
+                  id="linkText"
+                  value={diversContent.linkText || ""}
+                  onChange={(e) =>
+                    setDiversContent({
+                      ...diversContent,
+                      linkText: e.target.value,
+                    })
+                  }
+                  placeholder="En savoir plus"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Options de bordure */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">
+              Bordure
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Afficher la bordure */}
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="showBorder"
+                  checked={diversContent.showBorder}
+                  onChange={(e) =>
+                    setDiversContent({
+                      ...diversContent,
+                      showBorder: e.target.checked,
+                    })
+                  }
+                  className="w-4 h-4 text-cgt-red border-gray-300 rounded focus:ring-cgt-red"
+                />
+                <Label htmlFor="showBorder">Afficher une bordure</Label>
+              </div>
+
+              {/* Couleur de la bordure */}
+              {diversContent.showBorder && (
+                <div className="space-y-2">
+                  <Label htmlFor="borderColor">Couleur de la bordure</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      id="borderColor"
+                      type="color"
+                      value={diversContent.borderColor}
+                      onChange={(e) =>
+                        setDiversContent({
+                          ...diversContent,
+                          borderColor: e.target.value,
+                        })
+                      }
+                      className="w-16 h-10"
+                    />
+                    <Input
+                      value={diversContent.borderColor}
+                      onChange={(e) =>
+                        setDiversContent({
+                          ...diversContent,
+                          borderColor: e.target.value,
+                        })
+                      }
+                      placeholder="#e5e7eb"
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Statut d'activation */}
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="isActive"
-              checked={diversContent.isActive}
-              onChange={(e) =>
-                setDiversContent({
-                  ...diversContent,
-                  isActive: e.target.checked,
-                })
-              }
-              className="w-4 h-4 text-cgt-red border-gray-300 rounded focus:ring-cgt-red"
-            />
-            <Label htmlFor="isActive">
-              Afficher le contenu personnalisé (sinon affiche le message par
-              défaut)
-            </Label>
+          <div className="border-t pt-6">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="isActive"
+                checked={diversContent.isActive}
+                onChange={(e) =>
+                  setDiversContent({
+                    ...diversContent,
+                    isActive: e.target.checked,
+                  })
+                }
+                className="w-4 h-4 text-cgt-red border-gray-300 rounded focus:ring-cgt-red"
+              />
+              <Label htmlFor="isActive">
+                Afficher le contenu personnalisé (sinon affiche le message par
+                défaut)
+              </Label>
+            </div>
           </div>
 
           {/* Actions */}
