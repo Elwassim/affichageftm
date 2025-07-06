@@ -107,6 +107,21 @@ export const DiversAdmin: React.FC = () => {
     });
   };
 
+  // Force une synchronisation au montage du composant
+  useEffect(() => {
+    if (!loading && diversContent) {
+      console.log("🔄 DiversAdmin: Force sync au montage", diversContent);
+      window.dispatchEvent(
+        new CustomEvent("cgt-config-updated", {
+          detail: {
+            key: "diversContent",
+            value: diversContent,
+          },
+        }),
+      );
+    }
+  }, [loading, diversContent]);
+
   if (loading) {
     return (
       <Card className="p-6">
