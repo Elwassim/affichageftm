@@ -159,9 +159,9 @@ export const VideoWidget = () => {
     <Card className="p-3 bg-white professional-shadow border-0 h-full">
       <div className="mb-2">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-black text-cgt-gray flex items-center gap-2">
-            <div className="w-6 h-6 bg-cgt-red rounded-lg flex items-center justify-center shadow-sm">
-              <Play className="w-4 h-4 text-white" />
+          <h2 className="text-xl font-black text-cgt-gray flex items-center gap-2">
+            <div className="w-7 h-7 bg-cgt-red rounded-lg flex items-center justify-center shadow-sm">
+              <Play className="w-5 h-5 text-white" />
             </div>
             <p>Vidéo FTM CGT</p>
           </h2>
