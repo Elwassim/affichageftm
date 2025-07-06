@@ -804,7 +804,7 @@ const Admin = () => {
   // TEST EDIT FUNCTIONALITY
   const handleTestEdit = async () => {
     try {
-      console.log("🧪 Test des fonctions d'��dition...");
+      console.log("🧪 Test des fonctions d'édition...");
 
       toast({
         title: "Test d'édition...",
@@ -1725,7 +1725,7 @@ const Admin = () => {
                           onChange={(e) =>
                             setNewUser({ ...newUser, password: e.target.value })
                           }
-                          placeholder="•••••���••"
+                          placeholder="••••••••••"
                           className="admin-input w-full pr-10"
                         />
                         <button
