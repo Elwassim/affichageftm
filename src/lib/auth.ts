@@ -220,6 +220,10 @@ export const hasAdminAccess = (user: AuthUser | null): boolean => {
   return user?.group === "admin" || user?.group === "editor";
 };
 
+export const canManageUsers = (user: AuthUser | null): boolean => {
+  return user?.group === "admin";
+};
+
 export const hasPermission = (
   user: AuthUser | null,
   permission: string,
