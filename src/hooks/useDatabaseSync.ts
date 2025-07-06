@@ -55,14 +55,25 @@ export const useDatabaseSync = (
     try {
       console.log("🔄 Refresh des données depuis localStorage...");
 
-      // Utiliser directement localStorage
-      const localData = JSON.parse(
-        localStorage.getItem("union-dashboard-data") || "null",
-      );
+      // Charger les données via les fonctions de database
+      const [meetings, tributes, permanences, users] = await Promise.all([
+        getAllMeetings(),
+        getTributes(),
+        getPermanences(),
+        getUsers(),
+      ]);
 
-      if (!localData) {
-        console.log("📦 Initialisation des données par défaut");
-        // Utiliser les données par défaut du storage
+      console.log("📊 Données chargées:", {
+        meetings: meetings.length,
+        tributes: tributes.length,
+        permanences: permanences.length,
+        users: users.length,
+      });
+
+      if (meetings.length === 0) {
+        console.log(
+          "📦 Aucune réunion trouvée, utilisation données par défaut",
+        );
         const { getDashboardData } = await import("../lib/storage");
         const defaultData = getDashboardData();
 
