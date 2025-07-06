@@ -168,7 +168,7 @@ export const PermanencesCombinedWidget = () => {
   return (
     <div className="h-full flex flex-col gap-1">
       {/* Rectangle 1 - Permanences Techniques */}
-      <Card className="p-1 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
+      <Card className="p-1.5 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
         <div className="mb-0.5">
           <h2 className="text-sm font-black text-white bg-cgt-red px-2 py-0.5 rounded flex items-center gap-1.5">
             <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
@@ -189,7 +189,7 @@ export const PermanencesCombinedWidget = () => {
               </p>
             </div>
           ) : (
-            <div className="space-y-0.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
+            <div className="space-y-1 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
               {permanencesTech.map(renderPermanenceItem)}
             </div>
           )}
@@ -197,7 +197,7 @@ export const PermanencesCombinedWidget = () => {
       </Card>
 
       {/* Rectangle 2 - Permanences Politiques */}
-      <Card className="p-1 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
+      <Card className="p-1.5 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
         <div className="mb-0.5">
           <h2 className="text-sm font-black text-white bg-cgt-red px-2 py-0.5 rounded flex items-center gap-1.5">
             <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
@@ -218,7 +218,7 @@ export const PermanencesCombinedWidget = () => {
               </p>
             </div>
           ) : (
-            <div className="space-y-0.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
+            <div className="space-y-1 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
               {permanencesPolitiques.map(renderPermanenceItem)}
             </div>
           )}
