@@ -241,7 +241,7 @@ const Admin = () => {
       if (meeting) {
         // Force clear localStorage to ensure sync
         localStorage.removeItem("union-dashboard-data");
-        await refresh(); // Actualiser les données
+        await refresh(); // Actualiser les donn��es
         // Dispatch event for dashboard sync
         window.dispatchEvent(
           new CustomEvent("cgt-config-updated", {
@@ -277,6 +277,12 @@ const Admin = () => {
         toast({
           title: "Succès",
           description: "Réunion supprimée avec succès.",
+        });
+      } else {
+        toast({
+          title: "Erreur",
+          description: "Impossible de supprimer la réunion.",
+          variant: "destructive",
         });
       }
     } catch (error) {
