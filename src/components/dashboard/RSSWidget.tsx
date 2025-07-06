@@ -30,7 +30,7 @@ export const RSSWidget = () => {
       "Défense - Présentation du nouveau livre blanc sur la sécurité nationale",
       "International - La France préside le G7 sur les questions climatiques",
       "Écologie - Nouveau plan de transition énergétique présenté par le gouvernement",
-      "Santé - Réforme du syst��me hospitalier débattue à l'Assemblée",
+      "Santé - Réforme du système hospitalier débattue à l'Assemblée",
       "Éducation - Présentation de la réforme de l'enseignement professionnel",
       "Culture - Plan de soutien aux industries créatives et culturelles",
       "Agriculture - Négociations européennes sur la PAC et les subventions",
@@ -92,7 +92,7 @@ export const RSSWidget = () => {
       <div className="fixed bottom-0 left-0 w-full h-12 bg-cgt-red z-50 flex items-center">
         <div className="flex items-center px-4 gap-2">
           <Globe className="w-4 h-4 text-white animate-spin" />
-          <span className="text-white font-bold text-sm">
+          <span className="text-white font-bold text-base">
             FLUX RSS FRANCE INFO
           </span>
         </div>
