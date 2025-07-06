@@ -43,8 +43,6 @@ import {
 import type { Meeting, Tribute, Permanence, User } from "../lib/supabase";
 import { useAdminSync } from "../hooks/useDatabaseSync";
 import { PermanencesAdmin } from "../components/admin/PermanencesAdmin";
-import { syncPermanencesWithDB } from "../lib/permanenceSync";
-import { verifyCompleteDatabaseSync } from "../lib/verifyDatabaseSync";
 
 const MEETING_CATEGORIES = [
   "Assemblée Générale",
