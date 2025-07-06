@@ -430,7 +430,10 @@ const Admin = () => {
 
   // USER FUNCTIONS
   const handleAddUser = async () => {
+    console.log("🚀 handleAddUser appelé");
+
     if (!newUser.username.trim() || !newUser.password.trim()) {
+      console.log("❌ Champs obligatoires manquants");
       toast({
         title: "Erreur",
         description: "Veuillez remplir tous les champs obligatoires.",
@@ -440,6 +443,12 @@ const Admin = () => {
     }
 
     try {
+      console.log("👤 Appel de createUser avec:", {
+        username: newUser.username,
+        role: newUser.role,
+        is_admin: newUser.is_admin,
+      });
+
       const user = await createUser({
         username: newUser.username,
         password: newUser.password,
@@ -448,7 +457,10 @@ const Admin = () => {
         is_admin: newUser.is_admin,
       });
 
+      console.log("📋 Résultat createUser:", user);
+
       if (user) {
+        console.log("🔄 Actualisation des données...");
         await refresh();
         setNewUser({
           username: "",
@@ -457,12 +469,21 @@ const Admin = () => {
           role: "user",
           is_admin: false,
         });
+        console.log("✅ Utilisateur ajouté avec succès");
         toast({
           title: "Succès",
           description: "Utilisateur ajouté avec succès.",
         });
+      } else {
+        console.log("❌ createUser a retourné null");
+        toast({
+          title: "Erreur",
+          description: "Échec de la création de l'utilisateur.",
+          variant: "destructive",
+        });
       }
     } catch (error) {
+      console.error("💥 Exception dans handleAddUser:", error);
       toast({
         title: "Erreur",
         description: "Impossible d'ajouter l'utilisateur.",
