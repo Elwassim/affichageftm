@@ -280,23 +280,33 @@ const Admin = () => {
       console.log("🗑️ Résultat suppression base:", success);
 
       if (success) {
-        // Force clear localStorage to ensure sync
-        localStorage.removeItem("union-dashboard-data");
+        console.log("✅ Suppression réussie, mise à jour de l'interface");
 
         // Actualiser immédiatement les données locales
         await refresh();
 
-        // Dispatch event for dashboard sync
+        // Dispatch multiple events to ensure all components refresh
         window.dispatchEvent(
           new CustomEvent("cgt-config-updated", {
             detail: { key: "meetings", value: "deleted" },
           }),
         );
 
-        // Forcer un second refresh après 500ms pour s'assurer
+        // Déclencher un événement storage pour forcer la synchronisation
+        window.dispatchEvent(new Event("storage"));
+
+        // Force page reload si nécessaire après un délai
         setTimeout(async () => {
-          console.log("🔄 Second refresh forcé");
+          console.log("🔄 Refresh de sécurité");
           await refresh();
+
+          // Si ça ne marche toujours pas, forcer un rechargement complet
+          setTimeout(() => {
+            if (meetings.some((m) => m.id === id)) {
+              console.log("🔄 Rechargement complet nécessaire");
+              window.location.reload();
+            }
+          }, 1000);
         }, 500);
 
         toast({
