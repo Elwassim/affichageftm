@@ -138,17 +138,23 @@ export const authenticateUser = async (
   credentials: LoginCredentials,
 ): Promise<AuthUser | null> => {
   try {
-    // Essayer d'abord avec les utilisateurs Supabase
+    console.log("🔍 Authentification UNIQUEMENT avec Supabase");
+
+    // Utiliser UNIQUEMENT les utilisateurs Supabase
     const { getUsers } = await import("./database");
     const supabaseUsers = await getUsers();
 
-    console.log("🔍 Tentative authentification avec Supabase");
     console.log(
-      "👥 Utilisateurs disponibles:",
-      supabaseUsers.map((u) => ({ username: u.username, role: u.role })),
+      "👥 Utilisateurs Supabase disponibles:",
+      supabaseUsers.map((u) => ({
+        username: u.username,
+        role: u.role,
+        is_admin: u.is_admin,
+        is_active: u.is_active,
+      })),
     );
 
-    // Chercher l'utilisateur dans Supabase
+    // Chercher l'utilisateur dans Supabase UNIQUEMENT
     const supabaseUser = supabaseUsers.find(
       (u) => u.username === credentials.username && u.is_active,
     );
@@ -159,8 +165,8 @@ export const authenticateUser = async (
         supabaseUser.username,
       );
 
-      // Pour la démo, vérifier simplement si c'est un mot de passe simple
-      // En production, vous devriez utiliser bcrypt.compare avec le hash
+      // Pour la démo, vérifier avec des mots de passe simples
+      // En production, utilisez bcrypt.compare avec le hash stocké
       const validPasswords = ["cgtftm2024", "admin", "test", "password"];
 
       if (validPasswords.includes(credentials.password)) {
@@ -182,31 +188,17 @@ export const authenticateUser = async (
         };
 
         return authUser;
+      } else {
+        console.log("❌ Mot de passe incorrect");
       }
+    } else {
+      console.log("❌ Utilisateur non trouvé ou inactif dans Supabase");
     }
-
-    console.log(
-      "❌ Utilisateur non trouvé dans Supabase, essai avec les utilisateurs locaux",
-    );
   } catch (error) {
     console.error("❌ Erreur lors de l'authentification Supabase:", error);
   }
 
-  // Fallback vers les utilisateurs par défaut
-  console.log("🔄 Fallback vers utilisateurs par défaut");
-  const users = getAuthUsers();
-  const user = users.find(
-    (u) => u.username === credentials.username && u.active,
-  );
-
-  if (user && credentials.password === user.password) {
-    console.log("✅ Authentification réussie avec utilisateur par défaut");
-    // Update last login
-    updateAuthUser(user.id, { lastLogin: new Date().toISOString() });
-    return { ...user, lastLogin: new Date().toISOString() };
-  }
-
-  console.log("❌ Authentification échouée");
+  console.log("❌ Authentification échouée - utilisateur non autorisé");
   return null;
 };
 
