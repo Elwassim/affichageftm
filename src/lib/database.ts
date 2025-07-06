@@ -174,28 +174,35 @@ export const getMeetings = async (): Promise<Meeting[]> => {
 };
 
 export const getAllMeetings = async (): Promise<Meeting[]> => {
-  console.log("📱 Chargement des réunions depuis localStorage");
+  const supabaseReady = await ensureSupabaseReady();
 
-  const localData = getLocalData();
-  console.log("📊 Données locales:", {
-    meetings: localData.meetings?.length || 0,
-    hasData: !!localData.meetings,
-  });
-
-  // Si pas de réunions, réinitialiser avec les données par défaut
-  if (!localData.meetings || localData.meetings.length === 0) {
-    console.log("🔄 Réinitialisation des données par défaut");
-    localStorage.removeItem("union-dashboard-data");
-    const freshData = getLocalData(); // Cela va charger les données par défaut
-    console.log(
-      "✨ Nouvelles données par défaut:",
-      freshData.meetings?.length || 0,
-      "réunions",
-    );
-    return freshData.meetings;
+  if (!supabaseReady) {
+    console.log("📱 Utilisation du localStorage pour les réunions");
+    const localData = getLocalData();
+    return localData.meetings;
   }
 
-  return localData.meetings;
+  try {
+    console.log("🗄️ Chargement des réunions depuis Supabase...");
+    const { data, error } = await supabase!
+      .from("meetings")
+      .select("*")
+      .order("date", { ascending: true })
+      .order("time", { ascending: true });
+
+    if (error) {
+      console.error("❌ Erreur Supabase meetings:", error);
+      console.log("📱 Fallback vers localStorage");
+      return getLocalData().meetings;
+    }
+
+    console.log("✅ Réunions chargées depuis Supabase:", data?.length || 0);
+    return data || [];
+  } catch (error) {
+    console.error("❌ Exception Supabase meetings:", error);
+    console.log("📱 Fallback vers localStorage");
+    return getLocalData().meetings;
+  }
 };
 
 export const createMeeting = async (
