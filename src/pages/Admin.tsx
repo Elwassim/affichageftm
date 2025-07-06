@@ -23,6 +23,7 @@ import {
   Eye,
   EyeOff,
   Info,
+  Cloud,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -44,6 +45,7 @@ import {
 import type { Meeting, Tribute, User, Permanence } from "../lib/supabase";
 import { PermanencesAdmin } from "../components/admin/PermanencesAdmin";
 import { DiversAdmin } from "../components/admin/DiversAdmin";
+import { WeatherAdmin } from "../components/admin/WeatherAdmin";
 import { verifyCompleteDatabaseSync } from "../lib/verifyDatabaseSync";
 import { useAdminSync } from "../hooks/useDatabaseSync";
 
@@ -197,6 +199,7 @@ const Admin = () => {
     { id: "permanences", label: "Permanences", icon: Users, color: "green" },
     { id: "tributes", label: "Hommages", icon: Heart, color: "pink" },
     { id: "divers", label: "Divers", icon: Info, color: "indigo" },
+    { id: "weather", label: "Météo", icon: Cloud, color: "sky" },
     { id: "video", label: "Médias", icon: Video, color: "orange" },
     { id: "users", label: "Utilisateurs", icon: Shield, color: "purple" },
     { id: "settings", label: "Paramètres", icon: Settings, color: "gray" },
@@ -1321,6 +1324,13 @@ const Admin = () => {
             {activeTab === "divers" && (
               <div className="space-y-8">
                 <DiversAdmin />
+              </div>
+            )}
+
+            {/* Weather Tab */}
+            {activeTab === "weather" && (
+              <div className="space-y-8">
+                <WeatherAdmin />
               </div>
             )}
 
