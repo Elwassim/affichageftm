@@ -120,13 +120,8 @@ export const useDatabaseSync = (
     refresh();
   }, [refresh]);
 
-  // Auto-refresh automatique
-  useEffect(() => {
-    if (autoRefreshInterval > 0) {
-      const interval = setInterval(refresh, autoRefreshInterval);
-      return () => clearInterval(interval);
-    }
-  }, [refresh, autoRefreshInterval]);
+  // Auto-refresh désactivé pour éviter d'effacer les formulaires
+  // Utilisation uniquement de refresh manuels après les actions
 
   return {
     ...state,
