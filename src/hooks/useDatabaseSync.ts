@@ -140,7 +140,7 @@ export const useDashboardSync = () => {
   return useDatabaseSync(60000); // Refresh toutes les minutes
 };
 
-// Hook spécialisé pour l'admin (toutes les données + refresh fréquent)
+// Hook spécialisé pour l'admin (toutes les données + refresh manuel uniquement)
 export const useAdminSync = () => {
-  return useDatabaseSync(30000); // Refresh toutes les 30 secondes
+  return useDatabaseSync(0); // Pas d'auto-refresh - uniquement manuel
 };
