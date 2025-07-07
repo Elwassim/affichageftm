@@ -177,27 +177,6 @@ const Login = () => {
               )}
             </Button>
           </form>
-
-          {/* Demo Credentials */}
-          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <h3 className="text-sm font-semibold text-gray-700 mb-2">
-              Comptes de démonstration :
-            </h3>
-            <div className="space-y-1 text-xs text-gray-600">
-              <div>
-                <strong>Secrétaire :</strong> marie.dubois
-              </div>
-              <div>
-                <strong>Délégué :</strong> jc.martin
-              </div>
-              <div>
-                <strong>Admin :</strong> admin.cgt
-              </div>
-              <div className="mt-2">
-                <strong>Mot de passe :</strong> cgtftm2024
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Footer */}
