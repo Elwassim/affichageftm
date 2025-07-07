@@ -207,6 +207,16 @@ const Admin = () => {
 
   const navigate = useNavigate();
 
+  // État pour éviter les refresh pendant la saisie
+  const [isFormActive, setIsFormActive] = useState(false);
+
+  // Fonction de refresh intelligente qui préserve l'état des formulaires
+  const smartRefresh = async () => {
+    if (!isFormActive) {
+      await refresh();
+    }
+  };
+
   // Filtrer les éléments de navigation selon les permissions
   const allNavigationItems = [
     { id: "meetings", label: "Réunions", icon: Calendar, color: "blue" },
