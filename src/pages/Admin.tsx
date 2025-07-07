@@ -378,6 +378,12 @@ const Admin = () => {
 
       if (tribute) {
         await refresh();
+        // Force immediate UI update
+        window.dispatchEvent(
+          new CustomEvent("cgt-config-updated", {
+            detail: { key: "tributes", value: "updated" },
+          }),
+        );
         setNewTribute({
           name: "",
           photo: "",
@@ -566,7 +572,7 @@ const Admin = () => {
 
   const handleSaveUser = async (userId: string) => {
     console.log(
-      "🚀 handleSaveUser appelé pour ID:",
+      "���� handleSaveUser appelé pour ID:",
       userId,
       "données:",
       editUserData,
