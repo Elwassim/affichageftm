@@ -408,6 +408,12 @@ const Admin = () => {
       const success = await deleteTributeFromDB(id);
       if (success) {
         await refresh();
+        // Force immediate UI update
+        window.dispatchEvent(
+          new CustomEvent("cgt-config-updated", {
+            detail: { key: "tributes", value: "updated" },
+          }),
+        );
         toast({
           title: "Succès",
           description: "Hommage supprimé avec succès.",
@@ -572,7 +578,7 @@ const Admin = () => {
 
   const handleSaveUser = async (userId: string) => {
     console.log(
-      "���� handleSaveUser appelé pour ID:",
+      "🚀 handleSaveUser appelé pour ID:",
       userId,
       "données:",
       editUserData,
