@@ -1410,7 +1410,7 @@ const Admin = () => {
             {/* Permanences Tab */}
             {activeTab === "permanences" && (
               <div className="space-y-8">
-                <PermanencesAdmin />
+                <PermanencesAdmin onRefresh={refresh} />
               </div>
             )}
 
