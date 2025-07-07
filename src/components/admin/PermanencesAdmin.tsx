@@ -189,50 +189,187 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
   };
 
   const renderCalendar = () => {
-    const daysInMonth = 31; // Simplifié pour l'exemple
-    const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+    // Obtenir le mois et l'année actuels
+    const currentYear = parseInt(newPermanence.year.toString());
+    const monthNames = [
+      "janvier",
+      "février",
+      "mars",
+      "avril",
+      "mai",
+      "juin",
+      "juillet",
+      "août",
+      "septembre",
+      "octobre",
+      "novembre",
+      "décembre",
+    ];
+    const monthIndex = monthNames.indexOf(newPermanence.month.toLowerCase());
+
+    if (monthIndex === -1) {
+      return <div>Mois invalide</div>;
+    }
+
+    // Calculer les jours du mois
+    const daysInMonth = new Date(currentYear, monthIndex + 1, 0).getDate();
+    const firstDayOfMonth = new Date(currentYear, monthIndex, 1).getDay();
+    // Convertir dimanche (0) en 7 pour avoir lundi = 1
+    const firstDayMondayStart = firstDayOfMonth === 0 ? 7 : firstDayOfMonth;
+
+    // Créer un tableau avec les jours vides au début + les jours du mois
+    const calendarCells = [];
+
+    // Jours vides au début
+    for (let i = 1; i < firstDayMondayStart; i++) {
+      calendarCells.push(null);
+    }
+
+    // Jours du mois
+    for (let day = 1; day <= daysInMonth; day++) {
+      calendarCells.push(day);
+    }
 
     return (
       <div className="border rounded-lg p-4 bg-white">
-        <h4 className="font-semibold mb-3">
-          Calendrier - {newPermanence.month} {newPermanence.year}
-        </h4>
-        <div className="grid grid-cols-7 gap-1 mb-4">
+        <div className="flex items-center justify-between mb-3">
+          <h4 className="font-semibold">
+            Calendrier - {newPermanence.month} {newPermanence.year}
+          </h4>
+          <div className="flex gap-2">
+            <button
+              onClick={() => changeMonth(-1)}
+              className="px-2 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
+            >
+              ←
+            </button>
+            <button
+              onClick={() => changeMonth(1)}
+              className="px-2 py-1 text-sm bg-gray-100 hover:bg-gray-200 rounded"
+            >
+              →
+            </button>
+          </div>
+        </div>
+
+        {/* En-têtes des jours */}
+        <div className="grid grid-cols-7 gap-1 mb-2">
           {["L", "Ma", "Me", "J", "V", "S", "D"].map((day, index) => (
             <div
               key={`day-header-${index}`}
-              className="text-center font-medium text-sm p-2"
+              className="text-center font-medium text-sm p-2 text-gray-600"
             >
               {day}
             </div>
           ))}
         </div>
+
+        {/* Grille du calendrier */}
         <div className="grid grid-cols-7 gap-1">
-          {days.map((day) => {
+          {calendarCells.map((day, index) => {
+            if (!day) {
+              return <div key={`empty-${index}`} className="p-2"></div>;
+            }
+
             const dayStr = day.toString();
             const isSelected = selectedDays[dayStr];
             const typeColor = getTypeColor(newPermanence.type);
+            const isToday = isCurrentMonth() && day === new Date().getDate();
 
             return (
               <button
                 key={day}
                 onClick={() => toggleDay(dayStr)}
                 className={`
-                  p-2 text-sm rounded transition-all
+                  p-2 text-sm rounded transition-all relative
                   ${
                     isSelected
-                      ? `text-white font-medium`
-                      : "bg-gray-50 hover:bg-gray-100 text-gray-700"
+                      ? `text-white font-medium shadow-md`
+                      : isToday
+                        ? "bg-blue-50 hover:bg-blue-100 text-blue-700 font-medium border border-blue-200"
+                        : "bg-gray-50 hover:bg-gray-100 text-gray-700"
                   }
                 `}
                 style={isSelected ? { backgroundColor: typeColor } : {}}
               >
                 {day}
+                {isToday && !isSelected && (
+                  <div className="absolute bottom-0 right-0 w-1.5 h-1.5 bg-blue-500 rounded-full"></div>
+                )}
               </button>
             );
           })}
         </div>
+
+        <div className="mt-3 text-xs text-gray-500">
+          Cliquez sur les jours pour sélectionner les permanences
+        </div>
       </div>
+    );
+  };
+
+  // Fonction pour changer de mois
+  const changeMonth = (direction: number) => {
+    const monthNames = [
+      "janvier",
+      "février",
+      "mars",
+      "avril",
+      "mai",
+      "juin",
+      "juillet",
+      "août",
+      "septembre",
+      "octobre",
+      "novembre",
+      "décembre",
+    ];
+
+    const currentMonthIndex = monthNames.indexOf(
+      newPermanence.month.toLowerCase(),
+    );
+    let newMonthIndex = currentMonthIndex + direction;
+    let newYear = newPermanence.year;
+
+    if (newMonthIndex < 0) {
+      newMonthIndex = 11;
+      newYear = newYear - 1;
+    } else if (newMonthIndex > 11) {
+      newMonthIndex = 0;
+      newYear = newYear + 1;
+    }
+
+    setNewPermanence({
+      ...newPermanence,
+      month: monthNames[newMonthIndex],
+      year: newYear,
+    });
+
+    // Réinitialiser les jours sélectionnés lors du changement de mois
+    setSelectedDays({});
+  };
+
+  // Vérifier si c'est le mois actuel
+  const isCurrentMonth = () => {
+    const now = new Date();
+    const monthNames = [
+      "janvier",
+      "février",
+      "mars",
+      "avril",
+      "mai",
+      "juin",
+      "juillet",
+      "août",
+      "septembre",
+      "octobre",
+      "novembre",
+      "décembre",
+    ];
+
+    return (
+      newPermanence.year === now.getFullYear() &&
+      newPermanence.month.toLowerCase() === monthNames[now.getMonth()]
     );
   };
 
