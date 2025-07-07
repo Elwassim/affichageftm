@@ -588,7 +588,7 @@ const Admin = () => {
           description: "Utilisateur mis à jour avec succès.",
         });
       } else {
-        console.log("❌ updateUser a retourné false");
+        console.log("�� updateUser a retourné false");
         toast({
           title: "Erreur",
           description: "Échec de la mise à jour de l'utilisateur.",
@@ -1011,6 +1011,17 @@ const Admin = () => {
 
         {/* Bottom Actions */}
         <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-200 space-y-2">
+          <Button
+            onClick={refresh}
+            variant="ghost"
+            className="w-full justify-start text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+            disabled={loading}
+          >
+            <RefreshCw
+              className={`w-4 h-4 mr-3 ${loading ? "animate-spin" : ""}`}
+            />
+            {loading ? "Actualisation..." : "Actualiser"}
+          </Button>
           <Link to="/">
             <Button
               variant="ghost"
