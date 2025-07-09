@@ -46,6 +46,7 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
 
     let monthName = "juillet"; // par défaut
     let year = 2025; // par défaut
+    let dayMapping: { [columnIndex: number]: number } = {}; // Map colonne -> jour
 
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
       const line = lines[lineIndex];
@@ -61,10 +62,22 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
         continue;
       }
 
-      // Ignorer les lignes d'en-tête, de légende et vides
+      // Extraire le mapping des jours depuis la ligne d'en-tête
+      if (line.includes("Nom, Prénom")) {
+        const headerParts = line.split(";");
+        for (let i = 3; i < headerParts.length; i++) {
+          const headerValue = headerParts[i]?.trim();
+          const dayNumber = parseInt(headerValue);
+          if (!isNaN(dayNumber) && dayNumber >= 1 && dayNumber <= 31) {
+            dayMapping[i] = dayNumber;
+          }
+        }
+        continue;
+      }
+
+      // Ignorer les lignes de légende et vides
       if (
         !line ||
-        line.includes("Nom, Prénom") ||
         line.includes("P:") ||
         line.includes("RTT:") ||
         lineIndex < 2
@@ -80,17 +93,13 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
       const fullName = parts[0]?.trim();
       if (!fullName || fullName.includes(":")) continue;
 
-      // Parser chaque jour du mois (colonnes 3 à 34 approximativement)
-      for (
-        let dayIndex = 3;
-        dayIndex < parts.length && dayIndex <= 34;
-        dayIndex++
-      ) {
-        const cellValue = parts[dayIndex]?.trim();
+      // Parser chaque colonne en utilisant le mapping des jours
+      for (let columnIndex = 3; columnIndex < parts.length; columnIndex++) {
+        const cellValue = parts[columnIndex]?.trim();
 
         // Ne traiter que les cellules contenant "P" (permanences)
-        if (cellValue === "P") {
-          const day = dayIndex - 2; // Ajuster l'index pour correspondre au jour du mois
+        if (cellValue === "P" && dayMapping[columnIndex]) {
+          const day = dayMapping[columnIndex];
 
           permanences.push({
             name: fullName,
