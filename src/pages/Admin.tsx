@@ -579,7 +579,7 @@ const Admin = () => {
 
   const handleSaveUser = async (userId: string) => {
     console.log(
-      "🚀 handleSaveUser appelé pour ID:",
+      "��� handleSaveUser appelé pour ID:",
       userId,
       "données:",
       editUserData,
@@ -972,7 +972,7 @@ const Admin = () => {
     <div className="min-h-screen bg-slate-50">
       {/* Modern Sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 md:w-64 sm:w-80 bg-white shadow-xl border-r border-slate-200 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+        className={`fixed inset-y-0 left-0 z-50 w-full sm:w-80 md:w-64 bg-white shadow-xl border-r border-slate-200 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         {/* Sidebar Header */}
         <div className="flex items-center justify-between p-6 border-b border-slate-200">
@@ -1839,7 +1839,7 @@ const Admin = () => {
                           onChange={(e) =>
                             setNewUser({ ...newUser, password: e.target.value })
                           }
-                          placeholder="••••••••••"
+                          placeholder="��•••••••••"
                           className="admin-input w-full pr-10"
                         />
                         <button
