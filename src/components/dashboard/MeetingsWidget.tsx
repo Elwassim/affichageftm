@@ -217,18 +217,18 @@ export const MeetingsWidget = () => {
                         {index + 1}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
+                        <h3 className="font-bold text-cgt-gray text-base truncate leading-tight">
                           {meeting.title}
                         </h3>
-                        <div className="flex flex-col gap-0.5 text-gray-600 text-xs mt-0.5">
+                        <div className="flex flex-col gap-0.5 text-gray-600 text-sm mt-0.5">
                           <div className="flex items-center gap-1">
-                            <Calendar className="w-2.5 h-2.5 text-cgt-red" />
+                            <Calendar className="w-3.5 h-3.5 text-cgt-red" />
                             <span className="font-semibold text-cgt-red">
                               {formatDate(meeting.date)}
                             </span>
                             {meeting.time && (
                               <>
-                                <Clock className="w-2.5 h-2.5 text-gray-500 ml-1" />
+                                <Clock className="w-3.5 h-3.5 text-gray-500 ml-1" />
                                 <span className="text-gray-700 font-medium">
                                   {meeting.time}
                                 </span>
