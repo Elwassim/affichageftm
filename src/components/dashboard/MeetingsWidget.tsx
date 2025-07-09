@@ -237,7 +237,7 @@ export const MeetingsWidget = () => {
                           </div>
                           {meeting.room && (
                             <div className="flex items-center gap-1">
-                              <MapPin className="w-2.5 h-2.5 text-gray-500" />
+                              <MapPin className="w-3.5 h-3.5 text-gray-500" />
                               <span className="text-gray-700 font-medium">
                                 {meeting.room}
                               </span>
