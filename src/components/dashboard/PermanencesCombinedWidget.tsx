@@ -178,13 +178,13 @@ export const PermanencesCombinedWidget = () => {
           </h2>
         </div>
 
-        <div className="flex-1 min-h-0">
+        <div className="flex-1 min-h-0 overflow-hidden">
           {permanencesTech.length === 0 ? (
             <div className="text-center py-2">
               <div className="w-4 h-4 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-1">
                 <Users className="w-2 h-2 text-gray-400" />
               </div>
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 text-xs">
                 Aucune permanence aujourd'hui
               </p>
             </div>
@@ -197,23 +197,23 @@ export const PermanencesCombinedWidget = () => {
       </Card>
 
       {/* Rectangle 2 - Permanences Politiques */}
-      <Card className="p-1.5 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0">
-        <div className="mb-0.5">
+      <Card className="p-1.5 bg-white professional-shadow border-0 flex-1 flex flex-col min-h-0 overflow-hidden">
+        <div className="mb-0.5 flex-shrink-0">
           <h2 className="text-sm font-black text-white bg-cgt-red px-2 py-0.5 rounded flex items-center gap-1.5">
             <div className="w-4 h-4 bg-white rounded flex items-center justify-center">
               <Users className="w-2.5 h-2.5 text-cgt-red" />
             </div>
-            <p>PERMANENCE POLITIQUE</p>
+            <p className="truncate">PERMANENCE POLITIQUE</p>
           </h2>
         </div>
 
-        <div className="flex-1 min-h-0">
+        <div className="flex-1 min-h-0 overflow-hidden">
           {permanencesPolitiques.length === 0 ? (
             <div className="text-center py-2">
               <div className="w-4 h-4 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-1">
                 <Users className="w-2 h-2 text-gray-400" />
               </div>
-              <p className="text-gray-500 text-sm">
+              <p className="text-gray-500 text-xs">
                 Aucune permanence cette semaine
               </p>
             </div>
