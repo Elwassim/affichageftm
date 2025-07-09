@@ -1,5 +1,5 @@
 export const CGTLogo = ({
-  className = "w-16 h-16",
+  className = "w-24 h-24",
 }: {
   className?: string;
 }) => {
