@@ -130,7 +130,7 @@ export const PermanencesCombinedWidget = () => {
   const renderPermanenceItem = (permanence: DashboardPermanence) => (
     <div
       key={permanence.id}
-      className="group p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-3 hover:shadow-md transition-shadow"
+      className="group p-1.5 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-3 hover:shadow-md transition-shadow"
       style={{ borderLeftColor: permanence.color }}
     >
       <div className="flex items-start gap-2">
