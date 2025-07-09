@@ -1094,34 +1094,30 @@ const Admin = () => {
                 </p>
               </div>
             </div>
-            <div className="flex items-center space-x-2 md:space-x-4">
-              <button
-                onClick={handleVerifyAllSync}
-                className="admin-btn-secondary hidden md:flex"
-                title="Vérifier toutes les connexions BDD"
-              >
-                <Shield className="w-4 h-4 mr-2" />
-                Vérifier Tout
-              </button>
-              <button
-                onClick={handleVerifyAllSync}
-                className="admin-btn-secondary md:hidden p-2"
-                title="Vérifier connexions"
-              >
-                <Shield className="w-4 h-4" />
-              </button>
+            <div className="flex items-center gap-3">
               {lastSync && (
-                <span className="text-xs text-slate-500">
-                  Dernière sync: {lastSync.toLocaleTimeString()}
+                <span className="text-xs text-slate-500 hidden md:block">
+                  Sync: {lastSync.toLocaleTimeString()}
                 </span>
               )}
-              <Button onClick={refresh} variant="outline" size="sm">
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Actualiser
+              <Button
+                onClick={handleVerifyAllSync}
+                variant="outline"
+                size="sm"
+                className="hidden md:flex"
+                title="Vérifier connexions BDD"
+              >
+                <Shield className="w-4 h-4 md:mr-2" />
+                <span className="hidden lg:inline">Vérifier</span>
               </Button>
-              <Button onClick={handleSave} className="admin-btn-primary">
-                <Save className="w-4 h-4 mr-2" />
-                Sauvegarder
+              <Button
+                onClick={handleSave}
+                variant="outline"
+                size="sm"
+                className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+              >
+                <Save className="w-4 h-4 md:mr-2" />
+                <span className="hidden sm:inline">Sauvegarder</span>
               </Button>
             </div>
           </div>
