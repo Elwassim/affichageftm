@@ -41,12 +41,12 @@ export const SocialWidget = () => {
 
               {/* Photo */}
               <div className="flex justify-center">
-                <Avatar className="w-28 h-28 ring-4 ring-cgt-red/20">
+                <Avatar className="w-40 h-40 ring-4 ring-cgt-red/20">
                   <AvatarImage
                     src={currentTribute.photo}
                     alt={currentTribute.name}
                   />
-                  <AvatarFallback className="bg-cgt-red text-white font-bold text-2xl">
+                  <AvatarFallback className="bg-cgt-red text-white font-bold text-3xl">
                     {currentTribute.name
                       .split(" ")
                       .map((n) => n[0])
