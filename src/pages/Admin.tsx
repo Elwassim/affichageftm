@@ -644,7 +644,7 @@ const Admin = () => {
         await refresh();
         toast({
           title: "Succès",
-          description: "Réunion mise �� jour avec succès.",
+          description: "Réunion mise à jour avec succès.",
         });
       }
     } catch (error) {
@@ -1015,7 +1015,7 @@ const Admin = () => {
                     setSidebarOpen(false);
                   }
                 }}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
+                className={`w-full flex items-center space-x-2 md:space-x-3 px-3 md:px-4 py-2 md:py-3 rounded-lg md:rounded-xl transition-all duration-200 group ${
                   isActive
                     ? "bg-blue-50 text-blue-700 shadow-sm"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-800"
