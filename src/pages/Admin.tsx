@@ -971,9 +971,7 @@ const Admin = () => {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Modern Sidebar */}
-      <div
-        className={`fixed inset-y-0 left-0 z-50 w-full sm:w-80 md:w-64 bg-white shadow-xl border-r border-slate-200 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
-      >
+      <div className="fixed inset-y-0 left-0 z-50 w-full sm:w-80 md:w-64 bg-white shadow-xl border-r border-slate-200 hidden md:block">
         {/* Sidebar Header */}
         <div className="flex items-center justify-between p-4 md:p-6 border-b border-slate-200">
           <div className="flex items-center space-x-2 md:space-x-3">
