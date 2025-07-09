@@ -135,7 +135,7 @@ export const MeetingsWidget = () => {
     if (!scrollContainer || meetings.length <= 2) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.5;
+    const scrollSpeed = 0.2;
     const pauseTime = 4000;
     let isPaused = false;
 
