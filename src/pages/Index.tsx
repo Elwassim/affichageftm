@@ -98,39 +98,59 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 pb-6 h-[calc(100vh-200px)] w-full">
         <div className="w-full h-full">
-          {/* Layout avec permanences - 4 colonnes responsive */}
-          <div
-            className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 h-full"
-            style={{ gridTemplateRows: "1fr 2fr" }}
-          >
-            {/* Col 1 Row 1: DATE/MÉTÉO */}
-            <div className="col-span-1 row-span-1">
-              <DateTimeWidget />
+          {/* Layout responsive adaptatif */}
+          <div className="h-full">
+            {/* Layout Mobile: Stack vertical */}
+            <div className="block md:hidden space-y-3">
+              <div className="grid grid-cols-2 gap-3 h-32">
+                <DateTimeWidget />
+                <PermanencesCombinedWidget />
+              </div>
+              <div className="h-48">
+                <SocialWidget />
+              </div>
+              <div className="h-32">
+                <MeetingsWidget />
+              </div>
+              <div className="h-48">
+                <VideoWidget />
+              </div>
             </div>
 
-            {/* Col 2 Row 1: PERMANENCES (à côté de l'heure) */}
-            <div className="col-span-1 row-span-1 md:col-start-2">
-              <PermanencesCombinedWidget />
-            </div>
+            {/* Layout Desktop: Grid 4 colonnes */}
+            <div
+              className="hidden md:grid md:grid-cols-4 md:gap-4 h-full"
+              style={{ gridTemplateRows: "1fr 2fr" }}
+            >
+              {/* Col 1 Row 1: DATE/MÉTÉO */}
+              <div className="col-start-1 col-end-2 row-start-1 row-end-2">
+                <DateTimeWidget />
+              </div>
 
-            {/* Col 3 Row 1: DIVERS (caché sur mobile) */}
-            <div className="hidden md:block md:col-span-1 md:row-span-1">
-              <DiversWidget />
-            </div>
+              {/* Col 2 Row 1: PERMANENCES */}
+              <div className="col-start-2 col-end-3 row-start-1 row-end-2">
+                <PermanencesCombinedWidget />
+              </div>
 
-            {/* Col 4 Row 1-2: HOMMAGE (2 rangées, sur mobile prend toute la largeur) */}
-            <div className="col-span-2 row-span-2 md:col-span-1 md:col-start-4 md:row-start-1">
-              <SocialWidget />
-            </div>
+              {/* Col 3 Row 1: DIVERS */}
+              <div className="col-start-3 col-end-4 row-start-1 row-end-2">
+                <DiversWidget />
+              </div>
 
-            {/* Col 1 Row 2: REUNION */}
-            <div className="col-span-1 row-span-1 md:col-start-1 md:row-start-2">
-              <MeetingsWidget />
-            </div>
+              {/* Col 4 Row 1-2: HOMMAGE (2 rangées) */}
+              <div className="col-start-4 col-end-5 row-start-1 row-end-3">
+                <SocialWidget />
+              </div>
 
-            {/* Col 2-3 Row 2: VIDEO (prend plus d'espace - 2 colonnes) */}
-            <div className="col-span-1 row-span-1 md:col-span-2 md:col-start-2 md:row-start-2">
-              <VideoWidget />
+              {/* Col 1 Row 2: REUNION */}
+              <div className="col-start-1 col-end-2 row-start-2 row-end-3">
+                <MeetingsWidget />
+              </div>
+
+              {/* Col 2-3 Row 2: VIDEO (2 colonnes) */}
+              <div className="col-start-2 col-end-4 row-start-2 row-end-3">
+                <VideoWidget />
+              </div>
             </div>
           </div>
 
