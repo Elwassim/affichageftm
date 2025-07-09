@@ -31,7 +31,7 @@ export const VideoWidget = () => {
     const handleConfigUpdate = (event: CustomEvent) => {
       if (event.detail.key === "videoUrl") {
         setVideoUrl(
-          event.detail.value || "https://www.youtube.com/embed/dQw4w9WgXcQ",
+          event.detail.value || "https://www.youtube.com/embed/YQHsXMglC9A",
         );
       }
     };
