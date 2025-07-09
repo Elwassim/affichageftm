@@ -230,7 +230,11 @@ export const MeetingsWidget = () => {
                               <>
                                 <Clock className="w-3.5 h-3.5 text-gray-500 ml-1" />
                                 <span className="text-gray-700 font-medium">
-                                  {meeting.time}
+                                  {meeting.time === "matin"
+                                    ? "Matin"
+                                    : meeting.time === "midi"
+                                      ? "Midi"
+                                      : meeting.time}
                                 </span>
                               </>
                             )}
