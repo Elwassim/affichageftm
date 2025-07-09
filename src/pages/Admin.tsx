@@ -1313,7 +1313,7 @@ const Admin = () => {
                         }
                         className="admin-input w-full"
                       >
-                        {MEETING_CATEGORIES.map((category) => (
+                        {meetingCategories.map((category) => (
                           <option key={category} value={category}>
                             {category}
                           </option>
@@ -1444,7 +1444,7 @@ const Admin = () => {
                                 disabled
                                 className="admin-input w-full bg-gray-50"
                               >
-                                {MEETING_CATEGORIES.map((category) => (
+                                {meetingCategories.map((category) => (
                                   <option key={category} value={category}>
                                     {category}
                                   </option>
