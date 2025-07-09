@@ -1,5 +1,46 @@
 /* Améliorations visuelles pour le panel admin */
 
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 768px) {
+  .admin-section-header {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .admin-section-stats {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .admin-add-card {
+    padding: 16px !important;
+  }
+
+  .admin-form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  .admin-users-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-section-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .admin-section-title h2 {
+    font-size: 1.5rem !important;
+  }
+
+  .admin-section-title h3 {
+    font-size: 1.25rem !important;
+  }
+}
+
 /* Headers de section plus visibles */
 .admin-section-header {
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
