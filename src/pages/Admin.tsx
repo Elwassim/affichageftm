@@ -1088,14 +1088,21 @@ const Admin = () => {
                 </p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 md:space-x-4">
               <button
                 onClick={handleVerifyAllSync}
-                className="admin-btn-secondary"
+                className="admin-btn-secondary hidden md:flex"
                 title="Vérifier toutes les connexions BDD"
               >
                 <Shield className="w-4 h-4 mr-2" />
                 Vérifier Tout
+              </button>
+              <button
+                onClick={handleVerifyAllSync}
+                className="admin-btn-secondary md:hidden p-2"
+                title="Vérifier connexions"
+              >
+                <Shield className="w-4 h-4" />
               </button>
               {lastSync && (
                 <span className="text-xs text-slate-500">
@@ -1178,7 +1185,7 @@ const Admin = () => {
                             title: e.target.value,
                           })
                         }
-                        placeholder="Assemblée gén��rale CGT"
+                        placeholder="Assemblée générale CGT"
                         className="admin-input w-full"
                       />
                     </div>
