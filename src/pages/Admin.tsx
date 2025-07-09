@@ -1458,10 +1458,9 @@ const Admin = () => {
                             )}
                           </div>
                           <div>
-                            <label className="admin-label">Heure</label>
+                            <label className="admin-label">Période</label>
                             {editingMeeting === meeting.id ? (
-                              <input
-                                type="time"
+                              <select
                                 value={editMeetingData.time || ""}
                                 onChange={(e) =>
                                   setEditMeetingData({
@@ -1470,11 +1469,23 @@ const Admin = () => {
                                   })
                                 }
                                 className="admin-input w-full"
-                              />
+                              >
+                                <option value="">
+                                  Sélectionner une période
+                                </option>
+                                <option value="matin">Matin</option>
+                                <option value="midi">Midi</option>
+                              </select>
                             ) : (
                               <input
-                                type="time"
-                                value={meeting.time}
+                                type="text"
+                                value={
+                                  meeting.time === "matin"
+                                    ? "Matin"
+                                    : meeting.time === "midi"
+                                      ? "Midi"
+                                      : meeting.time
+                                }
                                 readOnly
                                 className="admin-input w-full bg-gray-50"
                               />
