@@ -95,10 +95,14 @@ export const getNext7DaysPermanences = async (): Promise<
       });
     });
 
-    // Trier par date
-    dashboardPermanences.sort((a, b) => a.date.localeCompare(b.date));
+    // Grouper les permanences politiques par semaine
+    const groupedPermanences =
+      groupPoliticalPermanencesByWeek(dashboardPermanences);
 
-    return dashboardPermanences;
+    // Trier par date
+    groupedPermanences.sort((a, b) => a.date.localeCompare(b.date));
+
+    return groupedPermanences;
   } catch (error) {
     return [];
   }
