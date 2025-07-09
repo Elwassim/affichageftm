@@ -88,7 +88,7 @@ const Login = () => {
           {/* Header */}
           <div className="text-center space-y-4">
             <div className="flex justify-center">
-              <CGTLogo className="w-28 h-28" />
+              <CGTLogo className="w-32 h-32" />
             </div>
             <div>
               <h1 className="text-2xl font-black text-cgt-gray">
