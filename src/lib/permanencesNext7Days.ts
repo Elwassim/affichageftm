@@ -108,6 +108,80 @@ export const getNext7DaysPermanences = async (): Promise<
   }
 };
 
+// Fonction pour grouper les permanences politiques par semaine
+const groupPoliticalPermanencesByWeek = (
+  permanences: DashboardPermanence[],
+): DashboardPermanence[] => {
+  const result: DashboardPermanence[] = [];
+  const politicalWeeks = new Map<string, DashboardPermanence[]>();
+
+  // Séparer les permanences techniques et grouper les politiques par semaine
+  permanences.forEach((permanence) => {
+    if (permanence.type === "technique") {
+      // Garder les permanences techniques comme avant
+      result.push(permanence);
+    } else {
+      // Grouper les permanences politiques par semaine
+      const date = new Date(permanence.date);
+      const year = date.getFullYear();
+      const month = date.getMonth();
+
+      // Calculer le début de la semaine (lundi)
+      const dayOfWeek = date.getDay();
+      const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+      const monday = new Date(date);
+      monday.setDate(date.getDate() + mondayOffset);
+
+      // Calculer la fin de la semaine (dimanche)
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+
+      // Clé unique pour la semaine
+      const weekKey = `${permanence.name}-${year}-${month}-${monday.getDate()}`;
+
+      if (!politicalWeeks.has(weekKey)) {
+        politicalWeeks.set(weekKey, []);
+      }
+      politicalWeeks.get(weekKey)!.push(permanence);
+    }
+  });
+
+  // Convertir les groupes de semaine en entrées uniques
+  politicalWeeks.forEach((weekPermanences, weekKey) => {
+    if (weekPermanences.length > 0) {
+      const firstPermanence = weekPermanences[0];
+      const firstDate = new Date(firstPermanence.date);
+
+      // Calculer le début et la fin de la semaine
+      const dayOfWeek = firstDate.getDay();
+      const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+      const monday = new Date(firstDate);
+      monday.setDate(firstDate.getDate() + mondayOffset);
+
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+
+      // Format d'affichage de la semaine
+      const startDay = monday.getDate();
+      const endDay = sunday.getDate();
+      const monthName = getMonthName(monday.getMonth()).slice(0, 3);
+
+      result.push({
+        id: `week-${weekKey}`,
+        name: firstPermanence.name,
+        date: firstPermanence.date, // Garder la première date pour le tri
+        day: firstPermanence.day,
+        type: "politique",
+        displayDate: `Semaine ${startDay}-${endDay} ${monthName}`,
+        color: firstPermanence.color,
+        time: firstPermanence.time,
+      });
+    }
+  });
+
+  return result;
+};
+
 // Fonction pour obtenir le label d'un type
 export const getTypeLabel = (type: "technique" | "politique"): string => {
   const labels = {
