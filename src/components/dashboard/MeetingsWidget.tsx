@@ -176,9 +176,9 @@ export const MeetingsWidget = () => {
   return (
     <Card className="p-3 bg-white professional-shadow border-0 h-full flex flex-col">
       <div className="mb-3">
-        <h2 className="text-xl font-black text-cgt-gray flex items-center gap-2">
-          <div className="w-7 h-7 bg-cgt-red rounded flex items-center justify-center">
-            <Calendar className="w-5 h-5 text-white" />
+        <h2 className="text-2xl font-black text-cgt-gray flex items-center gap-2">
+          <div className="w-8 h-8 bg-cgt-red rounded flex items-center justify-center">
+            <Calendar className="w-6 h-6 text-white" />
           </div>
           <p>Réunions</p>
         </h2>
