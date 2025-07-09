@@ -234,7 +234,9 @@ export const MeetingsWidget = () => {
                                     ? "Matin"
                                     : meeting.time === "midi"
                                       ? "Midi"
-                                      : meeting.time}
+                                      : meeting.time === "journée"
+                                        ? "Journée"
+                                        : meeting.time}
                                 </span>
                               </>
                             )}

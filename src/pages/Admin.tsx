@@ -1279,6 +1279,7 @@ const Admin = () => {
                         <option value="">Sélectionner une période</option>
                         <option value="matin">Matin</option>
                         <option value="midi">Midi</option>
+                        <option value="journée">Journée</option>
                       </select>
                     </div>
                     <div>
@@ -1475,6 +1476,7 @@ const Admin = () => {
                                 </option>
                                 <option value="matin">Matin</option>
                                 <option value="midi">Midi</option>
+                                <option value="journée">Journée</option>
                               </select>
                             ) : (
                               <input
@@ -1484,7 +1486,9 @@ const Admin = () => {
                                     ? "Matin"
                                     : meeting.time === "midi"
                                       ? "Midi"
-                                      : meeting.time
+                                      : meeting.time === "journée"
+                                        ? "Journée"
+                                        : meeting.time
                                 }
                                 readOnly
                                 className="admin-input w-full bg-gray-50"
