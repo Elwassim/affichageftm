@@ -1041,17 +1041,19 @@ const Admin = () => {
             disabled={loading}
           >
             <RefreshCw
-              className={`w-4 h-4 mr-3 ${loading ? "animate-spin" : ""}`}
+              className={`w-4 h-4 mr-2 md:mr-3 ${loading ? "animate-spin" : ""}`}
             />
-            {loading ? "Actualisation..." : "Actualiser"}
+            <span className="text-sm md:text-base">
+              {loading ? "Actualisation..." : "Actualiser"}
+            </span>
           </Button>
-          <Link to="/">
+          <Link to="/" className="w-full">
             <Button
               variant="ghost"
               className="w-full justify-start text-slate-600 hover:text-slate-800 hover:bg-slate-50"
             >
-              <Home className="w-4 h-4 mr-3" />
-              Tableau de bord
+              <Home className="w-4 h-4 mr-2 md:mr-3" />
+              <span className="text-sm md:text-base">Tableau de bord</span>
             </Button>
           </Link>
           <Button
@@ -1059,8 +1061,8 @@ const Admin = () => {
             variant="ghost"
             className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
           >
-            <LogOut className="w-4 h-4 mr-3" />
-            Déconnexion
+            <LogOut className="w-4 h-4 mr-2 md:mr-3" />
+            <span className="text-sm md:text-base">Déconnexion</span>
           </Button>
         </div>
       </div>
