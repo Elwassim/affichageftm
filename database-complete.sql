@@ -112,7 +112,7 @@ INSERT INTO public.users (username, email, role, is_admin, is_active) VALUES
 
 -- Configuration par défaut
 INSERT INTO public.config (video_url, weather_city, alert_text, divers_title, divers_subtitle, divers_content, divers_active) VALUES
-('https://www.youtube.com/watch?v=dQw4w9WgXcQ', 'Paris', '🚨 APPEL CGT FTM - Rejoignez-nous pour défendre vos droits ! 🚨', 'Informations Diverses', 'Actualités et communications importantes', 'Restez informés des dernières actualités syndicales et des communications importantes de la CGT FTM.', true);
+('https://www.youtube.com/watch?v=YQHsXMglC9A', 'Paris', '🚨 APPEL CGT FTM - Rejoignez-nous pour défendre vos droits ! 🚨', 'Informations Diverses', 'Actualités et communications importantes', 'Restez informés des dernières actualités syndicales et des communications importantes de la CGT FTM.', true);
 
 -- Réunions d'exemple
 INSERT INTO public.meetings (title, date, time, room, category) VALUES
@@ -149,7 +149,7 @@ CREATE POLICY "Allow all for authenticated users" ON public.config FOR ALL USING
 -- ============ VUES UTILES ============
 -- Vue des prochaines réunions
 CREATE OR REPLACE VIEW public.upcoming_meetings AS
-SELECT 
+SELECT
     id,
     title,
     date,
@@ -157,13 +157,13 @@ SELECT
     room,
     category,
     EXTRACT(DOW FROM date) as day_of_week
-FROM public.meetings 
-WHERE date >= CURRENT_DATE 
+FROM public.meetings
+WHERE date >= CURRENT_DATE
 ORDER BY date ASC, time ASC;
 
 -- Vue des permanences actives
 CREATE OR REPLACE VIEW public.active_permanences AS
-SELECT 
+SELECT
     id,
     title,
     day_of_week,
@@ -180,8 +180,8 @@ SELECT
         WHEN 5 THEN 'Vendredi'
         WHEN 6 THEN 'Samedi'
     END as day_name
-FROM public.permanences 
-WHERE is_active = true 
+FROM public.permanences
+WHERE is_active = true
 ORDER BY day_of_week;
 
 -- ============ COMMENTAIRES ============
