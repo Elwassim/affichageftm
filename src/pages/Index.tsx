@@ -96,7 +96,7 @@ const Index = () => {
       <CGTHeader />
 
       {/* Main Dashboard Grid - Full Screen TV Layout */}
-      <div className="p-3 pb-12 h-[calc(100vh-260px)] w-full">
+      <div className="p-3 pb-6 h-[calc(100vh-180px)] w-full">
         <div className="w-full h-full">
           {/* Layout responsive adaptatif */}
           <div className="h-full">
