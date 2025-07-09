@@ -178,7 +178,9 @@ export const MeetingsWidget = () => {
 
       {meetings.length === 0 ? (
         <div className="text-center py-4">
-          <p className="text-gray-500 text-base">Aucune réunion programmé</p>
+          <p className="text-gray-500 text-base">
+            Aucune réunion programmée aujourd'hui
+          </p>
         </div>
       ) : (
         <div
