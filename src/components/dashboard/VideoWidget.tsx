@@ -7,38 +7,23 @@ export const VideoWidget = () => {
   const [videoUrl, setVideoUrl] = useState("");
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [showSoundActivator, setShowSoundActivator] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Charger l'URL de la vidéo depuis la configuration avec cache
+  // Charger l'URL de la vidéo
   useEffect(() => {
     const loadVideoUrl = async () => {
       try {
-        // Essayer d'abord le cache local pour un chargement instantané
-        const cachedUrl = localStorage.getItem("cgt-video-url");
-        if (cachedUrl && !videoUrl) {
-          setVideoUrl(cachedUrl);
-        }
-
         const url = await getConfig("videoUrl");
-        if (url && url !== cachedUrl) {
-          setVideoUrl(url);
-          localStorage.setItem("cgt-video-url", url);
-        }
+        setVideoUrl(url || "");
       } catch (error) {
-        // Utiliser le cache même en cas d'erreur
-        const cachedUrl = localStorage.getItem("cgt-video-url");
-        if (cachedUrl && !videoUrl) {
-          setVideoUrl(cachedUrl);
-        }
+        // Garder l'URL par défaut
       }
     };
 
     loadVideoUrl();
-    const timer = setInterval(loadVideoUrl, 60000); // Réduit la fréquence
+    const timer = setInterval(loadVideoUrl, 30000);
 
-    // Écouter les changements de configuration depuis l'admin
+    // Écouter les changements de configuration
     const handleConfigUpdate = (event: CustomEvent) => {
       if (event.detail.key === "videoUrl") {
         setVideoUrl(event.detail.value || "");
@@ -59,128 +44,44 @@ export const VideoWidget = () => {
     };
   }, []);
 
-  // AUTOPLAY ULTRA-AGRESSIF pour environnement TV/kiosque
+  // Autoplay simple
   useEffect(() => {
-    if (!videoUrl) return;
+    if (!videoUrl || !videoRef.current) return;
 
-    const forceAutoplay = () => {
-      if (videoRef.current) {
-        const video = videoRef.current;
+    const video = videoRef.current;
 
-        // Configuration MAXIMALE pour autoplay
-        video.muted = true; // OBLIGATOIRE pour autoplay
-        video.autoplay = true;
-        video.loop = true;
-        video.volume = 1.0;
-        video.defaultMuted = true;
-        video.setAttribute("autoplay", "");
-        video.setAttribute("muted", "");
-        video.setAttribute("playsinline", "");
-        video.setAttribute("webkit-playsinline", "");
+    // Configuration simple
+    video.muted = true;
+    video.autoplay = true;
+    video.loop = true;
 
-        // FORCER le démarrage avec gestion des erreurs améliorée
-        const tryPlay = async () => {
-          try {
-            console.log("🎬 Tentative de lecture automatique...");
-            video.currentTime = 0;
-            await video.play();
-            console.log("✅ Lecture automatique réussie");
-            setIsPlaying(true);
-            setIsMuted(true);
-
-            // Activer le son automatiquement après 2 secondes
-            setTimeout(() => {
-              if (video && !video.paused) {
-                video.muted = false;
-                setIsMuted(false);
-                console.log("🔊 Son activé automatiquement");
-              }
-            }, 2000);
-          } catch (error) {
-            console.log("❌ Autoplay bloqué, nouvelle tentative...", error);
-            // Attendre l'interaction utilisateur ou continuer d'essayer
-            setTimeout(tryPlay, 2000);
-          }
-        };
-
-        // Tentatives multiples et répétées avec délais progressifs
-        const attemptPlay = () => {
-          tryPlay();
-          setTimeout(tryPlay, 100);
-          setTimeout(tryPlay, 500);
-          setTimeout(tryPlay, 1000);
-          setTimeout(tryPlay, 2000);
-          setTimeout(tryPlay, 5000);
-        };
-
-        // Démarrer immédiatement
-        attemptPlay();
-
-        // Déclencheurs sur événements vidéo
-        const onLoadedData = () => {
-          console.log("📺 Vidéo chargée, tentative de lecture...");
-          tryPlay();
-        };
-
-        const onCanPlay = () => {
-          console.log("▶️ Vidéo prête, tentative de lecture...");
-          tryPlay();
-        };
-
-        const onLoadedMetadata = () => {
-          console.log("📋 Métadonnées chargées, tentative de lecture...");
-          tryPlay();
-        };
-
-        video.addEventListener("loadeddata", onLoadedData);
-        video.addEventListener("canplay", onCanPlay);
-        video.addEventListener("loadedmetadata", onLoadedMetadata);
-
-        // Tentative lors du focus/clic sur la page
-        const onInteraction = () => {
-          console.log("👆 Interaction détectée, tentative de lecture...");
-          tryPlay();
-        };
-
-        document.addEventListener("click", onInteraction, { once: true });
-        document.addEventListener("touchstart", onInteraction, { once: true });
-        window.addEventListener("focus", onInteraction, { once: true });
-
-        return () => {
-          video.removeEventListener("loadeddata", onLoadedData);
-          video.removeEventListener("canplay", onCanPlay);
-          video.removeEventListener("loadedmetadata", onLoadedMetadata);
-          document.removeEventListener("click", onInteraction);
-          document.removeEventListener("touchstart", onInteraction);
-          window.removeEventListener("focus", onInteraction);
-        };
-      } else {
-        // Pour les iframe - considérer comme démarrées
-        console.log("🎬 Iframe vidéo configurée avec autoplay");
-        setIsPlaying(true);
-        setIsMuted(false);
-      }
+    // Tentative de lecture simple
+    const tryPlay = () => {
+      video
+        .play()
+        .then(() => {
+          setIsPlaying(true);
+          // Activer le son après 1 seconde
+          setTimeout(() => {
+            video.muted = false;
+            setIsMuted(false);
+          }, 1000);
+        })
+        .catch(() => {
+          // Réessayer une fois
+          setTimeout(() => video.play().catch(() => {}), 1000);
+        });
     };
 
-    const cleanup = forceAutoplay();
-    return cleanup;
+    tryPlay();
   }, [videoUrl]);
-
-  // Fonction pour activer le son
-  const activateSound = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = false;
-      videoRef.current.volume = 1.0;
-    }
-    setIsMuted(false);
-    setShowSoundActivator(false);
-  };
 
   // Basculer le son
   const toggleMute = () => {
     if (videoRef.current) {
       if (isMuted) {
-        activateSound();
+        videoRef.current.muted = false;
+        setIsMuted(false);
       } else {
         videoRef.current.muted = true;
         setIsMuted(true);
@@ -188,19 +89,19 @@ export const VideoWidget = () => {
     }
   };
 
-  // URLs d'embed optimisées pour chargement rapide et autoplay
+  // URLs d'embed simples
   const getEmbedUrl = (url: string) => {
     if (url.includes("youtube.com/watch?v=")) {
       const videoId = url.split("v=")[1]?.split("&")[0];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=0&cc_load_policy=0&iv_load_policy=3&origin=${window.location.origin}&widget_referrer=${window.location.origin}`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1`;
     }
     if (url.includes("youtu.be/")) {
       const videoId = url.split("youtu.be/")[1]?.split("?")[0];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=0&cc_load_policy=0&iv_load_policy=3&origin=${window.location.origin}&widget_referrer=${window.location.origin}`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=1`;
     }
     if (url.includes("vimeo.com/")) {
       const videoId = url.split("vimeo.com/")[1]?.split("?")[0];
-      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=0&loop=1&background=1&controls=1&byline=0&title=0&portrait=0&autopause=0&preload=metadata`;
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1&controls=1`;
     }
     return url;
   };
@@ -236,108 +137,29 @@ export const VideoWidget = () => {
       </div>
 
       {videoUrl ? (
-        <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200 relative">
-          {/* Activateur de son intelligent */}
-          {showSoundActivator && (
-            <div className="absolute top-4 right-4 z-20">
-              <button
-                onClick={activateSound}
-                className="bg-cgt-red hover:bg-cgt-red-dark text-white px-4 py-2 rounded-lg shadow-lg transition-all animate-pulse"
-              >
-                🔊 Activer le son
-              </button>
-            </div>
-          )}
-
+        <div className="w-full h-[calc(100%-3.5rem)] rounded-lg overflow-hidden bg-gray-100 shadow-lg border border-gray-200">
           {isDirectVideo(videoUrl) ? (
             <video
               ref={videoRef}
               src={videoUrl}
-              className="w-full h-full object-cover cursor-pointer"
-              autoPlay={true}
-              muted={true}
-              loop={true}
-              playsInline={true}
-              controls={true}
-              preload="metadata"
-              defaultMuted={true}
-              crossOrigin="anonymous"
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
               style={{ minHeight: "300px" }}
-              onClick={() => {
-                // Force play au clic
-                if (videoRef.current) {
-                  if (videoRef.current.paused) {
-                    videoRef.current.play().catch(console.error);
-                  } else {
-                    videoRef.current.pause();
-                  }
-                }
-              }}
-              onLoadedData={() => {
-                console.log("📺 onLoadedData - Force play");
-                if (videoRef.current) {
-                  videoRef.current.play().catch(console.error);
-                }
-              }}
-              onCanPlay={() => {
-                console.log("▶️ onCanPlay - Force play");
-                if (videoRef.current) {
-                  videoRef.current.play().catch(console.error);
-                  setIsPlaying(true);
-                }
-              }}
-              onLoadedMetadata={() => {
-                console.log("📋 onLoadedMetadata - Force play");
-                if (videoRef.current) {
-                  videoRef.current.play().catch(console.error);
-                }
-              }}
-              onPlay={() => {
-                console.log("✅ Vidéo en cours de lecture");
-                setIsPlaying(true);
-                // Activer le son après 1 seconde
-                setTimeout(() => {
-                  if (videoRef.current && !videoRef.current.paused) {
-                    videoRef.current.muted = false;
-                    setIsMuted(false);
-                    console.log("🔊 Son activé");
-                  }
-                }, 1000);
-              }}
-              onPause={() => {
-                console.log("⏸️ Vidéo en pause");
-                setIsPlaying(false);
-              }}
-              onEnded={(e) => {
-                console.log("🔄 Vidéo terminée, redémarrage");
-                e.currentTarget.currentTime = 0;
-                e.currentTarget.play().catch(console.error);
-              }}
-              onError={(e) => {
-                console.error("❌ Erreur vidéo:", e);
-                // Réessayer en cas d'erreur
-                setTimeout(() => {
-                  if (videoRef.current) {
-                    videoRef.current.load();
-                    videoRef.current.play().catch(() => {});
-                  }
-                }, 1000);
-              }}
+              onPlay={() => setIsPlaying(true)}
+              onPause={() => setIsPlaying(false)}
             />
           ) : (
             <iframe
-              ref={iframeRef}
               src={getEmbedUrl(videoUrl)}
               className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allow="autoplay; encrypted-media"
               allowFullScreen
               title="Vidéo institutionnelle CGT FTM"
               style={{ minHeight: "300px" }}
-              loading="eager"
-              onLoad={() => {
-                setIsPlaying(true);
-                setIsMuted(false);
-              }}
             />
           )}
         </div>
