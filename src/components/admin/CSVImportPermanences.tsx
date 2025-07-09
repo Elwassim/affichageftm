@@ -189,10 +189,13 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
                 person.description || `Permanence du ${day} ${month} ${year}`,
             };
 
+            console.log("🔄 Création permanence:", permanenceData);
             const created = await createPermanence(permanenceData);
+            console.log("✅ Résultat création:", created);
             if (created) {
               successCount++;
             } else {
+              console.error("❌ Échec création permanence:", permanenceData);
               errorCount++;
             }
           } catch (error) {
