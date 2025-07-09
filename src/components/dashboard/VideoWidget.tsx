@@ -18,7 +18,7 @@ export const VideoWidget = () => {
     const loadVideoUrl = async () => {
       try {
         const url = await getConfig("videoUrl");
-        setVideoUrl(url || "https://www.youtube.com/embed/dQw4w9WgXcQ");
+        setVideoUrl(url || "https://www.youtube.com/embed/YQHsXMglC9A");
       } catch (error) {
         // Garder l'URL par défaut
       }
