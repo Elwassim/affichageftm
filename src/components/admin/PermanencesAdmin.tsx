@@ -149,13 +149,73 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
   };
 
   const toggleDay = (day: string) => {
+    // Pour les permanences politiques, sélectionner toute la semaine
+    if (newPermanence.type === "politique") {
+      selectWeekForDay(parseInt(day));
+    } else {
+      // Pour les permanences techniques, sélection individuelle
+      setSelectedDays((prev) => {
+        const newDays = { ...prev };
+        if (newDays[day]) {
+          delete newDays[day];
+        } else {
+          newDays[day] = {};
+        }
+        return newDays;
+      });
+    }
+  };
+
+  // Sélectionner toute la semaine contenant le jour donné
+  const selectWeekForDay = (dayNumber: number) => {
+    const currentYear = parseInt(newPermanence.year.toString());
+    const monthNames = [
+      "janvier",
+      "février",
+      "mars",
+      "avril",
+      "mai",
+      "juin",
+      "juillet",
+      "août",
+      "septembre",
+      "octobre",
+      "novembre",
+      "décembre",
+    ];
+    const monthIndex = monthNames.indexOf(newPermanence.month.toLowerCase());
+
+    if (monthIndex === -1) return;
+
+    // Calculer le jour de la semaine pour le jour donné
+    const date = new Date(currentYear, monthIndex, dayNumber);
+    const dayOfWeek = date.getDay(); // 0 = dimanche, 1 = lundi, etc.
+
+    // Calculer le début de la semaine (lundi)
+    const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+    const weekStart = dayNumber + mondayOffset;
+    const weekEnd = weekStart + 6;
+
+    // Calculer le nombre de jours dans le mois
+    const daysInMonth = new Date(currentYear, monthIndex + 1, 0).getDate();
+
     setSelectedDays((prev) => {
       const newDays = { ...prev };
-      if (newDays[day]) {
-        delete newDays[day];
-      } else {
-        newDays[day] = {};
+
+      // Désélectionner tous les jours d'abord
+      Object.keys(newDays).forEach((key) => {
+        delete newDays[key];
+      });
+
+      // Sélectionner toute la semaine
+      for (
+        let day = Math.max(1, weekStart);
+        day <= Math.min(daysInMonth, weekEnd);
+        day++
+      ) {
+        newDays[day.toString()] = {};
       }
+
       return newDays;
     });
   };
