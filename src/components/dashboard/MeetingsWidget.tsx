@@ -199,8 +199,8 @@ export const MeetingsWidget = () => {
               <div key={category} className="space-y-0.5">
                 {/* Category Header */}
                 <div className="flex items-center gap-2 px-1">
-                  <div className="w-1.5 h-1.5 bg-cgt-red rounded-full"></div>
-                  <h4 className="text-xs font-bold text-cgt-red uppercase tracking-wide">
+                  <div className="w-2 h-2 bg-cgt-red rounded-full"></div>
+                  <h4 className="text-sm font-bold text-cgt-red uppercase tracking-wide">
                     {category}
                   </h4>
                   <div className="flex-1 h-px bg-cgt-red/30"></div>
