@@ -29,9 +29,9 @@ const ensureSupabaseReady = async (): Promise<boolean> => {
     console.log("🔧 Initialisation automatique de Supabase...");
     const success = await initializeSupabaseTables();
     if (success) {
-      await insertDefaultData();
+      // Ne plus insérer de données par défaut automatiquement
       supabaseInitialized = true;
-      console.log("✅ Supabase initialisé et prêt");
+      console.log("✅ Supabase initialisé et prêt (sans données par défaut)");
     }
     return success;
   } catch (error) {
