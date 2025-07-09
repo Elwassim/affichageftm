@@ -104,32 +104,32 @@ const Index = () => {
             style={{ gridTemplateRows: "1fr 2fr" }}
           >
             {/* Col 1 Row 1: DATE/MÉTÉO */}
-            <div className="col-start-1 col-end-2 row-start-1 row-end-2">
+            <div className="col-span-1 row-span-1">
               <DateTimeWidget />
             </div>
 
             {/* Col 2 Row 1: PERMANENCES (à côté de l'heure) */}
-            <div className="col-start-2 col-end-3 row-start-1 row-end-2">
+            <div className="col-span-1 row-span-1 md:col-start-2">
               <PermanencesCombinedWidget />
             </div>
 
-            {/* Col 3 Row 1: DIVERS */}
-            <div className="col-start-3 col-end-4 row-start-1 row-end-2">
+            {/* Col 3 Row 1: DIVERS (caché sur mobile) */}
+            <div className="hidden md:block md:col-span-1 md:row-span-1">
               <DiversWidget />
             </div>
 
-            {/* Col 4 Row 1-2: HOMMAGE (2 rangées) */}
-            <div className="col-start-4 col-end-5 row-start-1 row-end-3">
+            {/* Col 4 Row 1-2: HOMMAGE (2 rangées, sur mobile prend toute la largeur) */}
+            <div className="col-span-2 row-span-2 md:col-span-1 md:col-start-4 md:row-start-1">
               <SocialWidget />
             </div>
 
             {/* Col 1 Row 2: REUNION */}
-            <div className="col-start-1 col-end-2 row-start-2 row-end-3">
+            <div className="col-span-1 row-span-1 md:col-start-1 md:row-start-2">
               <MeetingsWidget />
             </div>
 
             {/* Col 2-3 Row 2: VIDEO (prend plus d'espace - 2 colonnes) */}
-            <div className="col-start-2 col-end-4 row-start-2 row-end-3">
+            <div className="col-span-1 row-span-1 md:col-span-2 md:col-start-2 md:row-start-2">
               <VideoWidget />
             </div>
           </div>
