@@ -28,9 +28,7 @@ export const VideoWidget = () => {
     // Écouter les changements de configuration depuis l'admin
     const handleConfigUpdate = (event: CustomEvent) => {
       if (event.detail.key === "videoUrl") {
-        setVideoUrl(
-          event.detail.value || "https://www.youtube.com/embed/YQHsXMglC9A",
-        );
+        setVideoUrl(event.detail.value || "");
       }
     };
 
