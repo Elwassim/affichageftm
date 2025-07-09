@@ -11,19 +11,32 @@ export const VideoWidget = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
-  // Charger l'URL de la vidéo depuis la configuration
+  // Charger l'URL de la vidéo depuis la configuration avec cache
   useEffect(() => {
     const loadVideoUrl = async () => {
       try {
+        // Essayer d'abord le cache local pour un chargement instantané
+        const cachedUrl = localStorage.getItem("cgt-video-url");
+        if (cachedUrl && !videoUrl) {
+          setVideoUrl(cachedUrl);
+        }
+
         const url = await getConfig("videoUrl");
-        setVideoUrl(url || "");
+        if (url && url !== cachedUrl) {
+          setVideoUrl(url);
+          localStorage.setItem("cgt-video-url", url);
+        }
       } catch (error) {
-        // Garder l'URL par défaut
+        // Utiliser le cache même en cas d'erreur
+        const cachedUrl = localStorage.getItem("cgt-video-url");
+        if (cachedUrl && !videoUrl) {
+          setVideoUrl(cachedUrl);
+        }
       }
     };
 
     loadVideoUrl();
-    const timer = setInterval(loadVideoUrl, 30000);
+    const timer = setInterval(loadVideoUrl, 60000); // Réduit la fréquence
 
     // Écouter les changements de configuration depuis l'admin
     const handleConfigUpdate = (event: CustomEvent) => {
@@ -129,19 +142,19 @@ export const VideoWidget = () => {
     }
   };
 
-  // URLs d'embed avec AUTOPLAY FORCÉ pour TV/kiosque
+  // URLs d'embed optimisées pour chargement rapide et autoplay
   const getEmbedUrl = (url: string) => {
     if (url.includes("youtube.com/watch?v=")) {
       const videoId = url.split("v=")[1]?.split("&")[0];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=0&cc_load_policy=0`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=0&cc_load_policy=0&iv_load_policy=3&origin=${window.location.origin}&widget_referrer=${window.location.origin}`;
     }
     if (url.includes("youtu.be/")) {
       const videoId = url.split("youtu.be/")[1]?.split("?")[0];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=0&cc_load_policy=0`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=0&loop=1&playlist=${videoId}&controls=1&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=0&cc_load_policy=0&iv_load_policy=3&origin=${window.location.origin}&widget_referrer=${window.location.origin}`;
     }
     if (url.includes("vimeo.com/")) {
       const videoId = url.split("vimeo.com/")[1]?.split("?")[0];
-      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1&background=1&controls=0&byline=0&title=0&portrait=0&autopause=0`;
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=0&loop=1&background=1&controls=1&byline=0&title=0&portrait=0&autopause=0&preload=metadata`;
     }
     return url;
   };
@@ -200,11 +213,18 @@ export const VideoWidget = () => {
               loop={true}
               playsInline={true}
               controls={true}
-              preload="auto"
+              preload="metadata" // Plus rapide que "auto"
               defaultMuted={true}
+              crossOrigin="anonymous"
               style={{ minHeight: "300px" }}
-              onLoadedData={() => {
-                // Force play dès que les données sont chargées
+              onLoadStart={() => {
+                // Démarrer dès le début du chargement
+                if (videoRef.current) {
+                  videoRef.current.play().catch(() => {});
+                }
+              }}
+              onLoadedMetadata={() => {
+                // Force play dès que les métadonnées sont chargées
                 if (videoRef.current) {
                   videoRef.current.play().catch(() => {});
                 }
@@ -213,22 +233,32 @@ export const VideoWidget = () => {
                 // Force play quand la vidéo peut être jouée
                 if (videoRef.current) {
                   videoRef.current.play().catch(() => {});
+                  setIsPlaying(true);
                 }
               }}
               onPlay={() => {
                 setIsPlaying(true);
-                // Activer le son après 500ms
+                // Activer le son après 200ms (plus rapide)
                 setTimeout(() => {
-                  if (videoRef.current) {
+                  if (videoRef.current && videoRef.current.readyState >= 2) {
                     videoRef.current.muted = false;
                     setIsMuted(false);
                   }
-                }, 500);
+                }, 200);
               }}
               onPause={() => setIsPlaying(false)}
               onEnded={(e) => {
                 e.currentTarget.currentTime = 0;
                 e.currentTarget.play();
+              }}
+              onError={() => {
+                // Réessayer en cas d'erreur
+                setTimeout(() => {
+                  if (videoRef.current) {
+                    videoRef.current.load();
+                    videoRef.current.play().catch(() => {});
+                  }
+                }, 1000);
               }}
             />
           ) : (
@@ -240,6 +270,11 @@ export const VideoWidget = () => {
               allowFullScreen
               title="Vidéo institutionnelle CGT FTM"
               style={{ minHeight: "300px" }}
+              loading="eager"
+              onLoad={() => {
+                setIsPlaying(true);
+                setIsMuted(false);
+              }}
             />
           )}
         </div>
