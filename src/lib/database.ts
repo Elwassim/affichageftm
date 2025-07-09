@@ -96,7 +96,7 @@ export const setConfig = async (key: string, value: any): Promise<boolean> => {
 // Initialiser les configurations par défaut
 export const initializeDefaultConfig = async (): Promise<void> => {
   const defaults = {
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    videoUrl: "https://www.youtube.com/embed/YQHsXMglC9A",
     alertText:
       "🚨 APPEL CGT FTM - Rejoignez-nous pour défendre vos droits ! 🚨",
     diversContent: JSON.stringify({
