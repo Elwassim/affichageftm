@@ -57,6 +57,36 @@ const Index = () => {
     return () => clearTimeout(timer);
   }, []);
 
+  // Raccourci clavier pour basculer le plein écran (F11 ou Ctrl+F)
+  useEffect(() => {
+    const handleKeyPress = async (event: KeyboardEvent) => {
+      // F11 ou Ctrl+F pour basculer le plein écran
+      if (event.key === "F11" || (event.ctrlKey && event.key === "f")) {
+        event.preventDefault();
+
+        try {
+          if (document.fullscreenElement) {
+            // Sortir du plein écran
+            await document.exitFullscreen();
+            console.log("🖥️ Sortie du mode plein écran");
+          } else {
+            // Entrer en plein écran
+            const element = document.documentElement;
+            if (element.requestFullscreen) {
+              await element.requestFullscreen();
+              console.log("🖥️ Activation du mode plein écran");
+            }
+          }
+        } catch (error) {
+          console.warn("⚠️ Erreur lors du basculement plein écran:", error);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
+  }, []);
+
   return (
     <div className="h-screen w-screen cgt-gradient overflow-hidden relative">
       {/* Alert Banner */}
