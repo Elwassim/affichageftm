@@ -31,6 +31,7 @@ import { getCurrentUser, canManageUsers, logout } from "@/lib/auth";
 
 // Import des styles améliorés
 import "../styles/admin-improvements.css";
+import "../styles/admin-modern.css";
 
 // Import database functions
 import {
