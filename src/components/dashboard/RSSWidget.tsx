@@ -107,35 +107,9 @@ export const RSSWidget = () => {
       console.warn("⚠️ Erreur API 2 (AllOrigins):", error2);
     }
 
-    // Fallback final avec du contenu statique mais réaliste
-    console.log("🔄 Utilisation du contenu de fallback");
-    return [
-      {
-        title: "Actualités politiques françaises - Flux RSS France Info",
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: new Date().toISOString(),
-      },
-      {
-        title: "Suivez l'actualité politique en temps réel sur France Info",
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: new Date().toISOString(),
-      },
-      {
-        title: "Informations et analyses politiques - France Info",
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: new Date().toISOString(),
-      },
-      {
-        title: "Déclarations gouvernementales et réactions politiques",
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: new Date().toISOString(),
-      },
-      {
-        title: "Débats parlementaires et actualité institutionnelle",
-        link: "https://www.franceinfo.fr/politique",
-        pubDate: new Date().toISOString(),
-      },
-    ];
+    // Pas de contenu de fallback - retourner vide si aucune source ne fonctionne
+    console.log("❌ Aucune source RSS disponible");
+    return [];
   };
 
   useEffect(() => {
