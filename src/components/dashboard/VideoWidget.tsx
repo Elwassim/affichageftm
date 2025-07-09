@@ -5,7 +5,7 @@ import { getConfig } from "@/lib/database";
 
 export const VideoWidget = () => {
   const [videoUrl, setVideoUrl] = useState(
-    "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    "https://www.youtube.com/embed/YQHsXMglC9A",
   );
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
