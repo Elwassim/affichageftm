@@ -1022,9 +1022,11 @@ const Admin = () => {
                 }`}
               >
                 <Icon
-                  className={`w-5 h-5 ${isActive ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"}`}
+                  className={`w-4 h-4 md:w-5 md:h-5 flex-shrink-0 ${isActive ? "text-blue-600" : "text-slate-400 group-hover:text-slate-600"}`}
                 />
-                <span className="font-medium">{item.label}</span>
+                <span className="font-medium text-sm md:text-base truncate">
+                  {item.label}
+                </span>
               </button>
             );
           })}
