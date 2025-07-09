@@ -68,7 +68,7 @@ export const VideoWidget = () => {
         const video = videoRef.current;
 
         // Configuration MAXIMALE pour autoplay
-        video.muted = true; // OBLIGATOIRE
+        video.muted = true; // OBLIGATOIRE pour autoplay
         video.autoplay = true;
         video.loop = true;
         video.volume = 1.0;
@@ -76,43 +76,89 @@ export const VideoWidget = () => {
         video.setAttribute("autoplay", "");
         video.setAttribute("muted", "");
         video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "");
 
-        // FORCER le démarrage immédiatement
+        // FORCER le démarrage avec gestion des erreurs améliorée
         const tryPlay = async () => {
           try {
+            console.log("🎬 Tentative de lecture automatique...");
+            video.currentTime = 0;
             await video.play();
+            console.log("✅ Lecture automatique réussie");
             setIsPlaying(true);
             setIsMuted(true);
 
-            // Activer le son automatiquement après 1 seconde
+            // Activer le son automatiquement après 2 secondes
             setTimeout(() => {
-              video.muted = false;
-              setIsMuted(false);
-            }, 1000);
+              if (video && !video.paused) {
+                video.muted = false;
+                setIsMuted(false);
+                console.log("🔊 Son activé automatiquement");
+              }
+            }, 2000);
           } catch (error) {
-            // Continuer d'essayer même en cas d'échec
-            setTimeout(tryPlay, 1000);
+            console.log("❌ Autoplay bloqué, nouvelle tentative...", error);
+            // Attendre l'interaction utilisateur ou continuer d'essayer
+            setTimeout(tryPlay, 2000);
           }
         };
 
-        // Tentatives multiples et répétées
-        tryPlay();
-        setTimeout(tryPlay, 100);
-        setTimeout(tryPlay, 500);
-        setTimeout(tryPlay, 1000);
+        // Tentatives multiples et répétées avec délais progressifs
+        const attemptPlay = () => {
+          tryPlay();
+          setTimeout(tryPlay, 100);
+          setTimeout(tryPlay, 500);
+          setTimeout(tryPlay, 1000);
+          setTimeout(tryPlay, 2000);
+          setTimeout(tryPlay, 5000);
+        };
 
-        // Déclencheurs sur événements
-        video.addEventListener("loadeddata", tryPlay);
-        video.addEventListener("canplay", tryPlay);
+        // Démarrer immédiatement
+        attemptPlay();
+
+        // Déclencheurs sur événements vidéo
+        const onLoadedData = () => {
+          console.log("📺 Vidéo chargée, tentative de lecture...");
+          tryPlay();
+        };
+
+        const onCanPlay = () => {
+          console.log("▶️ Vidéo prête, tentative de lecture...");
+          tryPlay();
+        };
+
+        const onLoadedMetadata = () => {
+          console.log("📋 Métadonnées chargées, tentative de lecture...");
+          tryPlay();
+        };
+
+        video.addEventListener("loadeddata", onLoadedData);
+        video.addEventListener("canplay", onCanPlay);
+        video.addEventListener("loadedmetadata", onLoadedMetadata);
+
+        // Tentative lors du focus/clic sur la page
+        const onInteraction = () => {
+          console.log("👆 Interaction détectée, tentative de lecture...");
+          tryPlay();
+        };
+
+        document.addEventListener("click", onInteraction, { once: true });
+        document.addEventListener("touchstart", onInteraction, { once: true });
+        window.addEventListener("focus", onInteraction, { once: true });
 
         return () => {
-          video.removeEventListener("loadeddata", tryPlay);
-          video.removeEventListener("canplay", tryPlay);
+          video.removeEventListener("loadeddata", onLoadedData);
+          video.removeEventListener("canplay", onCanPlay);
+          video.removeEventListener("loadedmetadata", onLoadedMetadata);
+          document.removeEventListener("click", onInteraction);
+          document.removeEventListener("touchstart", onInteraction);
+          window.removeEventListener("focus", onInteraction);
         };
       } else {
         // Pour les iframe - considérer comme démarrées
         setIsPlaying(true);
         setIsMuted(false);
+        console.log("🎬 Iframe vidéo configurée avec autoplay");
       }
     };
 
@@ -207,7 +253,7 @@ export const VideoWidget = () => {
             <video
               ref={videoRef}
               src={videoUrl}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover cursor-pointer"
               autoPlay={true}
               muted={true}
               loop={true}
@@ -217,6 +263,7 @@ export const VideoWidget = () => {
               defaultMuted={true}
               crossOrigin="anonymous"
               style={{ minHeight: "300px" }}
+<<<<<<< HEAD
               onLoadStart={() => {
                 // Démarrer dès le début du chargement
                 if (videoRef.current) {
@@ -225,31 +272,74 @@ export const VideoWidget = () => {
               }}
               onLoadedMetadata={() => {
                 // Force play dès que les métadonnées sont chargées
+=======
+              onClick={() => {
+                // Force play au clic
+>>>>>>> 842a7b400dc018a65ec02f31d9855268b0901545
                 if (videoRef.current) {
-                  videoRef.current.play().catch(() => {});
+                  if (videoRef.current.paused) {
+                    videoRef.current.play().catch(console.error);
+                  } else {
+                    videoRef.current.pause();
+                  }
+                }
+              }}
+              onLoadedData={() => {
+                console.log("📺 onLoadedData - Force play");
+                if (videoRef.current) {
+                  videoRef.current.play().catch(console.error);
                 }
               }}
               onCanPlay={() => {
-                // Force play quand la vidéo peut être jouée
+                console.log("▶️ onCanPlay - Force play");
                 if (videoRef.current) {
+<<<<<<< HEAD
                   videoRef.current.play().catch(() => {});
                   setIsPlaying(true);
+=======
+                  videoRef.current.play().catch(console.error);
+                }
+              }}
+              onLoadedMetadata={() => {
+                console.log("📋 onLoadedMetadata - Force play");
+                if (videoRef.current) {
+                  videoRef.current.play().catch(console.error);
+>>>>>>> 842a7b400dc018a65ec02f31d9855268b0901545
                 }
               }}
               onPlay={() => {
+                console.log("✅ Vidéo en cours de lecture");
                 setIsPlaying(true);
+<<<<<<< HEAD
                 // Activer le son après 200ms (plus rapide)
                 setTimeout(() => {
                   if (videoRef.current && videoRef.current.readyState >= 2) {
+=======
+                // Activer le son après 1 seconde
+                setTimeout(() => {
+                  if (videoRef.current && !videoRef.current.paused) {
+>>>>>>> 842a7b400dc018a65ec02f31d9855268b0901545
                     videoRef.current.muted = false;
                     setIsMuted(false);
+                    console.log("🔊 Son activé");
                   }
+<<<<<<< HEAD
                 }, 200);
+=======
+                }, 1000);
               }}
-              onPause={() => setIsPlaying(false)}
+              onPause={() => {
+                console.log("⏸️ Vidéo en pause");
+                setIsPlaying(false);
+>>>>>>> 842a7b400dc018a65ec02f31d9855268b0901545
+              }}
               onEnded={(e) => {
+                console.log("🔄 Vidéo terminée, redémarrage");
                 e.currentTarget.currentTime = 0;
-                e.currentTarget.play();
+                e.currentTarget.play().catch(console.error);
+              }}
+              onError={(e) => {
+                console.error("❌ Erreur vidéo:", e);
               }}
               onError={() => {
                 // Réessayer en cas d'erreur
