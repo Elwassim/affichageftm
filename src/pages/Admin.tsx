@@ -579,7 +579,7 @@ const Admin = () => {
 
   const handleSaveUser = async (userId: string) => {
     console.log(
-      "��� handleSaveUser appelé pour ID:",
+      "🚀 handleSaveUser appelé pour ID:",
       userId,
       "données:",
       editUserData,
@@ -975,13 +975,15 @@ const Admin = () => {
         className={`fixed inset-y-0 left-0 z-50 w-full sm:w-80 md:w-64 bg-white shadow-xl border-r border-slate-200 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
       >
         {/* Sidebar Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center">
-              <Shield className="w-6 h-6 text-white" />
+        <div className="flex items-center justify-between p-4 md:p-6 border-b border-slate-200">
+          <div className="flex items-center space-x-2 md:space-x-3">
+            <div className="w-8 h-8 md:w-10 md:h-10 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center">
+              <Shield className="w-4 h-4 md:w-6 md:h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-slate-800">CGT FTM</h1>
+              <h1 className="text-base md:text-lg font-bold text-slate-800">
+                CGT FTM
+              </h1>
               <p className="text-xs text-slate-500">
                 {currentUser?.group === "admin" ? "Administrateur" : "Éditeur"}
               </p>
@@ -991,7 +993,7 @@ const Admin = () => {
             variant="ghost"
             size="sm"
             onClick={() => setSidebarOpen(false)}
-            className="md:hidden"
+            className="md:hidden flex-shrink-0"
           >
             <X className="w-4 h-4" />
           </Button>
@@ -1839,7 +1841,7 @@ const Admin = () => {
                           onChange={(e) =>
                             setNewUser({ ...newUser, password: e.target.value })
                           }
-                          placeholder="��•••••••••"
+                          placeholder="••••••••••"
                           className="admin-input w-full pr-10"
                         />
                         <button
