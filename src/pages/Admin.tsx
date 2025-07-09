@@ -1083,14 +1083,6 @@ const Admin = () => {
         <header className="bg-white shadow-lg border-b border-slate-200 sticky top-0 z-30">
           <div className="flex items-center justify-between px-4 md:px-8 py-4 md:py-6">
             <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="text-slate-600 hover:text-slate-800"
-              >
-                <Menu className="w-5 h-5" />
-              </Button>
               <div>
                 <h1 className="text-lg md:text-xl font-bold text-slate-800">
                   {navigationItems.find((item) => item.id === activeTab)
