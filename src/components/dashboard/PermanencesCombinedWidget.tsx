@@ -73,32 +73,22 @@ export const PermanencesCombinedWidget = () => {
     };
   }, []);
 
-  // Auto-scroll pour les permanences techniques
+  // Auto-scroll pour les permanences techniques (sans délai)
   useEffect(() => {
     const scrollContainer = scrollRefTech.current;
     if (!scrollContainer || permanencesTech.length <= 1) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.3;
-    const pauseTime = 3000;
-    let isPaused = false;
+    const scrollSpeed = 1;
 
     const autoScroll = () => {
-      if (isPaused) return;
-
       scrollPosition += scrollSpeed;
       const maxScroll =
         scrollContainer.scrollHeight - scrollContainer.clientHeight;
 
       if (scrollPosition >= maxScroll) {
-        isPaused = true;
-        setTimeout(() => {
-          scrollPosition = 0;
-          scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
-          setTimeout(() => {
-            isPaused = false;
-          }, 1000);
-        }, pauseTime);
+        scrollPosition = 0;
+        scrollContainer.scrollTo({ top: 0, behavior: "auto" });
       } else {
         scrollContainer.scrollTop = scrollPosition;
       }
@@ -108,32 +98,22 @@ export const PermanencesCombinedWidget = () => {
     return () => clearInterval(interval);
   }, [permanencesTech.length]);
 
-  // Auto-scroll pour les permanences politiques
+  // Auto-scroll pour les permanences politiques (sans délai)
   useEffect(() => {
     const scrollContainer = scrollRefPolitiques.current;
     if (!scrollContainer || permanencesPolitiques.length <= 1) return;
 
     let scrollPosition = 0;
-    const scrollSpeed = 0.3;
-    const pauseTime = 3000;
-    let isPaused = false;
+    const scrollSpeed = 1;
 
     const autoScroll = () => {
-      if (isPaused) return;
-
       scrollPosition += scrollSpeed;
       const maxScroll =
         scrollContainer.scrollHeight - scrollContainer.clientHeight;
 
       if (scrollPosition >= maxScroll) {
-        isPaused = true;
-        setTimeout(() => {
-          scrollPosition = 0;
-          scrollContainer.scrollTo({ top: 0, behavior: "smooth" });
-          setTimeout(() => {
-            isPaused = false;
-          }, 1000);
-        }, pauseTime);
+        scrollPosition = 0;
+        scrollContainer.scrollTo({ top: 0, behavior: "auto" });
       } else {
         scrollContainer.scrollTop = scrollPosition;
       }
