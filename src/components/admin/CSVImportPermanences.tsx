@@ -43,78 +43,62 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
       .map((line) => line.trim())
       .filter((line) => line);
     const permanences: ParsedPermanence[] = [];
-    let currentType: "technique" | "politique" = "technique";
 
-    for (const line of lines) {
-      // Vérifier si c'est un titre de section
-      const lowerLine = line.toLowerCase();
-      if (
-        lowerLine.includes("permanences techniques") ||
-        lowerLine.includes("permanence technique")
-      ) {
-        currentType = "technique";
-        continue;
-      }
-      if (
-        lowerLine.includes("permanences politiques") ||
-        lowerLine.includes("permanence politique")
-      ) {
-        currentType = "politique";
+    let monthName = "juillet"; // par défaut
+    let year = 2025; // par défaut
+
+    for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+      const line = lines[lineIndex];
+
+      // Extraire le mois et l'année depuis la première ligne si disponible
+      if (lineIndex === 0 && line.toLowerCase().includes("absence")) {
+        const monthMatch = line.match(
+          /(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/i,
+        );
+        const yearMatch = line.match(/(\d{4})/);
+        if (monthMatch) monthName = monthMatch[1].toLowerCase();
+        if (yearMatch) year = parseInt(yearMatch[1]);
         continue;
       }
 
-      // Ignorer les lignes vides ou les titres
+      // Ignorer les lignes d'en-tête, de légende et vides
       if (
         !line ||
-        line.startsWith("#") ||
-        line.includes("nom") ||
-        line.includes("date")
+        line.includes("Nom, Prénom") ||
+        line.includes("P:") ||
+        line.includes("RTT:") ||
+        lineIndex < 2
       ) {
         continue;
       }
 
-      // Parser la ligne de données
-      // Format attendu: nom,date(AAAA-MM-JJ),description
-      const parts = line
-        .split(",")
-        .map((part) => part.trim().replace(/^["']|["']$/g, ""));
+      const parts = line.split(";");
 
-      if (parts.length >= 2) {
-        const name = parts[0];
-        const dateStr = parts[1];
-        const description = parts.slice(2).join(",") || "";
+      // Vérifier qu'il y a un nom et des données
+      if (parts.length < 4) continue;
 
-        // Parser la date
-        const dateMatch = dateStr.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
-        if (dateMatch) {
-          const year = parseInt(dateMatch[1]);
-          const month = parseInt(dateMatch[2]);
-          const day = parseInt(dateMatch[3]);
+      const fullName = parts[0]?.trim();
+      if (!fullName || fullName.includes(":")) continue;
 
-          // Convertir le mois en nom français
-          const monthNames = [
-            "janvier",
-            "février",
-            "mars",
-            "avril",
-            "mai",
-            "juin",
-            "juillet",
-            "août",
-            "septembre",
-            "octobre",
-            "novembre",
-            "décembre",
-          ];
-          const monthName = monthNames[month - 1] || "janvier";
+      // Parser chaque jour du mois (colonnes 3 à 34 approximativement)
+      for (
+        let dayIndex = 3;
+        dayIndex < parts.length && dayIndex <= 34;
+        dayIndex++
+      ) {
+        const cellValue = parts[dayIndex]?.trim();
+
+        // Ne traiter que les cellules contenant "P" (permanences)
+        if (cellValue === "P") {
+          const day = dayIndex - 2; // Ajuster l'index pour correspondre au jour du mois
 
           permanences.push({
-            name,
-            type: currentType,
-            day,
+            name: fullName,
+            type: "technique", // Toutes les permanences sont techniques par défaut
+            day: day,
             month: monthName,
-            year,
-            description,
+            year: year,
+            description: `Permanence du ${day} ${monthName} ${year}`,
           });
         }
       }
@@ -248,19 +232,20 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
           <AlertCircle className="w-5 h-5 text-blue-600 mr-2 mt-0.5" />
           <div className="text-sm">
             <p className="font-medium text-blue-900 mb-2">
-              Format CSV attendu :
+              Format CSV planning attendu :
             </p>
             <div className="text-blue-800 font-mono text-xs bg-white p-2 rounded border">
-              <div>Permanences techniques</div>
-              <div>Jean Dupont,2024-01-15,Maintenance réseau</div>
-              <div>Marie Martin,2024-01-16,Support utilisateurs</div>
-              <div className="mt-2">Permanences politiques</div>
-              <div>Pierre Durand,2024-01-20,Assemblée générale</div>
+              <div>Absence;;juillet 2025;;;;;;;;;</div>
+              <div>Nom, Prénom;;;1;2;3;4;5;6;7;8;9;10;11;12...</div>
+              <div>DUPONT, JEAN;;;P;;P;PAR;;;P;;;;P;</div>
+              <div>MARTIN, MARIE;;;;P;;;CP;;P;P;;;</div>
+              <div>P:;Permanences;;CP:;Congés Payés;</div>
             </div>
             <p className="mt-2 text-blue-700">
-              Les sections sont définies par des titres contenant "Permanences
-              techniques" ou "Permanences politiques". Chaque ligne de données
-              contient : nom,date(AAAA-MM-JJ),description
+              Format planning avec noms en lignes et jours en colonnes. Seules
+              les cellules contenant "P" seront importées comme permanences
+              techniques. Le mois et l'année sont détectés automatiquement
+              depuis la première ligne.
             </p>
           </div>
         </div>
