@@ -160,7 +160,7 @@ export const insertDefaultData = async (): Promise<void> => {
 
     // Insérer la configuration par défaut
     await supabase.from("dashboard_config").insert([
-      { key: "videoUrl", value: "https://www.youtube.com/embed/dQw4w9WgXcQ" },
+      { key: "videoUrl", value: "https://www.youtube.com/embed/YQHsXMglC9A" },
       {
         key: "alertText",
         value:
