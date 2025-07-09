@@ -29,31 +29,42 @@ interface ImportResult {
   total: number;
 }
 
+interface PersonWithDays {
+  name: string;
+  days: { [day: number]: boolean };
+}
+
+interface CSVData {
+  month: string;
+  year: number;
+  people: PersonWithDays[];
+  availableDays: number[];
+}
+
 export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
   onImportComplete,
 }) => {
   const [isImporting, setIsImporting] = useState(false);
   const [importResult, setImportResult] = useState<ImportResult | null>(null);
+  const [csvData, setCsvData] = useState<CSVData | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const parseCSV = (csvText: string): ParsedPermanence[] => {
+  const parseCSVToData = (csvText: string): CSVData | null => {
     const lines = csvText
       .split("\n")
       .map((line) => line.trim())
       .filter((line) => line);
-    const permanences: ParsedPermanence[] = [];
 
-    let monthName = "juillet"; // par défaut
-    let year = 2025; // par défaut
-    let dayMapping: { [columnIndex: number]: number } = {}; // Map colonne -> jour
-
-    console.log("🔍 Parsing CSV, nombre de lignes:", lines.length);
+    let monthName = "juillet";
+    let year = 2025;
+    let dayMapping: { [columnIndex: number]: number } = {};
+    const people: PersonWithDays[] = [];
 
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
       const line = lines[lineIndex];
 
-      // Extraire le mois et l'année depuis la première ligne si disponible
+      // Extraire le mois et l'année
       if (line.toLowerCase().includes("absence")) {
         const monthMatch = line.match(
           /(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/i,
@@ -61,14 +72,12 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
         const yearMatch = line.match(/(\d{4})/);
         if (monthMatch) monthName = monthMatch[1].toLowerCase();
         if (yearMatch) year = parseInt(yearMatch[1]);
-        console.log("📅 Détecté:", monthName, year);
         continue;
       }
 
-      // Extraire le mapping des jours depuis la ligne d'en-tête
+      // Extraire le mapping des jours
       if (line.includes("Nom, Prénom")) {
         const headerParts = line.split(";");
-        console.log("📋 En-tête détectée:", headerParts.length, "colonnes");
         for (let i = 3; i < headerParts.length; i++) {
           const headerValue = headerParts[i]?.trim();
           const dayNumber = parseInt(headerValue);
@@ -76,59 +85,52 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
             dayMapping[i] = dayNumber;
           }
         }
-        console.log("🗓️ Mapping des jours:", dayMapping);
         continue;
       }
 
-      // Ignorer les lignes de légende et vides
+      // Extraire les personnes
       if (
-        !line ||
-        line.includes("P:") ||
-        line.includes("RTT:") ||
-        line.length < 10
+        line &&
+        !line.includes("P:") &&
+        !line.includes("RTT:") &&
+        line.length > 10
       ) {
-        continue;
-      }
+        const parts = line.split(";");
+        if (parts.length >= 4) {
+          const fullName = parts[0]?.trim();
+          if (fullName && !fullName.includes(":")) {
+            const personDays: { [day: number]: boolean } = {};
 
-      const parts = line.split(";");
+            // Détecter automatiquement les "P" existants
+            for (
+              let columnIndex = 3;
+              columnIndex < parts.length;
+              columnIndex++
+            ) {
+              const cellValue = parts[columnIndex]?.trim();
+              const day = dayMapping[columnIndex];
+              if (day && cellValue === "P") {
+                personDays[day] = true;
+              }
+            }
 
-      // Vérifier qu'il y a un nom et des données
-      if (parts.length < 4) continue;
-
-      const fullName = parts[0]?.trim();
-      if (!fullName || fullName.includes(":")) continue;
-
-      console.log("👤 Traitement:", fullName);
-
-      // Parser chaque colonne en utilisant le mapping des jours
-      for (let columnIndex = 3; columnIndex < parts.length; columnIndex++) {
-        const cellValue = parts[columnIndex]?.trim();
-
-        // Ne traiter que les cellules contenant "P" (permanences)
-        if (cellValue === "P") {
-          const day = dayMapping[columnIndex];
-          if (day) {
-            console.log("✅ Permanence trouvée:", fullName, "jour", day);
-            permanences.push({
+            people.push({
               name: fullName,
-              type: "technique", // Toutes les permanences sont techniques par défaut
-              day: day,
-              month: monthName,
-              year: year,
-              description: `Permanence du ${day} ${monthName} ${year}`,
+              days: personDays,
             });
-          } else {
-            console.log(
-              "❌ P trouvé mais pas de jour mappé pour colonne",
-              columnIndex,
-            );
           }
         }
       }
     }
 
-    console.log("🎯 Total permanences trouvées:", permanences.length);
-    return permanences;
+    const availableDays = Object.values(dayMapping).sort((a, b) => a - b);
+
+    return {
+      month: monthName,
+      year,
+      people,
+      availableDays,
+    };
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,46 +147,86 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
     }
 
     const reader = new FileReader();
-    reader.onload = async (e) => {
+    reader.onload = (e) => {
       const csvText = e.target?.result as string;
-      await processCSV(csvText);
+      const data = parseCSVToData(csvText);
+      if (data && data.people.length > 0) {
+        setCsvData(data);
+        setImportResult(null);
+        toast({
+          title: "CSV chargé",
+          description: `${data.people.length} personnes trouvées pour ${data.month} ${data.year}`,
+        });
+      } else {
+        toast({
+          title: "Erreur",
+          description: "Aucune personne trouvée dans le fichier CSV.",
+          variant: "destructive",
+        });
+      }
     };
     reader.readAsText(file, "UTF-8");
   };
 
-  const processCSV = async (csvText: string) => {
+  const toggleDay = (personIndex: number, day: number) => {
+    if (!csvData) return;
+
+    const newCsvData = { ...csvData };
+    newCsvData.people = [...csvData.people];
+    newCsvData.people[personIndex] = {
+      ...csvData.people[personIndex],
+      days: {
+        ...csvData.people[personIndex].days,
+        [day]: !csvData.people[personIndex].days[day],
+      },
+    };
+    setCsvData(newCsvData);
+  };
+
+  const importPermanences = async () => {
+    if (!csvData) return;
+
     setIsImporting(true);
     setImportResult(null);
 
+    const result: ImportResult = {
+      success: 0,
+      errors: [],
+      total: 0,
+    };
+
     try {
-      const permanences = parseCSV(csvText);
+      for (const person of csvData.people) {
+        const selectedDays = Object.entries(person.days)
+          .filter(([_, selected]) => selected)
+          .map(([day, _]) => parseInt(day));
 
-      if (permanences.length === 0) {
-        toast({
-          title: "Erreur",
-          description: "Aucune permanence valide trouvée dans le fichier CSV.",
-          variant: "destructive",
-        });
-        return;
-      }
+        result.total += selectedDays.length;
 
-      const result: ImportResult = {
-        success: 0,
-        errors: [],
-        total: permanences.length,
-      };
+        for (const day of selectedDays) {
+          try {
+            const permanence: ParsedPermanence = {
+              name: person.name,
+              type: "technique",
+              day: day,
+              month: csvData.month,
+              year: csvData.year,
+              description: `Permanence du ${day} ${csvData.month} ${csvData.year}`,
+            };
 
-      // Importer les permanences une par une
-      for (const permanence of permanences) {
-        try {
-          const created = await createPermanence(permanence);
-          if (created) {
-            result.success++;
-          } else {
-            result.errors.push(`Échec de création pour ${permanence.name}`);
+            const created = await createPermanence(permanence);
+            if (created) {
+              result.success++;
+            } else {
+              result.errors.push(
+                `Échec création ${person.name} - ${day}/${csvData.month}`,
+              );
+            }
+          } catch (error) {
+            result.errors.push(
+              `Erreur ${person.name} - ${day}/${csvData.month}: ${error}`,
+            );
           }
-        } catch (error) {
-          result.errors.push(`Erreur pour ${permanence.name}: ${error}`);
         }
       }
 
@@ -208,16 +250,11 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
     } catch (error) {
       toast({
         title: "Erreur d'import",
-        description: "Impossible de traiter le fichier CSV.",
+        description: "Impossible d'importer les permanences.",
         variant: "destructive",
       });
-      console.error("Erreur import CSV:", error);
     } finally {
       setIsImporting(false);
-      // Reset file input
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
     }
   };
 
@@ -251,29 +288,92 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
       </div>
 
       {/* Format d'aide */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-        <div className="flex items-start">
-          <AlertCircle className="w-5 h-5 text-blue-600 mr-2 mt-0.5" />
-          <div className="text-sm">
-            <p className="font-medium text-blue-900 mb-2">
-              Format CSV planning attendu :
-            </p>
-            <div className="text-blue-800 font-mono text-xs bg-white p-2 rounded border">
-              <div>Absence;;juillet 2025;;;;;;;;;</div>
-              <div>Nom, Prénom;;;1;2;3;4;5;6;7;8;9;10;11;12...</div>
-              <div>DUPONT, JEAN;;;P;;P;PAR;;;P;;;;P;</div>
-              <div>MARTIN, MARIE;;;;P;;;CP;;P;P;;;</div>
-              <div>P:;Permanences;;CP:;Congés Payés;</div>
+      {!csvData && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+          <div className="flex items-start">
+            <AlertCircle className="w-5 h-5 text-blue-600 mr-2 mt-0.5" />
+            <div className="text-sm">
+              <p className="font-medium text-blue-900 mb-2">
+                Format CSV planning attendu :
+              </p>
+              <div className="text-blue-800 font-mono text-xs bg-white p-2 rounded border">
+                <div>Absence;;juillet 2025;;;;;;;;;</div>
+                <div>Nom, Prénom;;;1;2;3;4;5;6;7;8;9;10;11;12...</div>
+                <div>DUPONT, JEAN;;;P;;P;PAR;;;P;;;;P;</div>
+                <div>MARTIN, MARIE;;;;P;;;CP;;P;P;;;</div>
+                <div>P:;Permanences;;CP:;Congés Payés;</div>
+              </div>
+              <p className="mt-2 text-blue-700">
+                Après chargement du fichier, vous pourrez sélectionner
+                manuellement les jours de permanence pour chaque personne.
+              </p>
             </div>
-            <p className="mt-2 text-blue-700">
-              Format planning avec noms en lignes et jours en colonnes. Seules
-              les cellules contenant "P" seront importées comme permanences
-              techniques. Le mois et l'ann��e sont détectés automatiquement
-              depuis la première ligne.
-            </p>
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Interface de sélection des permanences */}
+      {csvData && (
+        <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="font-medium text-gray-900">
+              Sélection des permanences - {csvData.month} {csvData.year}
+            </h4>
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setCsvData(null)}
+                variant="outline"
+                size="sm"
+              >
+                Annuler
+              </Button>
+              <Button
+                onClick={importPermanences}
+                disabled={isImporting}
+                className="bg-green-600 hover:bg-green-700 text-white"
+              >
+                {isImporting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                    Import...
+                  </>
+                ) : (
+                  <>Importer les permanences sélectionnées</>
+                )}
+              </Button>
+            </div>
+          </div>
+
+          <div className="max-h-96 overflow-y-auto">
+            {csvData.people.map((person, personIndex) => (
+              <div key={personIndex} className="mb-4 p-3 bg-gray-50 rounded-lg">
+                <h5 className="font-medium text-gray-800 mb-2">
+                  {person.name}
+                </h5>
+                <div className="grid grid-cols-7 gap-1">
+                  {csvData.availableDays.map((day) => (
+                    <button
+                      key={day}
+                      onClick={() => toggleDay(personIndex, day)}
+                      className={`w-8 h-8 text-xs rounded border-2 transition-colors ${
+                        person.days[day]
+                          ? "bg-cgt-red text-white border-cgt-red"
+                          : "bg-white text-gray-600 border-gray-300 hover:border-cgt-red"
+                      }`}
+                    >
+                      {day}
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  {Object.values(person.days).filter(Boolean).length} jours
+                  sélectionnés
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Résultats d'import */}
       {importResult && (
