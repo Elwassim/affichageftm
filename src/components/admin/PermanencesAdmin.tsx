@@ -362,7 +362,19 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
         </div>
 
         <div className="mt-3 text-xs text-gray-500">
-          Cliquez sur les jours pour sélectionner les permanences
+          {newPermanence.type === "politique" ? (
+            <div className="flex items-center gap-2 bg-orange-50 p-2 rounded">
+              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
+              <span className="text-orange-700 font-medium">
+                Permanences politiques : Cliquez sur un jour pour sélectionner
+                toute la semaine
+              </span>
+            </div>
+          ) : (
+            <span>
+              Cliquez sur les jours pour sélectionner les permanences techniques
+            </span>
+          )}
         </div>
       </div>
     );
