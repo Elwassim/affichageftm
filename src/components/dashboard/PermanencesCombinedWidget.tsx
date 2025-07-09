@@ -185,7 +185,10 @@ export const PermanencesCombinedWidget = () => {
               </p>
             </div>
           ) : (
-            <div className="space-y-0.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
+            <div
+              ref={scrollRefTech}
+              className="space-y-0.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide h-full"
+            >
               {permanencesTech.map(renderPermanenceItem)}
             </div>
           )}
@@ -214,7 +217,10 @@ export const PermanencesCombinedWidget = () => {
               </p>
             </div>
           ) : (
-            <div className="space-y-0.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide">
+            <div
+              ref={scrollRefPolitiques}
+              className="space-y-0.5 overflow-y-auto flex-1 min-h-0 scrollbar-hide h-full"
+            >
               {permanencesPolitiques.map(renderPermanenceItem)}
             </div>
           )}
