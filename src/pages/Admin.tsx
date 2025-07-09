@@ -52,7 +52,7 @@ import { CSVImportPermanences } from "../components/admin/CSVImportPermanences";
 import { verifyCompleteDatabaseSync } from "../lib/verifyDatabaseSync";
 import { useAdminSync } from "../hooks/useDatabaseSync";
 
-const MEETING_CATEGORIES = [
+const DEFAULT_MEETING_CATEGORIES = [
   "Assemblée Générale",
   "Commission",
   "Délégués",
@@ -66,6 +66,11 @@ const MEETING_CATEGORIES = [
 const Admin = () => {
   const [activeTab, setActiveTab] = useState("meetings");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [meetingCategories, setMeetingCategories] = useState<string[]>(
+    DEFAULT_MEETING_CATEGORIES,
+  );
+  const [newCategory, setNewCategory] = useState("");
+  const [showAddCategory, setShowAddCategory] = useState(false);
   const { toast } = useToast();
 
   // Vérifier les permissions de l'utilisateur actuel
@@ -551,7 +556,7 @@ const Admin = () => {
           description: "Utilisateur supprimé avec succès.",
         });
       } else {
-        console.log("❌ deleteUser a retourné false");
+        console.log("�� deleteUser a retourné false");
         toast({
           title: "Erreur",
           description: "Échec de la suppression de l'utilisateur.",
