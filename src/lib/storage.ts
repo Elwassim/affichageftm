@@ -59,34 +59,7 @@ export interface DashboardData {
 }
 
 const DEFAULT_DATA: DashboardData = {
-  meetings: (() => {
-    const today = new Date();
-    const monday = new Date(today);
-    const dayOfWeek = today.getDay();
-    const diff = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-    monday.setDate(today.getDate() + diff);
-
-    const formatDate = (daysOffset: number) => {
-      const date = new Date(monday);
-      date.setDate(monday.getDate() + daysOffset);
-      return date.toISOString().split("T")[0];
-    };
-
-    return [
-      // LUNDI
-      {
-        id: "1",
-        title: "Assemblée Générale Ordinaire",
-        time: "14:00",
-        room: "Salle des Congrès",
-        category: "Assemblée Générale",
-        date: formatDate(0), // Lundi
-      },
-      {
-        id: "2",
-        title: "Commission Exécutive",
-        time: "09:00",
-        room: "Bureau Confédéral",
+  meetings: [],
         category: "Commission",
         date: formatDate(0), // Lundi
       },
