@@ -182,9 +182,9 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
             const permanenceData = {
               name: person.name,
               type: person.type,
-              day,
               month,
               year,
+              days: { [day]: { time: "" } }, // Structure attendue par Supabase
               description:
                 person.description || `Permanence du ${day} ${month} ${year}`,
             };
