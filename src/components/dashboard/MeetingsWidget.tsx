@@ -185,7 +185,11 @@ export const MeetingsWidget = () => {
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
 
-      {meetings.length > 0 && (
+      {meetings.length === 0 ? (
+        <div className="text-center py-4">
+          <p className="text-gray-500 text-base">Aucune réunion programmé</p>
+        </div>
+      ) : (
         <div
           ref={scrollRef}
           className="space-y-2 overflow-y-auto flex-1 min-h-0 scrollbar-hide"
