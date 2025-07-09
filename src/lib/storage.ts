@@ -268,7 +268,7 @@ const DEFAULT_DATA: DashboardData = {
       },
     ];
   })(),
-  videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+  videoUrl: "https://www.youtube.com/embed/YQHsXMglC9A",
   alertText:
     "🚨 APPEL CGT FTM - Négociation collective métallurgie - Jeudi 21 mars à 14h - Siège fédéral - Mobilisation pour nos salaires !",
   socialPost: {
