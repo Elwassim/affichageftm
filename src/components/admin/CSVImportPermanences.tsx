@@ -48,23 +48,27 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
     let year = 2025; // par défaut
     let dayMapping: { [columnIndex: number]: number } = {}; // Map colonne -> jour
 
+    console.log("🔍 Parsing CSV, nombre de lignes:", lines.length);
+
     for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
       const line = lines[lineIndex];
 
       // Extraire le mois et l'année depuis la première ligne si disponible
-      if (lineIndex === 0 && line.toLowerCase().includes("absence")) {
+      if (line.toLowerCase().includes("absence")) {
         const monthMatch = line.match(
           /(janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre)/i,
         );
         const yearMatch = line.match(/(\d{4})/);
         if (monthMatch) monthName = monthMatch[1].toLowerCase();
         if (yearMatch) year = parseInt(yearMatch[1]);
+        console.log("📅 Détecté:", monthName, year);
         continue;
       }
 
       // Extraire le mapping des jours depuis la ligne d'en-tête
       if (line.includes("Nom, Prénom")) {
         const headerParts = line.split(";");
+        console.log("📋 En-tête détectée:", headerParts.length, "colonnes");
         for (let i = 3; i < headerParts.length; i++) {
           const headerValue = headerParts[i]?.trim();
           const dayNumber = parseInt(headerValue);
@@ -72,6 +76,7 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
             dayMapping[i] = dayNumber;
           }
         }
+        console.log("🗓️ Mapping des jours:", dayMapping);
         continue;
       }
 
@@ -80,7 +85,7 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
         !line ||
         line.includes("P:") ||
         line.includes("RTT:") ||
-        lineIndex < 2
+        line.length < 10
       ) {
         continue;
       }
@@ -93,26 +98,36 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
       const fullName = parts[0]?.trim();
       if (!fullName || fullName.includes(":")) continue;
 
+      console.log("👤 Traitement:", fullName);
+
       // Parser chaque colonne en utilisant le mapping des jours
       for (let columnIndex = 3; columnIndex < parts.length; columnIndex++) {
         const cellValue = parts[columnIndex]?.trim();
 
         // Ne traiter que les cellules contenant "P" (permanences)
-        if (cellValue === "P" && dayMapping[columnIndex]) {
+        if (cellValue === "P") {
           const day = dayMapping[columnIndex];
-
-          permanences.push({
-            name: fullName,
-            type: "technique", // Toutes les permanences sont techniques par défaut
-            day: day,
-            month: monthName,
-            year: year,
-            description: `Permanence du ${day} ${monthName} ${year}`,
-          });
+          if (day) {
+            console.log("✅ Permanence trouvée:", fullName, "jour", day);
+            permanences.push({
+              name: fullName,
+              type: "technique", // Toutes les permanences sont techniques par défaut
+              day: day,
+              month: monthName,
+              year: year,
+              description: `Permanence du ${day} ${monthName} ${year}`,
+            });
+          } else {
+            console.log(
+              "❌ P trouvé mais pas de jour mappé pour colonne",
+              columnIndex,
+            );
+          }
         }
       }
     }
 
+    console.log("🎯 Total permanences trouvées:", permanences.length);
     return permanences;
   };
 
@@ -253,7 +268,7 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
             <p className="mt-2 text-blue-700">
               Format planning avec noms en lignes et jours en colonnes. Seules
               les cellules contenant "P" seront importées comme permanences
-              techniques. Le mois et l'année sont détectés automatiquement
+              techniques. Le mois et l'ann��e sont détectés automatiquement
               depuis la première ligne.
             </p>
           </div>
