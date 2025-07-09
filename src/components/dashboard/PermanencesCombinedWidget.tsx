@@ -130,12 +130,12 @@ export const PermanencesCombinedWidget = () => {
   const renderPermanenceItem = (permanence: DashboardPermanence) => (
     <div
       key={permanence.id}
-      className="group p-1.5 bg-gradient-to-r from-gray-50 to-white rounded border-l-2 hover:shadow-sm transition-shadow"
+      className="group p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-3 hover:shadow-md transition-shadow"
       style={{ borderLeftColor: permanence.color }}
     >
-      <div className="flex items-start gap-1.5">
+      <div className="flex items-start gap-2">
         <div
-          className="w-5 h-5 text-white rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0"
+          className="w-7 h-7 text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0"
           style={{ backgroundColor: permanence.color }}
         >
           {permanence.name
@@ -145,16 +145,16 @@ export const PermanencesCombinedWidget = () => {
             .slice(0, 2)}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
+          <h3 className="font-bold text-cgt-gray text-base truncate leading-tight">
             {permanence.name}
           </h3>
-          <div className="flex items-center gap-1 text-gray-600 text-sm mt-0.5">
-            <Calendar className="w-3 h-3" style={{ color: permanence.color }} />
+          <div className="flex items-center gap-1 text-gray-600 text-sm mt-1">
+            <Calendar className="w-4 h-4" style={{ color: permanence.color }} />
             <span className="font-semibold">{permanence.displayDate}</span>
           </div>
-          <div className="mt-0.5">
+          <div className="mt-1">
             <span
-              className="inline-block px-1.5 py-0.5 rounded text-xs font-semibold text-white"
+              className="inline-block px-2 py-1 rounded text-xs font-semibold text-white"
               style={{ backgroundColor: permanence.color }}
             >
               {getTypeLabel(permanence.type)}
