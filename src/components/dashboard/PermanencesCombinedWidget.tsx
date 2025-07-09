@@ -145,16 +145,16 @@ export const PermanencesCombinedWidget = () => {
             .slice(0, 2)}
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-cgt-gray text-base truncate leading-tight">
+          <h3 className="font-bold text-cgt-gray text-sm truncate leading-tight">
             {permanence.name}
           </h3>
-          <div className="flex items-center gap-1 text-gray-600 text-sm mt-1">
-            <Calendar className="w-4 h-4" style={{ color: permanence.color }} />
+          <div className="flex items-center gap-1 text-gray-600 text-xs mt-0.5">
+            <Calendar className="w-3 h-3" style={{ color: permanence.color }} />
             <span className="font-semibold">{permanence.displayDate}</span>
           </div>
-          <div className="mt-1">
+          <div className="mt-0.5">
             <span
-              className="inline-block px-2 py-1 rounded text-xs font-semibold text-white"
+              className="inline-block px-1.5 py-0.5 rounded text-xs font-semibold text-white"
               style={{ backgroundColor: permanence.color }}
             >
               {getTypeLabel(permanence.type)}
