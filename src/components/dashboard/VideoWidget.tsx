@@ -4,9 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { getConfig } from "@/lib/database";
 
 export const VideoWidget = () => {
-  const [videoUrl, setVideoUrl] = useState(
-    "https://www.youtube.com/embed/YQHsXMglC9A",
-  );
+  const [videoUrl, setVideoUrl] = useState("");
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [showSoundActivator, setShowSoundActivator] = useState(false);
