@@ -196,11 +196,11 @@ export const MeetingsWidget = () => {
         >
           {Object.entries(groupedMeetings).map(
             ([category, categoryMeetings]) => (
-              <div key={category} className="space-y-1">
+              <div key={category} className="space-y-0.5">
                 {/* Category Header */}
-                <div className="flex items-center gap-2 px-2">
-                  <div className="w-2 h-2 bg-cgt-red rounded-full"></div>
-                  <h4 className="text-sm font-bold text-cgt-red uppercase tracking-wide">
+                <div className="flex items-center gap-2 px-1">
+                  <div className="w-1.5 h-1.5 bg-cgt-red rounded-full"></div>
+                  <h4 className="text-xs font-bold text-cgt-red uppercase tracking-wide">
                     {category}
                   </h4>
                   <div className="flex-1 h-px bg-cgt-red/30"></div>
@@ -210,7 +210,7 @@ export const MeetingsWidget = () => {
                 {categoryMeetings.map((meeting, index) => (
                   <div
                     key={meeting.id}
-                    className="group p-2 bg-gradient-to-r from-gray-50 to-white rounded-lg border-l-2 border-cgt-red hover:shadow-sm transition-shadow ml-2"
+                    className="group p-1.5 bg-gradient-to-r from-gray-50 to-white rounded border-l-2 border-cgt-red hover:shadow-sm transition-shadow ml-1"
                   >
                     <div className="flex items-start gap-2">
                       <span className="w-4 h-4 bg-cgt-red text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">
