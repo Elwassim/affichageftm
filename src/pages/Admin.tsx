@@ -556,7 +556,7 @@ const Admin = () => {
           description: "Utilisateur supprimé avec succès.",
         });
       } else {
-        console.log("�� deleteUser a retourné false");
+        console.log("❌ deleteUser a retourné false");
         toast({
           title: "Erreur",
           description: "Échec de la suppression de l'utilisateur.",
@@ -960,6 +960,81 @@ const Admin = () => {
     logout();
     navigate("/login");
   };
+
+  // CATEGORY MANAGEMENT FUNCTIONS
+  const addCustomCategory = () => {
+    if (!newCategory.trim()) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez saisir un nom de catégorie.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (meetingCategories.includes(newCategory.trim())) {
+      toast({
+        title: "Erreur",
+        description: "Cette catégorie existe déjà.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const updatedCategories = [...meetingCategories, newCategory.trim()];
+    setMeetingCategories(updatedCategories);
+    localStorage.setItem(
+      "custom-meeting-categories",
+      JSON.stringify(updatedCategories),
+    );
+    setNewCategory("");
+    setShowAddCategory(false);
+
+    toast({
+      title: "Succès",
+      description: `Catégorie "${newCategory.trim()}" ajoutée.`,
+    });
+  };
+
+  const removeCategory = (categoryToRemove: string) => {
+    if (DEFAULT_MEETING_CATEGORIES.includes(categoryToRemove)) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de supprimer une catégorie par défaut.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const updatedCategories = meetingCategories.filter(
+      (cat) => cat !== categoryToRemove,
+    );
+    setMeetingCategories(updatedCategories);
+    localStorage.setItem(
+      "custom-meeting-categories",
+      JSON.stringify(updatedCategories),
+    );
+
+    toast({
+      title: "Succès",
+      description: `Catégorie "${categoryToRemove}" supprimée.`,
+    });
+  };
+
+  // Load custom categories on mount
+  useEffect(() => {
+    const savedCategories = localStorage.getItem("custom-meeting-categories");
+    if (savedCategories) {
+      try {
+        const categories = JSON.parse(savedCategories);
+        if (Array.isArray(categories)) {
+          setMeetingCategories(categories);
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des catégories:", error);
+      }
+    }
+  }, []);
 
   if (loading) {
     return (
