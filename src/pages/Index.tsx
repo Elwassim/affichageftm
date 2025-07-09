@@ -98,9 +98,9 @@ const Index = () => {
       {/* Main Dashboard Grid - Full Screen TV Layout */}
       <div className="p-3 pb-6 h-[calc(100vh-200px)] w-full">
         <div className="w-full h-full">
-          {/* Layout avec permanences - 4 colonnes */}
+          {/* Layout avec permanences - 4 colonnes responsive */}
           <div
-            className="grid grid-cols-4 gap-4 h-full"
+            className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 h-full"
             style={{ gridTemplateRows: "1fr 2fr" }}
           >
             {/* Col 1 Row 1: DATE/MÉTÉO */}
