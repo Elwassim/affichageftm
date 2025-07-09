@@ -827,7 +827,7 @@ const Admin = () => {
         });
       } else {
         toast({
-          title: "⚠️ Problèmes Détectés",
+          title: "���️ Problèmes Détectés",
           description: `${errorCount} erreurs sur ${totalTests} tests. Voir console pour détails.`,
           variant: "destructive",
         });
@@ -1074,9 +1074,7 @@ const Admin = () => {
       )}
 
       {/* Main Content */}
-      <div
-        className={`min-h-screen transition-all duration-300 ${sidebarOpen ? "md:ml-64" : "md:ml-0"} px-4 md:px-0`}
-      >
+      <div className="min-h-screen md:ml-64 px-4 md:px-0">
         {/* Top Header */}
         <header className="bg-white shadow-lg border-b border-slate-200 sticky top-0 z-30">
           <div className="flex items-center justify-between px-4 md:px-8 py-4 md:py-6">
