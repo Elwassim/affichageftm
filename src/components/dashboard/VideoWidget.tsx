@@ -55,7 +55,7 @@ export const VideoWidget = () => {
         const video = videoRef.current;
 
         // Configuration MAXIMALE pour autoplay
-        video.muted = true; // OBLIGATOIRE
+        video.muted = true; // OBLIGATOIRE pour autoplay
         video.autoplay = true;
         video.loop = true;
         video.volume = 1.0;
@@ -63,43 +63,89 @@ export const VideoWidget = () => {
         video.setAttribute("autoplay", "");
         video.setAttribute("muted", "");
         video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "");
 
-        // FORCER le démarrage immédiatement
+        // FORCER le démarrage avec gestion des erreurs améliorée
         const tryPlay = async () => {
           try {
+            console.log("🎬 Tentative de lecture automatique...");
+            video.currentTime = 0;
             await video.play();
+            console.log("✅ Lecture automatique réussie");
             setIsPlaying(true);
             setIsMuted(true);
 
-            // Activer le son automatiquement après 1 seconde
+            // Activer le son automatiquement après 2 secondes
             setTimeout(() => {
-              video.muted = false;
-              setIsMuted(false);
-            }, 1000);
+              if (video && !video.paused) {
+                video.muted = false;
+                setIsMuted(false);
+                console.log("🔊 Son activé automatiquement");
+              }
+            }, 2000);
           } catch (error) {
-            // Continuer d'essayer même en cas d'échec
-            setTimeout(tryPlay, 1000);
+            console.log("❌ Autoplay bloqué, nouvelle tentative...", error);
+            // Attendre l'interaction utilisateur ou continuer d'essayer
+            setTimeout(tryPlay, 2000);
           }
         };
 
-        // Tentatives multiples et répétées
-        tryPlay();
-        setTimeout(tryPlay, 100);
-        setTimeout(tryPlay, 500);
-        setTimeout(tryPlay, 1000);
+        // Tentatives multiples et répétées avec délais progressifs
+        const attemptPlay = () => {
+          tryPlay();
+          setTimeout(tryPlay, 100);
+          setTimeout(tryPlay, 500);
+          setTimeout(tryPlay, 1000);
+          setTimeout(tryPlay, 2000);
+          setTimeout(tryPlay, 5000);
+        };
 
-        // Déclencheurs sur événements
-        video.addEventListener("loadeddata", tryPlay);
-        video.addEventListener("canplay", tryPlay);
+        // Démarrer immédiatement
+        attemptPlay();
+
+        // Déclencheurs sur événements vidéo
+        const onLoadedData = () => {
+          console.log("📺 Vidéo chargée, tentative de lecture...");
+          tryPlay();
+        };
+
+        const onCanPlay = () => {
+          console.log("▶️ Vidéo prête, tentative de lecture...");
+          tryPlay();
+        };
+
+        const onLoadedMetadata = () => {
+          console.log("📋 Métadonnées chargées, tentative de lecture...");
+          tryPlay();
+        };
+
+        video.addEventListener("loadeddata", onLoadedData);
+        video.addEventListener("canplay", onCanPlay);
+        video.addEventListener("loadedmetadata", onLoadedMetadata);
+
+        // Tentative lors du focus/clic sur la page
+        const onInteraction = () => {
+          console.log("👆 Interaction détectée, tentative de lecture...");
+          tryPlay();
+        };
+
+        document.addEventListener("click", onInteraction, { once: true });
+        document.addEventListener("touchstart", onInteraction, { once: true });
+        window.addEventListener("focus", onInteraction, { once: true });
 
         return () => {
-          video.removeEventListener("loadeddata", tryPlay);
-          video.removeEventListener("canplay", tryPlay);
+          video.removeEventListener("loadeddata", onLoadedData);
+          video.removeEventListener("canplay", onCanPlay);
+          video.removeEventListener("loadedmetadata", onLoadedMetadata);
+          document.removeEventListener("click", onInteraction);
+          document.removeEventListener("touchstart", onInteraction);
+          window.removeEventListener("focus", onInteraction);
         };
       } else {
         // Pour les iframe - considérer comme démarrées
         setIsPlaying(true);
         setIsMuted(false);
+        console.log("🎬 Iframe vidéo configurée avec autoplay");
       }
     };
 
