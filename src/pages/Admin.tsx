@@ -543,7 +543,7 @@ const Admin = () => {
     console.log("🚀 handleDeleteUser appelé pour ID:", id);
 
     try {
-      console.log("🗑️ Appel de deleteUser...");
+      console.log("��️ Appel de deleteUser...");
       const success = await deleteUser(id);
       console.log("📋 Résultat deleteUser:", success);
 
@@ -1432,7 +1432,7 @@ const Admin = () => {
                                 }
                                 className="admin-input w-full"
                               >
-                                {MEETING_CATEGORIES.map((category) => (
+                                {meetingCategories.map((category) => (
                                   <option key={category} value={category}>
                                     {category}
                                   </option>
@@ -1867,7 +1867,7 @@ const Admin = () => {
                       ></div>
                       {dbConnected
                         ? "Base de données connectée"
-                        : "Connexion échouée"}
+                        : "Connexion ��chouée"}
                     </span>
                     <span>{users.length} utilisateurs</span>
                   </div>
