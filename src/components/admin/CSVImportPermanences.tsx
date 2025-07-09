@@ -212,6 +212,13 @@ export const CSVImportPermanences: React.FC<CSVImportPermanencesProps> = ({
         });
         onPermanencesCreated?.();
 
+        // Dispatch event pour notifier les widgets
+        window.dispatchEvent(
+          new CustomEvent("cgt-config-updated", {
+            detail: { key: "permanences", value: "updated" },
+          }),
+        );
+
         // Reset après création
         setPersonPermanences((prev) =>
           prev.map((person) => ({ ...person, dates: [] })),
