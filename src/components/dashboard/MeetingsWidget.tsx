@@ -185,16 +185,7 @@ export const MeetingsWidget = () => {
         <div className="h-px bg-gradient-to-r from-cgt-red to-transparent w-1/3 mt-1"></div>
       </div>
 
-      {meetings.length === 0 ? (
-        <div className="text-center py-4">
-          <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
-            <Calendar className="w-3 h-3 text-gray-400" />
-          </div>
-          <p className="text-gray-500 text-base">
-            Aucune réunion ces 7 prochains jours
-          </p>
-        </div>
-      ) : (
+      {meetings.length > 0 && (
         <div
           ref={scrollRef}
           className="space-y-2 overflow-y-auto flex-1 min-h-0 scrollbar-hide"
