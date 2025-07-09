@@ -48,6 +48,7 @@ import {
 import type { Meeting, Tribute, User, Permanence } from "../lib/supabase";
 import { PermanencesAdmin } from "../components/admin/PermanencesAdmin";
 import { DiversAdmin } from "../components/admin/DiversAdmin";
+import { CSVImportPermanences } from "../components/admin/CSVImportPermanences";
 import { verifyCompleteDatabaseSync } from "../lib/verifyDatabaseSync";
 import { useAdminSync } from "../hooks/useDatabaseSync";
 
@@ -1426,6 +1427,7 @@ const Admin = () => {
             {/* Permanences Tab */}
             {activeTab === "permanences" && (
               <div className="space-y-8">
+                <CSVImportPermanences onImportComplete={refresh} />
                 <PermanencesAdmin onRefresh={refresh} />
               </div>
             )}
