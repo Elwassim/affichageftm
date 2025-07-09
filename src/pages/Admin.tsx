@@ -1033,7 +1033,7 @@ const Admin = () => {
         </nav>
 
         {/* Bottom Actions */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-200 space-y-2">
+        <div className="absolute bottom-0 left-0 right-0 p-3 md:p-6 border-t border-slate-200 space-y-1 md:space-y-2 flex-shrink-0">
           <Button
             onClick={refresh}
             variant="ghost"
