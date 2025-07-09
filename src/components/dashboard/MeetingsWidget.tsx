@@ -192,7 +192,7 @@ export const MeetingsWidget = () => {
       ) : (
         <div
           ref={scrollRef}
-          className="space-y-2 overflow-y-auto flex-1 min-h-0 scrollbar-hide"
+          className="space-y-1 overflow-y-auto flex-1 min-h-0 scrollbar-hide"
         >
           {Object.entries(groupedMeetings).map(
             ([category, categoryMeetings]) => (
