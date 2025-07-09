@@ -38,7 +38,7 @@ export const CGTHeader = () => {
           <div className="flex items-center space-x-4">
             {/* CGT Official Logo */}
             <div className="flex items-center space-x-3">
-              <CGTLogo className="w-10 h-10" />
+              <CGTLogo className="w-16 h-16" />
               <div className="text-white">
                 <h1 className="text-xl lg:text-2xl font-black tracking-tight text-shadow">
                   <p> FÉDÉRATION DES TRAVAILLEURS DE LA MÉTALLURGIE</p>
