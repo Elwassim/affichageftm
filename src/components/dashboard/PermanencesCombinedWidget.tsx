@@ -54,7 +54,23 @@ export const PermanencesCombinedWidget = () => {
     loadPermanences();
     const timer = setInterval(loadPermanences, 60000);
 
-    return () => clearInterval(timer);
+    // Écouter les événements de mise à jour des permanences
+    const handleConfigUpdate = (event: any) => {
+      if (
+        event.detail?.key === "permanences" ||
+        event.detail?.key === "synced"
+      ) {
+        console.log("🔄 Rafraîchissement permanences suite à événement");
+        loadPermanences();
+      }
+    };
+
+    window.addEventListener("cgt-config-updated", handleConfigUpdate);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener("cgt-config-updated", handleConfigUpdate);
+    };
   }, []);
 
   // Auto-scroll pour les permanences techniques
