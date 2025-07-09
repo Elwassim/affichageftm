@@ -1268,15 +1268,18 @@ const Admin = () => {
                       />
                     </div>
                     <div>
-                      <label className="admin-label">Heure *</label>
-                      <input
-                        type="time"
+                      <label className="admin-label">Période *</label>
+                      <select
                         value={newMeeting.time}
                         onChange={(e) =>
                           setNewMeeting({ ...newMeeting, time: e.target.value })
                         }
                         className="admin-input w-full"
-                      />
+                      >
+                        <option value="">Sélectionner une période</option>
+                        <option value="matin">Matin</option>
+                        <option value="midi">Midi</option>
+                      </select>
                     </div>
                     <div>
                       <label className="admin-label">Salle *</label>
