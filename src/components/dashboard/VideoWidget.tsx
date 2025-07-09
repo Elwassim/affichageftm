@@ -57,7 +57,7 @@ export const VideoWidget = () => {
       if (videoRef.current) {
         const video = videoRef.current;
 
-        // Configuration pour autoplay
+        // Configuration pour autoplay et lecture infinie
         video.muted = true; // OBLIGATOIRE
         video.autoplay = true;
         video.loop = true;
@@ -66,6 +66,21 @@ export const VideoWidget = () => {
         video.setAttribute("autoplay", "");
         video.setAttribute("muted", "");
         video.setAttribute("playsinline", "");
+        video.setAttribute("loop", "");
+
+        // Surveillant pour s'assurer de la lecture continue
+        const ensureContinuousPlay = () => {
+          if (video.paused && !video.ended) {
+            video.play().catch(() => {});
+          }
+          // Vérifier que loop est toujours activé
+          if (!video.loop) {
+            video.loop = true;
+          }
+        };
+
+        // Vérifier toutes les 2 secondes que la vidéo joue toujours
+        const playbackMonitor = setInterval(ensureContinuousPlay, 2000);
 
         // FORCER le démarrage immédiatement
         const tryPlay = async () => {
@@ -98,6 +113,7 @@ export const VideoWidget = () => {
         return () => {
           video.removeEventListener("loadeddata", tryPlay);
           video.removeEventListener("canplay", tryPlay);
+          clearInterval(playbackMonitor);
         };
       } else {
         // Pour les iframe - considérer comme démarrées
@@ -132,19 +148,20 @@ export const VideoWidget = () => {
     }
   };
 
-  // URLs d'embed avec AUTOPLAY FORCÉ pour TV/kiosque
+  // URLs d'embed avec LECTURE INFINIE pour TV/kiosque
   const getEmbedUrl = (url: string) => {
     if (url.includes("youtube.com/watch?v=")) {
       const videoId = url.split("v=")[1]?.split("&")[0];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=0&cc_load_policy=0`;
+      // Utiliser playlist pour forcer la boucle infinie
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=0&cc_load_policy=0&disablekb=1&fs=0&iv_load_policy=3`;
     }
     if (url.includes("youtu.be/")) {
       const videoId = url.split("youtu.be/")[1]?.split("?")[0];
-      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=0&cc_load_policy=0`;
+      return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&enablejsapi=1&start=0&cc_load_policy=0&disablekb=1&fs=0&iv_load_policy=3`;
     }
     if (url.includes("vimeo.com/")) {
       const videoId = url.split("vimeo.com/")[1]?.split("?")[0];
-      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1&background=1&controls=0&byline=0&title=0&portrait=0&autopause=0`;
+      return `https://player.vimeo.com/video/${videoId}?autoplay=1&muted=1&loop=1&background=1&controls=0&byline=0&title=0&portrait=0&autopause=0&keyboard=0`;
     }
     return url;
   };
@@ -230,8 +247,22 @@ export const VideoWidget = () => {
               }}
               onPause={() => setIsPlaying(false)}
               onEnded={(e) => {
+                // Forcer le redémarrage immédiat pour lecture infinie
                 e.currentTarget.currentTime = 0;
-                e.currentTarget.play();
+                e.currentTarget.play().catch(() => {
+                  // Réessayer si échec
+                  setTimeout(() => {
+                    e.currentTarget.currentTime = 0;
+                    e.currentTarget.play();
+                  }, 100);
+                });
+              }}
+              onLoadedData={() => {
+                // S'assurer que loop est activé
+                if (videoRef.current) {
+                  videoRef.current.loop = true;
+                  videoRef.current.play().catch(() => {});
+                }
               }}
             />
           ) : (
