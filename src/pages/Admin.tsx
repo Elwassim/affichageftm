@@ -29,7 +29,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { getCurrentUser, canManageUsers, logout } from "@/lib/auth";
 
-// Import des styles amélior��s
+// Import des styles améliorés
 import "../styles/admin-improvements.css";
 import "../styles/admin-modern.css";
 
@@ -72,7 +72,7 @@ const Admin = () => {
   const currentUser = getCurrentUser();
   const canManageUsersAccess = canManageUsers(currentUser);
 
-  // Vérifier si l'utilisateur essaie d'acc��der à un onglet non autorisé
+  // Vérifier si l'utilisateur essaie d'accéder à un onglet non autorisé
   useEffect(() => {
     if (activeTab === "users" && !canManageUsersAccess) {
       console.log("⚠️ Accès refusé à la gestion des utilisateurs");
@@ -1434,6 +1434,7 @@ const Admin = () => {
                       description: `${names.length} personnes disponibles pour les permanences`,
                     });
                   }}
+                  onPermanencesCreated={refresh}
                 />
                 <PermanencesAdmin onRefresh={refresh} />
               </div>
