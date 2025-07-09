@@ -156,9 +156,9 @@ export const VideoWidget = () => {
         };
       } else {
         // Pour les iframe - considérer comme démarrées
+        console.log("🎬 Iframe vidéo configurée avec autoplay");
         setIsPlaying(true);
         setIsMuted(false);
-        console.log("🎬 Iframe vidéo configurée avec autoplay");
       }
     };
 
@@ -259,23 +259,12 @@ export const VideoWidget = () => {
               loop={true}
               playsInline={true}
               controls={true}
-              preload="metadata" // Plus rapide que "auto"
+              preload="metadata"
               defaultMuted={true}
               crossOrigin="anonymous"
               style={{ minHeight: "300px" }}
-<<<<<<< HEAD
-              onLoadStart={() => {
-                // Démarrer dès le début du chargement
-                if (videoRef.current) {
-                  videoRef.current.play().catch(() => {});
-                }
-              }}
-              onLoadedMetadata={() => {
-                // Force play dès que les métadonnées sont chargées
-=======
               onClick={() => {
                 // Force play au clic
->>>>>>> 842a7b400dc018a65ec02f31d9855268b0901545
                 if (videoRef.current) {
                   if (videoRef.current.paused) {
                     videoRef.current.play().catch(console.error);
@@ -293,45 +282,31 @@ export const VideoWidget = () => {
               onCanPlay={() => {
                 console.log("▶️ onCanPlay - Force play");
                 if (videoRef.current) {
-<<<<<<< HEAD
-                  videoRef.current.play().catch(() => {});
-                  setIsPlaying(true);
-=======
                   videoRef.current.play().catch(console.error);
+                  setIsPlaying(true);
                 }
               }}
               onLoadedMetadata={() => {
                 console.log("📋 onLoadedMetadata - Force play");
                 if (videoRef.current) {
                   videoRef.current.play().catch(console.error);
->>>>>>> 842a7b400dc018a65ec02f31d9855268b0901545
                 }
               }}
               onPlay={() => {
                 console.log("✅ Vidéo en cours de lecture");
                 setIsPlaying(true);
-<<<<<<< HEAD
-                // Activer le son après 200ms (plus rapide)
-                setTimeout(() => {
-                  if (videoRef.current && videoRef.current.readyState >= 2) {
-=======
                 // Activer le son après 1 seconde
                 setTimeout(() => {
                   if (videoRef.current && !videoRef.current.paused) {
->>>>>>> 842a7b400dc018a65ec02f31d9855268b0901545
                     videoRef.current.muted = false;
                     setIsMuted(false);
                     console.log("🔊 Son activé");
                   }
-<<<<<<< HEAD
-                }, 200);
-=======
                 }, 1000);
               }}
               onPause={() => {
                 console.log("⏸️ Vidéo en pause");
                 setIsPlaying(false);
->>>>>>> 842a7b400dc018a65ec02f31d9855268b0901545
               }}
               onEnded={(e) => {
                 console.log("🔄 Vidéo terminée, redémarrage");
@@ -340,8 +315,6 @@ export const VideoWidget = () => {
               }}
               onError={(e) => {
                 console.error("❌ Erreur vidéo:", e);
-              }}
-              onError={() => {
                 // Réessayer en cas d'erreur
                 setTimeout(() => {
                   if (videoRef.current) {
