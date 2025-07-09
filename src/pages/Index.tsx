@@ -8,6 +8,7 @@ import { RSSWidget } from "@/components/dashboard/RSSWidget";
 import { CGTHeader } from "@/components/dashboard/CGTHeader";
 import { PermanencesCombinedWidget } from "@/components/dashboard/PermanencesCombinedWidget";
 import { useRealTimeUpdates } from "@/hooks/useRealTimeUpdates";
+import { useEffect } from "react";
 import { Wifi } from "lucide-react";
 
 const Index = () => {
@@ -15,6 +16,46 @@ const Index = () => {
     interval: 60000, // 1 minute
     enableDashboard: true,
   });
+
+  // Force le plein écran automatiquement
+  useEffect(() => {
+    const enterFullscreen = async () => {
+      try {
+        const element = document.documentElement;
+
+        // Vérifier si on n'est pas déjà en plein écran
+        if (!document.fullscreenElement) {
+          console.log("🖥️ Activation du mode plein écran...");
+
+          // Essayer différentes méthodes selon le navigateur
+          if (element.requestFullscreen) {
+            await element.requestFullscreen();
+          } else if ((element as any).webkitRequestFullscreen) {
+            await (element as any).webkitRequestFullscreen();
+          } else if ((element as any).mozRequestFullScreen) {
+            await (element as any).mozRequestFullScreen();
+          } else if ((element as any).msRequestFullscreen) {
+            await (element as any).msRequestFullscreen();
+          }
+
+          console.log("✅ Mode plein écran activé");
+        }
+      } catch (error) {
+        console.warn(
+          "⚠️ Impossible d'activer le plein écran automatiquement:",
+          error,
+        );
+        console.log(
+          "💡 L'utilisateur peut appuyer sur F11 pour passer en plein écran",
+        );
+      }
+    };
+
+    // Délai pour permettre à la page de se charger complètement
+    const timer = setTimeout(enterFullscreen, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="h-screen w-screen cgt-gradient overflow-hidden relative">
