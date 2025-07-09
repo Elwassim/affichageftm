@@ -644,7 +644,7 @@ const Admin = () => {
         await refresh();
         toast({
           title: "Succès",
-          description: "Réunion mise à jour avec succès.",
+          description: "Réunion mise �� jour avec succès.",
         });
       }
     } catch (error) {
@@ -1000,7 +1000,7 @@ const Admin = () => {
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-2">
+        <nav className="p-2 md:p-4 space-y-1 md:space-y-2 overflow-y-auto flex-1">
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
