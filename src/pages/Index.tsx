@@ -134,6 +134,27 @@ const Index = () => {
             </div>
           </div>
 
+          {/* Fullscreen toggle button */}
+          <button
+            onClick={async () => {
+              try {
+                if (document.fullscreenElement) {
+                  await document.exitFullscreen();
+                } else {
+                  await document.documentElement.requestFullscreen();
+                }
+              } catch (error) {
+                console.warn("Erreur plein écran:", error);
+              }
+            }}
+            className="absolute top-2 right-2 bg-black/30 backdrop-blur-sm rounded-full p-2 text-white/70 hover:text-white hover:bg-black/50 transition-all"
+            title="Basculer plein écran (F11)"
+          >
+            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M3 4a1 1 0 011-1h3a1 1 0 000 2H5.414l1.293 1.293a1 1 0 01-1.414 1.414L4 6.414V8a1 1 0 01-2 0V4zM16 4a1 1 0 00-1-1h-3a1 1 0 100 2h1.586l-1.293 1.293a1 1 0 001.414 1.414L16 6.414V8a1 1 0 102 0V4zM4 16a1 1 0 001 1h3a1 1 0 100-2H6.414l1.293-1.293a1 1 0 00-1.414-1.414L4 13.586V12a1 1 0 10-2 0v4zM17 12a1 1 0 10-2 0v1.586l-1.293-1.293a1 1 0 00-1.414 1.414L13.586 15H12a1 1 0 100 2h4a1 1 0 001-1v-4z" />
+            </svg>
+          </button>
+
           {/* Real-time status indicator */}
           <div className="absolute bottom-2 left-2 flex items-center gap-2 bg-black/30 backdrop-blur-sm rounded-full px-2 py-1">
             <Wifi
