@@ -64,14 +64,13 @@ export const MeetingsWidget = () => {
     }
   };
 
-  // Filter meetings for next 7 days
-  const filterNext7DaysMeetings = (meetings: Meeting[]) => {
+  // Filter meetings for today only
+  const filterTodayMeetings = (meetings: Meeting[]) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    const next7Days = new Date(today);
-    next7Days.setDate(today.getDate() + 7);
-    next7Days.setHours(23, 59, 59, 999);
+    const endOfToday = new Date(today);
+    endOfToday.setHours(23, 59, 59, 999);
 
     return meetings.filter((meeting) => {
       const meetingDate = new Date(meeting.date + "T00:00:00");
@@ -83,18 +82,10 @@ export const MeetingsWidget = () => {
         "Date obj:",
         meetingDate.toDateString(),
       );
-      console.log(
-        "Today:",
-        today.toDateString(),
-        "Next7Days:",
-        next7Days.toDateString(),
-      );
-      console.log(
-        "In range?",
-        meetingDate >= today && meetingDate <= next7Days,
-      );
+      console.log("Today:", today.toDateString());
+      console.log("Is today?", meetingDate.getTime() === today.getTime());
 
-      return meetingDate >= today && meetingDate <= next7Days;
+      return meetingDate.getTime() === today.getTime();
     });
   };
 
@@ -102,7 +93,7 @@ export const MeetingsWidget = () => {
     const loadMeetings = async () => {
       try {
         const meetingsData = await getAllMeetings();
-        const filteredMeetings = filterNext7DaysMeetings(meetingsData);
+        const filteredMeetings = filterTodayMeetings(meetingsData);
         setMeetings(filteredMeetings);
       } catch (error) {
         console.error("Error loading meetings:", error);
