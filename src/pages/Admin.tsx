@@ -504,7 +504,7 @@ const Admin = () => {
         is_admin: newUser.is_admin,
       });
 
-      console.log("📋 Résultat createUser:", user);
+      console.log("��� Résultat createUser:", user);
 
       if (user) {
         console.log("🔄 Actualisation des données...");
@@ -1335,6 +1335,89 @@ const Admin = () => {
                       <Plus className="w-4 h-4 mr-2" />
                       Ajouter la réunion
                     </button>
+                  </div>
+                </div>
+
+                {/* Category Management */}
+                <div className="admin-add-card">
+                  <div className="admin-section-title">
+                    <div className="admin-section-icon bg-purple-500">
+                      <List className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">
+                        Gestion des catégories
+                      </h3>
+                      <p className="text-sm text-gray-700">
+                        Ajouter ou supprimer des catégories de réunions
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {meetingCategories.map((category) => (
+                        <div
+                          key={category}
+                          className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm border ${
+                            DEFAULT_MEETING_CATEGORIES.includes(category)
+                              ? "bg-blue-50 border-blue-200 text-blue-800"
+                              : "bg-green-50 border-green-200 text-green-800"
+                          }`}
+                        >
+                          <span>{category}</span>
+                          {!DEFAULT_MEETING_CATEGORIES.includes(category) && (
+                            <button
+                              onClick={() => removeCategory(category)}
+                              className="text-red-500 hover:text-red-700"
+                              title="Supprimer cette catégorie"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {showAddCategory ? (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={newCategory}
+                          onChange={(e) => setNewCategory(e.target.value)}
+                          placeholder="Nom de la nouvelle catégorie"
+                          className="admin-input flex-1"
+                          onKeyPress={(e) =>
+                            e.key === "Enter" && addCustomCategory()
+                          }
+                        />
+                        <Button
+                          onClick={addCustomCategory}
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          Ajouter
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            setShowAddCategory(false);
+                            setNewCategory("");
+                          }}
+                          variant="outline"
+                        >
+                          Annuler
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        onClick={() => setShowAddCategory(true)}
+                        variant="outline"
+                        className="w-full"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Ajouter une catégorie personnalisée
+                      </Button>
+                    )}
                   </div>
                 </div>
 
