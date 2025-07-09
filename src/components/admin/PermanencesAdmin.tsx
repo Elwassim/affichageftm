@@ -86,7 +86,7 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
       toast({
         title: "Erreur",
         description:
-          "Veuillez remplir le nom et s��lectionner au moins un jour.",
+          "Veuillez remplir le nom et s����lectionner au moins un jour.",
         variant: "destructive",
       });
       return;
@@ -521,12 +521,23 @@ export const PermanencesAdmin: React.FC<PermanencesAdminProps> = ({
                     ...newPermanence,
                     type,
                   });
+                  // Réinitialiser les jours sélectionnés quand on change de type
+                  setSelectedDays({});
                 }}
                 className="admin-input w-full"
               >
-                <option value="technique">Technique</option>
-                <option value="politique">Politique</option>
+                <option value="technique">
+                  Technique (sélection par jour)
+                </option>
+                <option value="politique">
+                  Politique (sélection par semaine)
+                </option>
               </select>
+              <p className="text-xs text-gray-500 mt-1">
+                {newPermanence.type === "technique"
+                  ? "Permanences techniques : sélection jour par jour"
+                  : "Permanences politiques : une seule par semaine, sélection automatique de toute la semaine"}
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
