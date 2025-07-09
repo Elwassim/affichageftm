@@ -240,7 +240,7 @@ export const VideoWidget = () => {
             <video
               ref={videoRef}
               src={videoUrl}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover cursor-pointer"
               autoPlay={true}
               muted={true}
               loop={true}
@@ -249,32 +249,57 @@ export const VideoWidget = () => {
               preload="auto"
               defaultMuted={true}
               style={{ minHeight: "300px" }}
-              onLoadedData={() => {
-                // Force play dès que les données sont chargées
+              onClick={() => {
+                // Force play au clic
                 if (videoRef.current) {
-                  videoRef.current.play().catch(() => {});
+                  if (videoRef.current.paused) {
+                    videoRef.current.play().catch(console.error);
+                  } else {
+                    videoRef.current.pause();
+                  }
+                }
+              }}
+              onLoadedData={() => {
+                console.log("📺 onLoadedData - Force play");
+                if (videoRef.current) {
+                  videoRef.current.play().catch(console.error);
                 }
               }}
               onCanPlay={() => {
-                // Force play quand la vidéo peut être jouée
+                console.log("▶️ onCanPlay - Force play");
                 if (videoRef.current) {
-                  videoRef.current.play().catch(() => {});
+                  videoRef.current.play().catch(console.error);
+                }
+              }}
+              onLoadedMetadata={() => {
+                console.log("📋 onLoadedMetadata - Force play");
+                if (videoRef.current) {
+                  videoRef.current.play().catch(console.error);
                 }
               }}
               onPlay={() => {
+                console.log("✅ Vidéo en cours de lecture");
                 setIsPlaying(true);
-                // Activer le son après 500ms
+                // Activer le son après 1 seconde
                 setTimeout(() => {
-                  if (videoRef.current) {
+                  if (videoRef.current && !videoRef.current.paused) {
                     videoRef.current.muted = false;
                     setIsMuted(false);
+                    console.log("🔊 Son activé");
                   }
-                }, 500);
+                }, 1000);
               }}
-              onPause={() => setIsPlaying(false)}
+              onPause={() => {
+                console.log("⏸️ Vidéo en pause");
+                setIsPlaying(false);
+              }}
               onEnded={(e) => {
+                console.log("🔄 Vidéo terminée, redémarrage");
                 e.currentTarget.currentTime = 0;
-                e.currentTarget.play();
+                e.currentTarget.play().catch(console.error);
+              }}
+              onError={(e) => {
+                console.error("❌ Erreur vidéo:", e);
               }}
             />
           ) : (
