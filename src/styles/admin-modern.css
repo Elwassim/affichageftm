@@ -297,6 +297,60 @@
     width: 40px;
     height: 40px;
   }
+
+  /* Sidebar mobile optimizations */
+  .sidebar-mobile-optimized {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .sidebar-navigation {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sidebar-nav-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    margin: 2px 0;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    min-height: 40px;
+  }
+
+  .sidebar-nav-item:active {
+    background-color: rgba(59, 130, 246, 0.1);
+    transform: scale(0.98);
+  }
+
+  .sidebar-nav-text {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .sidebar-bottom-actions {
+    padding: 12px;
+    border-top: 1px solid #e2e8f0;
+    background: white;
+  }
+
+  .sidebar-bottom-button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 8px 12px;
+    margin: 4px 0;
+    border-radius: 8px;
+    font-size: 14px;
+    min-height: 40px;
+  }
 }
 
 /* Animation d'entrée */
