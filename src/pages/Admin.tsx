@@ -1079,11 +1079,11 @@ const Admin = () => {
                 <Menu className="w-5 h-5" />
               </Button>
               <div>
-                <h1 className="text-xl font-bold text-slate-800">
+                <h1 className="text-lg md:text-xl font-bold text-slate-800">
                   {navigationItems.find((item) => item.id === activeTab)
                     ?.label || "Administration"}
                 </h1>
-                <p className="text-sm text-slate-600">
+                <p className="text-xs md:text-sm text-slate-600 hidden sm:block">
                   Panel de gestion CGT FTM
                 </p>
               </div>
@@ -1178,7 +1178,7 @@ const Admin = () => {
                             title: e.target.value,
                           })
                         }
-                        placeholder="Assemblée générale CGT"
+                        placeholder="Assemblée gén��rale CGT"
                         className="admin-input w-full"
                       />
                     </div>
@@ -2186,7 +2186,7 @@ const Admin = () => {
                         Maintenance
                       </h3>
                       <p className="text-sm text-slate-600">
-                        Actions de maintenance syst��me
+                        Actions de maintenance système
                       </p>
                     </div>
                   </div>
