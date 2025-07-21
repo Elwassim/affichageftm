@@ -21,8 +21,6 @@ export const PermanencesCombinedWidget = () => {
     const loadPermanences = async () => {
       try {
         const permanencesData = await getNext7DaysPermanences();
-        console.log("🔍 Toutes les permanences:", permanencesData);
-
         const today = new Date();
         const todayStr = today.toISOString().split("T")[0]; // YYYY-MM-DD
 
@@ -34,13 +32,10 @@ export const PermanencesCombinedWidget = () => {
         const sunday = new Date(monday);
         sunday.setDate(monday.getDate() + 6);
 
-        console.log("📅 Semaine courante:", monday.toDateString(), "->", sunday.toDateString());
-
         // Permanences techniques : seulement celle d'aujourd'hui
         const techniques = permanencesData.filter(
           (p) => p.type === "technique" && p.date === todayStr,
         );
-        console.log("🔧 Permanences techniques aujourd'hui:", techniques);
 
         // Permanences politiques : seulement celles de cette semaine
         const politiques = permanencesData.filter((p) => {
@@ -54,20 +49,13 @@ export const PermanencesCombinedWidget = () => {
           const sundayNormalized = new Date(sunday);
           sundayNormalized.setHours(23, 59, 59, 999);
 
-          const isInWeek = permanenceDate >= mondayNormalized && permanenceDate <= sundayNormalized;
-          console.log("🏛️ Permanence politique:", p.name, p.date);
-          console.log("   Date permanence:", permanenceDate.toDateString());
-          console.log("   Lundi semaine:", mondayNormalized.toDateString());
-          console.log("   Dimanche semaine:", sundayNormalized.toDateString());
-          console.log("   Dans la semaine?", isInWeek);
-          return isInWeek;
+          return permanenceDate >= mondayNormalized && permanenceDate <= sundayNormalized;
         });
-        console.log("🏛️ Total permanences politiques cette semaine:", politiques);
 
         setPermanencesTech(techniques);
         setPermanencesPolitiques(politiques);
       } catch (error) {
-        console.error("❌ Erreur chargement permanences:", error);
+        // Error loading permanences
       }
     };
 
