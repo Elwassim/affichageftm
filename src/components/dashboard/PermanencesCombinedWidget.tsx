@@ -45,9 +45,21 @@ export const PermanencesCombinedWidget = () => {
         // Permanences politiques : seulement celles de cette semaine
         const politiques = permanencesData.filter((p) => {
           if (p.type !== "politique") return false;
-          const permanenceDate = new Date(p.date);
-          const isInWeek = permanenceDate >= monday && permanenceDate <= sunday;
-          console.log("🏛️ Permanence politique:", p.name, p.date, "dans la semaine?", isInWeek);
+          const permanenceDate = new Date(p.date + "T00:00:00");
+          permanenceDate.setHours(0, 0, 0, 0);
+
+          const mondayNormalized = new Date(monday);
+          mondayNormalized.setHours(0, 0, 0, 0);
+
+          const sundayNormalized = new Date(sunday);
+          sundayNormalized.setHours(23, 59, 59, 999);
+
+          const isInWeek = permanenceDate >= mondayNormalized && permanenceDate <= sundayNormalized;
+          console.log("🏛️ Permanence politique:", p.name, p.date);
+          console.log("   Date permanence:", permanenceDate.toDateString());
+          console.log("   Lundi semaine:", mondayNormalized.toDateString());
+          console.log("   Dimanche semaine:", sundayNormalized.toDateString());
+          console.log("   Dans la semaine?", isInWeek);
           return isInWeek;
         });
         console.log("🏛️ Total permanences politiques cette semaine:", politiques);
