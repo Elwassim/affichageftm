@@ -49,7 +49,10 @@ export const PermanencesCombinedWidget = () => {
           const sundayNormalized = new Date(sunday);
           sundayNormalized.setHours(23, 59, 59, 999);
 
-          return permanenceDate >= mondayNormalized && permanenceDate <= sundayNormalized;
+          return (
+            permanenceDate >= mondayNormalized &&
+            permanenceDate <= sundayNormalized
+          );
         });
 
         setPermanencesTech(techniques);
