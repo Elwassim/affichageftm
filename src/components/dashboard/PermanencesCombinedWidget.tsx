@@ -21,6 +21,8 @@ export const PermanencesCombinedWidget = () => {
     const loadPermanences = async () => {
       try {
         const permanencesData = await getNext7DaysPermanences();
+        console.log("🔍 Toutes les permanences:", permanencesData);
+
         const today = new Date();
         const todayStr = today.toISOString().split("T")[0]; // YYYY-MM-DD
 
@@ -32,22 +34,28 @@ export const PermanencesCombinedWidget = () => {
         const sunday = new Date(monday);
         sunday.setDate(monday.getDate() + 6);
 
+        console.log("📅 Semaine courante:", monday.toDateString(), "->", sunday.toDateString());
+
         // Permanences techniques : seulement celle d'aujourd'hui
         const techniques = permanencesData.filter(
           (p) => p.type === "technique" && p.date === todayStr,
         );
+        console.log("🔧 Permanences techniques aujourd'hui:", techniques);
 
         // Permanences politiques : seulement celles de cette semaine
         const politiques = permanencesData.filter((p) => {
           if (p.type !== "politique") return false;
           const permanenceDate = new Date(p.date);
-          return permanenceDate >= monday && permanenceDate <= sunday;
+          const isInWeek = permanenceDate >= monday && permanenceDate <= sunday;
+          console.log("🏛️ Permanence politique:", p.name, p.date, "dans la semaine?", isInWeek);
+          return isInWeek;
         });
+        console.log("🏛️ Total permanences politiques cette semaine:", politiques);
 
         setPermanencesTech(techniques);
         setPermanencesPolitiques(politiques);
       } catch (error) {
-        // Error loading permanences
+        console.error("❌ Erreur chargement permanences:", error);
       }
     };
 
